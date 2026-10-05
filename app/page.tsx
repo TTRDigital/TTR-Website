@@ -1,15 +1,51 @@
-export default function Home() {
+import type { Metadata } from "next";
+import { getHomeContent, getServiceSummaries, getSiteSettings, getTestimonials } from "@/lib/content";
+import { Hero } from "@/components/home/Hero";
+import { LogoRow } from "@/components/home/LogoRow";
+import { ProblemPromise } from "@/components/home/ProblemPromise";
+import { ServicesBento } from "@/components/home/ServicesBento";
+import { SearchEverywhere } from "@/components/home/SearchEverywhere";
+import { Results } from "@/components/home/Results";
+import { Process } from "@/components/home/Process";
+import { Industries } from "@/components/home/Industries";
+import { AiCrm } from "@/components/home/AiCrm";
+import { Testimonials } from "@/components/home/Testimonials";
+import { FaqSection } from "@/components/home/FaqSection";
+import { FinalCta } from "@/components/home/FinalCta";
+
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const home = await getHomeContent();
+  return {
+    title: { absolute: home.seo.title },
+    description: home.seo.description,
+    alternates: { canonical: "/" },
+  };
+}
+
+export default async function HomePage() {
+  const [home, settings, services, testimonials] = await Promise.all([
+    getHomeContent(),
+    getSiteSettings(),
+    getServiceSummaries(),
+    getTestimonials(),
+  ]);
+
   return (
-    <main className="container">
-      <div className="card">
-        <span className="accent-bar" aria-hidden="true" />
-        <h1>TTR Digital Marketing</h1>
-        <p className="tagline">New website coming soon</p>
-        <address>1000 Brickell Ave Ste 715, Miami, FL</address>
-        <a className="call" href="tel:+17864601311">
-          Call (786) 460-1311
-        </a>
-      </div>
-    </main>
+    <>
+      <Hero hero={home.hero} settings={settings} />
+      <LogoRow logos={home.logos} />
+      <ProblemPromise problem={home.problem} />
+      <ServicesBento intro={home.services} services={services} />
+      <SearchEverywhere data={home.searchEverywhere} />
+      <Results data={home.results} />
+      <Process data={home.process} />
+      <Industries data={home.industries} />
+      <AiCrm data={home.aiCrm} />
+      <Testimonials data={home.testimonials} items={testimonials} />
+      <FaqSection data={home.faq} phone={settings.phone} phoneHref={settings.phoneHref} />
+      <FinalCta cta={home.cta} settings={settings} />
+    </>
   );
 }
