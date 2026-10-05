@@ -198,6 +198,13 @@
     display: block;
   }
 
+  /* Default grid track is minmax(0, 1fr), not auto, so long unbreakable
+     content (truncated text, emails) can never widen the page on phones.
+     Any grid-cols-* utility still overrides this at its breakpoint. */
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   /* Lenis */
   html.lenis,
   html.lenis body {
@@ -733,4 +740,46 @@
 [data-playing] .anim-pulse,
 [data-playing] .mock-caret {
   animation-play-state: running;
+}
+
+/* 404 radar */
+.nf-sweep {
+  background: conic-gradient(from 0deg, rgb(166 107 255 / 0.35), transparent 22%, transparent);
+  animation: nf-spin 4s linear infinite;
+  animation-play-state: paused;
+}
+.nf-blip {
+  animation: nf-blip 4s ease-out infinite;
+  animation-play-state: paused;
+}
+[data-playing] .nf-sweep,
+[data-playing] .nf-blip {
+  animation-play-state: running;
+}
+@keyframes nf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes nf-blip {
+  0%,
+  8% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  12% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nf-sweep,
+  .nf-blip {
+    animation: none;
+  }
 }

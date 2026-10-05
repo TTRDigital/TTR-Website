@@ -2,7 +2,7 @@ import type { HomeContent } from "@/lib/content";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 /**
- * Four steps: horizontal on desktop, vertical on mobile. The progress line
+ * Three to five steps: horizontal on desktop, vertical on mobile. The progress line
  * fills as you scroll (CSS scroll-driven animation, no JS). Browsers
  * without support, and reduced motion, show the full line.
  */
@@ -18,7 +18,7 @@ export function Process({ data }: { data: HomeContent["process"] }) {
             <div className="process-fill h-full w-full bg-gradient-to-b from-violet-300 via-violet-400 to-brand-600 shadow-[0_0_12px_rgb(166_107_255/0.8)] lg:bg-gradient-to-r" />
           </div>
 
-          <ol className="relative grid gap-10 lg:grid-cols-4 lg:gap-8">
+          <ol className={`relative grid gap-10 lg:gap-8 ${data.steps.length >= 5 ? "lg:grid-cols-5" : data.steps.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"}`}>
             {data.steps.map((step, i) => (
               <li key={step.title} data-reveal style={{ "--i": i } as React.CSSProperties} className="relative flex gap-6 lg:block">
                 <span className="relative z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-violet-400/50 bg-ink-950 font-display text-small font-semibold text-lavender-100 shadow-[0_0_0_6px_var(--ink-950),0_0_24px_-4px_rgb(166_107_255/0.8)]">

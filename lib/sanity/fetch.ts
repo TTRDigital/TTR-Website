@@ -17,7 +17,7 @@ export const REVALIDATE_SECONDS = 300;
  */
 export async function sanityFetch<T>(
   query: string,
-  params: Record<string, string | number> = {},
+  params: Record<string, unknown> = {},
   tags: string[] = [],
 ): Promise<T | null> {
   if (!projectId) return null;

@@ -6,12 +6,12 @@ import { ProblemPromise } from "@/components/home/ProblemPromise";
 import { ServicesBento } from "@/components/home/ServicesBento";
 import { SearchEverywhere } from "@/components/home/SearchEverywhere";
 import { Results } from "@/components/home/Results";
-import { Process } from "@/components/home/Process";
+import { Process } from "@/components/sections/Process";
 import { Industries } from "@/components/home/Industries";
 import { AiCrm } from "@/components/home/AiCrm";
 import { Testimonials } from "@/components/home/Testimonials";
-import { FaqSection } from "@/components/home/FaqSection";
-import { FinalCta } from "@/components/home/FinalCta";
+import { FaqSection } from "@/components/sections/FaqSection";
+import { CtaBand } from "@/components/sections/CtaBand";
 
 export const revalidate = 300;
 
@@ -45,7 +45,7 @@ export default async function HomePage() {
       <AiCrm data={home.aiCrm} />
       <Testimonials data={home.testimonials} items={testimonials} />
       <FaqSection data={home.faq} phone={settings.phone} phoneHref={settings.phoneHref} />
-      <FinalCta cta={home.cta} settings={settings} />
+      <CtaBand variant="form" heading={home.cta.heading} text={home.cta.text} settings={settings} />
     </>
   );
 }

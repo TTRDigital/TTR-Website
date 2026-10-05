@@ -1,11 +1,19 @@
 import Link from "next/link";
-import type { HomeContent } from "@/lib/content";
+import type { Faq } from "@/lib/content";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FaqAccordion } from "@/components/ui/FaqAccordion";
 import { JsonLd, faqPageSchema } from "@/components/ui/JsonLd";
 
-/** Light section for rhythm and readability. */
-export function FaqSection({ data, phone, phoneHref }: { data: HomeContent["faq"]; phone: string; phoneHref: string }) {
+/** Light FAQ section with FAQPage schema. Used on every page that has FAQs. */
+export function FaqSection({
+  data,
+  phone,
+  phoneHref,
+}: {
+  data: { eyebrow: string; heading: string; items: Faq[] };
+  phone: string;
+  phoneHref: string;
+}) {
   return (
     <section aria-labelledby="faq-title" data-surface="light" className="surface-light section-pad relative">
       <JsonLd data={faqPageSchema(data.items)} />
