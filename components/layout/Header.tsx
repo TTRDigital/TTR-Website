@@ -10,8 +10,12 @@ import { lenisStore } from "@/lib/lenis-store";
 import { ServiceIcon } from "@/components/ui/icons";
 import { Magnetic } from "@/components/motion/Magnetic";
 
+type NavLink = { label: string; href: string };
+
 type Props = {
   services: ServiceSummary[];
+  mainLinks: NavLink[];
+  ctaLabel: string;
   phone: string;
   phoneHref: string;
 };
@@ -23,7 +27,7 @@ const industries = [
 
 type MenuKey = "services" | "industries" | null;
 
-export function Header({ services, phone, phoneHref }: Props) {
+export function Header({ services, mainLinks, ctaLabel, phone, phoneHref }: Props) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -172,12 +176,8 @@ export function Header({ services, phone, phoneHref }: Props) {
                   </ul>
                 </div>
               </li>
-              {[
-                { href: "/#results", label: "Results" },
-                { href: "/about", label: "About" },
-                { href: "/blog", label: "Blog" },
-              ].map((l) => (
-                <li key={l.href}>
+              {mainLinks.map((l) => (
+                <li key={l.href + l.label}>
                   <Link
                     href={l.href}
                     className="inline-flex min-h-11 items-center rounded-full px-4 text-[0.9375rem] text-body transition-colors hover:text-hi"
@@ -206,7 +206,7 @@ export function Header({ services, phone, phoneHref }: Props) {
                   data-track="audit_cta_click"
                   className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-[image:var(--grad-brand)] px-5 text-small font-medium text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_8px_24px_-10px_rgb(138_47_208/0.9)] transition-shadow duration-300 hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.28),0_0_0_1px_rgb(196_155_255/0.45),0_12px_36px_-8px_rgb(166_107_255/0.9)]"
                 >
-                  Free audit
+                  {ctaLabel}
                   <ArrowRight className="h-4 w-4" strokeWidth={1.5} aria-hidden="true" />
                 </Link>
               </Magnetic>
@@ -230,12 +230,14 @@ export function Header({ services, phone, phoneHref }: Props) {
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
         services={services}
+        mainLinks={mainLinks}
+        ctaLabel={ctaLabel}
         phone={phone}
         phoneHref={phoneHref}
         auditHref={auditHref}
       />
 
-      <MobileActionBar hidden={mobileOpen} phoneHref={phoneHref} auditHref={auditHref} />
+      <MobileActionBar hidden={mobileOpen} phoneHref={phoneHref} auditHref={auditHref} ctaLabel={ctaLabel} />
     </>
   );
 }
@@ -345,6 +347,8 @@ function MobileMenu({
   open,
   onClose,
   services,
+  mainLinks,
+  ctaLabel,
   phone,
   phoneHref,
   auditHref,
@@ -352,6 +356,8 @@ function MobileMenu({
   open: boolean;
   onClose: () => void;
   services: ServiceSummary[];
+  mainLinks: NavLink[];
+  ctaLabel: string;
   phone: string;
   phoneHref: string;
   auditHref: string;
@@ -407,10 +413,8 @@ function MobileMenu({
     { href: "/services", label: "Services" },
     { href: "/dental-marketing", label: "Dental marketing" },
     { href: "/home-services-marketing", label: "Home services marketing" },
-    { href: "/#results", label: "Results" },
-    { href: "/about", label: "About" },
-    { href: "/blog", label: "Blog" },
-    { href: "/contact", label: "Contact" },
+    ...mainLinks,
+    ...(mainLinks.some((l) => l.href === "/contact") ? [] : [{ href: "/contact", label: "Contact" }]),
   ];
 
   return (
@@ -496,14 +500,14 @@ function MobileMenu({
           data-track="audit_cta_click"
           className="inline-flex min-h-12 items-center justify-center rounded-full bg-[image:var(--grad-brand)] text-[0.9375rem] font-medium text-white"
         >
-          Free audit
+          {ctaLabel}
         </Link>
       </div>
     </div>
   );
 }
 
-function MobileActionBar({ hidden, phoneHref, auditHref }: { hidden: boolean; phoneHref: string; auditHref: string }) {
+function MobileActionBar({ hidden, phoneHref, auditHref, ctaLabel }: { hidden: boolean; phoneHref: string; auditHref: string; ctaLabel: string }) {
   return (
     <div
       style={{ viewTransitionName: "mobile-bar" }}
@@ -525,7 +529,7 @@ function MobileActionBar({ hidden, phoneHref, auditHref }: { hidden: boolean; ph
           data-track="audit_cta_click"
           className="inline-flex min-h-12 items-center justify-center rounded-full bg-[image:var(--grad-brand)] text-[0.9375rem] font-medium text-white"
         >
-          Free audit
+          {ctaLabel}
         </Link>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { getSiteSettings } from "@/lib/content";
+import { getCmsPage } from "@/lib/pages";
 import { PageHero } from "@/components/sections/PageHero";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -8,12 +9,20 @@ import { LeadForm } from "@/components/forms/LeadForm";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: { absolute: "Contact TTR Digital Marketing | Free Growth Audit" },
+const fallbackSeo = {
+  title: "Contact TTR Digital Marketing | Free Growth Audit",
   description:
     "Call (786) 460-1311 or send a message to book your free growth audit. TTR Digital Marketing, 1000 Brickell Ave Ste 715, Miami, FL.",
-  alternates: { canonical: "/contact" },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cms = await getCmsPage("contact");
+  return {
+    title: { absolute: cms?.seo?.title || fallbackSeo.title },
+    description: cms?.seo?.description || fallbackSeo.description,
+    alternates: { canonical: "/contact" },
+  };
+}
 
 const steps = [
   { title: "We reply within one business day", text: "A real person reviews your request and reaches out to set up a time that works for you." },
@@ -36,7 +45,7 @@ const faqs = [
 ];
 
 export default async function ContactPage() {
-  const settings = await getSiteSettings();
+  const [settings, cms] = await Promise.all([getSiteSettings(), getCmsPage("contact")]);
   const contact = [
     { icon: Phone, label: "Call", value: settings.phone, href: settings.phoneHref, track: "click_to_call" },
     { icon: Mail, label: "Email", value: settings.email, href: `mailto:${settings.email}` },
@@ -50,11 +59,11 @@ export default async function ContactPage() {
         compact
         breadcrumbs={[{ name: "Contact", href: "/contact" }]}
         eyebrow="Contact"
-        title="Let's talk about growing your business."
+        title={cms?.heading || "Let's talk about growing your business."}
         intro={
           <p>
-            Call us, stop by our Brickell office or send a quick message. We will get back to you within one business day to set up your free growth
-            audit.
+            {cms?.intro ||
+              "Call us, stop by our Brickell office or send a quick message. We will get back to you within one business day to set up your free growth audit."}
           </p>
         }
       />

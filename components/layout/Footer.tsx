@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
-import type { ServiceSummary, SiteSettings } from "@/lib/content";
+import type { Navigation, ServiceSummary, SiteSettings } from "@/lib/content";
 import { SocialIcon } from "@/components/ui/icons";
 
-export function Footer({ settings, services }: { settings: SiteSettings; services: ServiceSummary[] }) {
+export function Footer({ settings, services, nav }: { settings: SiteSettings; services: ServiceSummary[]; nav: Navigation }) {
   const year = new Date().getFullYear();
   const columns = [
     {
@@ -20,13 +20,7 @@ export function Footer({ settings, services }: { settings: SiteSettings; service
     },
     {
       title: "Company",
-      links: [
-        { href: "/about", label: "About" },
-        { href: "/#results", label: "Results" },
-        { href: "/blog", label: "Blog" },
-        { href: "/contact", label: "Contact" },
-        { href: "/contact", label: "Free growth audit" },
-      ],
+      links: nav.footerCompanyLinks,
     },
   ];
 
@@ -57,6 +51,19 @@ export function Footer({ settings, services }: { settings: SiteSettings; service
                 </li>
               ))}
             </ul>
+            {settings.badges.length ? (
+              <ul className="mt-8 flex flex-wrap items-center gap-4" aria-label="Certifications and partners">
+                {settings.badges.map((b) => (
+                  <li key={b.name}>
+                    {b.url ? (
+                      <Image src={b.url} alt={b.name} width={96} height={40} className="h-10 w-auto opacity-80" />
+                    ) : (
+                      <span className="text-small text-meta">{b.name}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-5">
@@ -65,7 +72,7 @@ export function Footer({ settings, services }: { settings: SiteSettings; service
                 <h2 className="font-sans text-micro font-medium uppercase tracking-[0.18em] text-meta">{col.title}</h2>
                 <ul className="mt-5 space-y-1">
                   {col.links.map((l) => (
-                    <li key={l.label}>
+                    <li key={l.label + l.href}>
                       <Link href={l.href} className="inline-flex min-h-9 items-center text-small text-body transition-colors hover:text-hi">
                         <span className="link-underline">{l.label}</span>
                       </Link>
