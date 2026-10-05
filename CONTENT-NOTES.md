@@ -310,3 +310,24 @@ Every placeholder renders as a clearly marked tag on the preview, e.g. `[CLIENT 
 - [ ] FAQ "Do you require long contracts?": the answer is written to stay neutral ("we explain the terms, the length and how to cancel before you sign"). Tell me your actual contract terms (month to month, minimum term, notice period) and I will make it specific.
 - [ ] Lead form consent line: "By sending this form you agree we may contact you by phone, text or email about your request." Have it checked alongside the privacy policy, especially for SMS (A2P 10DLC) compliance in GoHighLevel.
 - [ ] The example UI mockups (rankings chart, ad preview, lead pipeline) are labelled "Example view" and use made-up names. They are illustrations, not client data.
+
+---
+
+## 9. Phase 3 updates
+
+**Sanity changes made (patches and new documents only, nothing deleted)**
+- Fixed the merged heading + paragraph blocks in 16 documents (61 blocks): all 8 services, both industry pages, about, privacy, terms and the 3 posts. Headings were matched by exact text, not guessed.
+- Created 3 blog categories (SEO and AI search, Social media, Local marketing) and assigned the posts. The old "Uncategorized" category still exists, unassigned.
+- Refreshed the 3 post SEO titles and descriptions that still said "2021". Slugs unchanged.
+- Updated 7 internal links that pointed at the old `/services/websites` and `/services/social-media` slugs.
+
+**Where page copy lives right now**
+- Service pages (`lib/data/services.ts`) and industry pages (`lib/data/industries.ts`) use new, longer copy written for this build (600+ words each). Phase 4 moves this into Sanity so it is editable in `/cms`.
+- Blog posts and the privacy/terms pages render from Sanity today.
+
+**New items to confirm**
+- [ ] Blog covers: the 3 posts shared one clip-art illustration, so the site now draws an on-brand generated cover per post. Upload a unique image to any post in `/cms` and it will be used instead.
+- [ ] About page "at a glance" card says "1 business day to reply to every audit request" (from the earlier contact copy). Confirm that is still your promise.
+- [ ] About page lists Kia only. Add other team members (name, role, photo) if you want a fuller team section.
+- [ ] Service FAQ "Who owns the website?" and "Who owns the data?" answer "you do". Confirm this matches your contracts.
+- [ ] Per-service results: every service page except SEO shows a `[CLIENT RESULT]` block. Dental and home services pages show `[DENTAL CLIENT RESULT]` and `[HOME SERVICES CLIENT RESULT]`.
