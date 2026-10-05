@@ -12,6 +12,8 @@ import { sanityFetch } from "@/lib/sanity/fetch";
    ========================================================================== */
 
 export { isPlaceholder, showPlaceholders } from "@/lib/placeholders";
+import { fallbackHome } from "@/lib/data/home";
+export { fallbackHome };
 
 /* ---------- Types ---------- */
 
@@ -35,6 +37,8 @@ export type SiteSettings = {
   googleRating: string | null;
   reviewCount: string | null;
   social: { label: string; href: string; network: "facebook" | "instagram" | "linkedin" }[];
+  /** Partner badges an editor switched on in /cms. Empty until confirmed. */
+  badges: { name: string; url: string }[];
 };
 
 export type ServiceSummary = {
@@ -99,6 +103,7 @@ export const fallbackSettings: SiteSettings = {
   foundedYear: 2015,
   googleRating: "[GOOGLE RATING]",
   reviewCount: "[REVIEW COUNT]",
+  badges: [],
   social: [
     { network: "facebook", label: "Facebook", href: "https://www.facebook.com/TTRDigitalMarketing/" },
     { network: "instagram", label: "Instagram", href: "https://www.instagram.com/ttrdigitalmarketing/" },
@@ -174,220 +179,6 @@ export const fallbackTestimonials: Testimonial[] = [
   },
 ];
 
-export const fallbackHome: HomeContent = {
-  seo: {
-    title: "Miami Digital Marketing Agency for Local Businesses | TTR",
-    description:
-      "TTR Digital Marketing gets local businesses found on Google, ads and AI search, then turns that traffic into booked calls. Free growth audit.",
-  },
-  hero: {
-    eyebrow: "Miami digital marketing agency",
-    heading: "Get found everywhere your customers search.",
-    text: "Google, Maps, ads and AI answers like ChatGPT and Gemini. We put your business in front of people ready to buy, then turn those searches into booked calls.",
-  },
-  logos: {
-    heading: "Trusted by local businesses",
-    items: [
-      { name: "[CLIENT LOGO]" },
-      { name: "[CLIENT LOGO]" },
-      { name: "[CLIENT LOGO]" },
-      { name: "[CLIENT LOGO]" },
-      { name: "[CLIENT LOGO]" },
-    ],
-  },
-  problem: {
-    eyebrow: "Why leads slip away",
-    heading: "Most local businesses lose leads they never see.",
-    broken: [
-      {
-        title: "Invisible in AI answers",
-        text: "Customers now ask ChatGPT and Google's AI Overviews who to call. If you are not in that answer, you are not on the list.",
-      },
-      {
-        title: "Ad spend that leaks",
-        text: "Broad keywords, slow landing pages and no call tracking burn budget on clicks that never turn into customers.",
-      },
-      {
-        title: "Leads that go cold",
-        text: "A missed call or a reply three hours later sends the customer straight to the next business on Google.",
-      },
-    ],
-    fixes: [
-      {
-        title: "Found everywhere",
-        text: "We make your business easy to find and easy to recommend on Google, Maps and AI search.",
-      },
-      {
-        title: "Ads built for calls",
-        text: "We run campaigns around calls and booked jobs, and cut the spend that does not bring them.",
-      },
-      {
-        title: "Every lead answered",
-        text: "GoHighLevel and AI agents reply to every call, form and message in seconds, day or night.",
-      },
-    ],
-  },
-  services: {
-    eyebrow: "What we do",
-    heading: "One team for everything that makes the phone ring.",
-    intro: "Eight services that work as one system. Start with the one you need most and add more as you grow.",
-  },
-  searchEverywhere: {
-    eyebrow: "Search Everywhere Optimization",
-    heading: "Your customers don't just Google anymore.",
-    text: "They search Google, check the map and ask ChatGPT, Gemini or Perplexity who to call. Search Everywhere Optimization makes your business the clear, trusted answer in all of them.",
-    points: [
-      "Clear pages with direct answers that AI tools can quote",
-      "The same name, address and phone on every listing",
-      "Reviews and mentions that build trust with every platform",
-      "Monthly checks of where you show up, and where you do not yet",
-    ],
-    platforms: ["Google Search", "Google Maps", "AI Overviews", "ChatGPT", "Gemini", "Perplexity"],
-  },
-  results: {
-    eyebrow: "Results",
-    heading: "Real numbers from real clients.",
-    intro: "We report on calls, leads and booked jobs, not vanity metrics. Here is some of what that work has produced.",
-    stats: [
-      { value: "411%", countTo: 411, suffix: "%", label: "more organic traffic, year over year" },
-      { value: "688%", countTo: 688, suffix: "%", label: "more keywords ranking in Google's top 10" },
-      { value: "10-15", label: "cases a day for one client, up from 2" },
-      { value: "2015", label: "helping businesses grow since" },
-    ],
-    cases: [
-      {
-        client: "Displays & Holders",
-        industry: "Growing business",
-        challenge: "Stuck at about 2 cases a day.",
-        result: "Now 10 to 15 cases a day, in the CEO's own words.",
-        metricLabel: "Chris Aaron, CEO",
-      },
-      {
-        client: "[CLIENT NAME]",
-        industry: "Dental practice",
-        challenge: "[CHALLENGE]",
-        result: "[CLIENT RESULT]",
-      },
-      {
-        client: "[CLIENT NAME]",
-        industry: "Home services company",
-        challenge: "[CHALLENGE]",
-        result: "[CLIENT RESULT]",
-      },
-    ],
-    footnote: "Results depend on your market, competition, budget and starting point. We never promise rankings.",
-  },
-  process: {
-    eyebrow: "How we work",
-    heading: "A clear plan, then steady progress you can see.",
-    intro: "No long onboarding and no mystery. Four steps, and you always know what we are doing and why.",
-    steps: [
-      {
-        title: "Audit",
-        text: "We review your website, Google Business Profile, ads, reviews and competitors, and show you where leads are slipping away.",
-      },
-      {
-        title: "Strategy",
-        text: "You get a plan built around your goals and budget, with every task tied to calls, form leads or booked jobs.",
-      },
-      {
-        title: "Launch",
-        text: "We build and launch in the right order, with call and form tracking in place from day one.",
-      },
-      {
-        title: "Grow",
-        text: "Each month you see what we did and what it brought in. Then we put more behind what works.",
-      },
-    ],
-  },
-  industries: {
-    eyebrow: "Industries",
-    heading: "Built for businesses that live on calls and bookings.",
-    cards: [
-      {
-        href: "/dental-marketing",
-        eyebrow: "Dental practices",
-        title: "More new patients in the chair.",
-        text: "Attract the patients you want, from new families to implant and cosmetic cases, and book more of the calls you already get.",
-        tags: ["New patient exams", "Implants", "Invisalign", "Emergency visits"],
-      },
-      {
-        href: "/home-services-marketing",
-        eyebrow: "Home services",
-        title: "More booked jobs for your crews.",
-        text: "Steady calls from homeowners nearby, with missed calls answered while your team is out on a job.",
-        tags: ["HVAC", "Plumbing", "Roofing", "Electrical", "Landscaping", "Cleaning"],
-      },
-    ],
-    more: "And growing businesses in other industries that depend on calls, forms and appointments.",
-  },
-  aiCrm: {
-    eyebrow: "GoHighLevel CRM and AI agents",
-    heading: "Every lead answered in seconds. Day or night.",
-    text: "Most businesses do not have a lead problem. They have a follow up problem. We set up GoHighLevel so every call, form and message lands in one pipeline, then add AI agents that answer, ask the right questions and book the appointment.",
-    points: [
-      { title: "Missed call text back", text: "A missed call gets an instant text, so the customer does not call the next business." },
-      { title: "AI chat and voice agents", text: "Answers common questions and qualifies leads around the clock." },
-      { title: "Booked into your calendar", text: "Appointments go straight onto your schedule, with reminders." },
-      { title: "Review requests", text: "Happy customers get a quick request after every job or visit." },
-    ],
-  },
-  testimonials: {
-    eyebrow: "Client words",
-    heading: "What working with us feels like.",
-  },
-  faq: {
-    eyebrow: "FAQ",
-    heading: "Questions owners ask us.",
-    items: [
-      {
-        question: "How much does digital marketing cost?",
-        answer:
-          "It depends on what you need. The main factors are your competition, how many services and locations you cover, your starting point and how fast you want to grow. Ad budgets are paid to Google or Meta directly and are separate from our work. After the free audit you get a clear plan and a quote, with no surprises.",
-      },
-      {
-        question: "How long does SEO take to work?",
-        answer:
-          "Most businesses see movement within the first few months, with steadier growth after that. It depends on your competition, your website and how much work is needed up front. Google Ads can bring calls within the first few weeks, so many clients run both while SEO builds.",
-      },
-      {
-        question: "Do you require long contracts?",
-        answer:
-          "We explain the terms, the length and how to cancel before you sign anything, in plain English. Ask us on your audit call and we will walk you through the options for your situation.",
-      },
-      {
-        question: "How will I know it's working?",
-        answer:
-          "You get clear monthly reports in plain English. We track calls, form leads and booked appointments by channel, along with rankings and AI search visibility, so you can see what your money brought in.",
-      },
-      {
-        question: "What is Search Everywhere Optimization?",
-        answer:
-          "People now search on Google, Google Maps, YouTube and AI tools like ChatGPT, Gemini and Perplexity. Search Everywhere Optimization makes your business easy to find and easy to recommend in all of those places, not just in the classic blue links.",
-      },
-      {
-        question: "Can you promise I will be number one on Google?",
-        answer:
-          "No honest agency can promise a ranking, because Google and AI tools decide what to show. What we can promise is clear work, clear reporting and a plan focused on the searches that bring you real customers.",
-      },
-      {
-        question: "What kinds of businesses do you work with?",
-        answer:
-          "Mostly local service businesses. Dental practices and home service companies like HVAC, plumbing, roofing and cleaning are our main focus, along with other small and mid-sized businesses that live on calls and booked appointments.",
-      },
-      {
-        question: "Do you only work with businesses in Miami?",
-        answer:
-          "Our office is on Brickell Avenue in Miami and many of our clients are in South Florida, but we work with businesses across the United States.",
-      },
-    ],
-  },
-  cta: {
-    heading: "Ready for more calls and booked jobs?",
-    text: "Get a free growth audit. We will show you where your leads are slipping away and how to fix it, whether or not you hire us.",
-  },
-};
-
 /* ---------- Helpers ---------- */
 
 /** Earlier build used shorter slugs; normalize to the canonical ones. */
@@ -414,19 +205,31 @@ type SanitySettings = Partial<{
   postalCode: string;
   hoursText: string;
   mapsUrl: string;
+  foundedYear: number;
   googleRating: string;
   reviewCount: string;
+  social: { network: SiteSettings["social"][number]["network"]; url: string }[];
+  badges: { name: string; url: string | null }[];
 }>;
+
+const socialLabels: Record<string, string> = { facebook: "Facebook", instagram: "Instagram", linkedin: "LinkedIn" };
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   const data = await sanityFetch<SanitySettings>(
-    `*[_id == "siteSettings"][0]{phone, email, street, city, region, postalCode, hoursText, mapsUrl, googleRating, reviewCount}`,
+    `*[_id == "siteSettings"][0]{
+      phone, email, street, city, region, postalCode, hoursText, mapsUrl, foundedYear, googleRating, reviewCount,
+      social[]{network, url},
+      "badges": badges[show == true]{name, "url": image.asset->url}
+    }`,
     {},
     ["siteSettings"],
   );
   const f = fallbackSettings;
   const phone = pick(data?.phone, f.phone);
   const digits = phone.replace(/\D/g, "");
+  const social = (data?.social ?? [])
+    .filter((x) => x?.url && x.network in socialLabels)
+    .map((x) => ({ network: x.network, href: x.url, label: socialLabels[x.network] }));
   return {
     ...f,
     phone,
@@ -438,8 +241,43 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     postalCode: pick(data?.postalCode, f.postalCode),
     hoursText: pick(data?.hoursText, f.hoursText),
     mapsUrl: pick(data?.mapsUrl, f.mapsUrl),
+    foundedYear: pick(data?.foundedYear, f.foundedYear),
     googleRating: pick(data?.googleRating, f.googleRating),
     reviewCount: pick(data?.reviewCount, f.reviewCount),
+    social: social.length ? social : f.social,
+    badges: (data?.badges ?? []).filter((b) => b?.url).map((b) => ({ name: b.name, url: b.url as string })),
+  };
+}
+
+export type Navigation = { mainLinks: { label: string; href: string }[]; headerCtaLabel: string; footerCompanyLinks: { label: string; href: string }[] };
+
+export const fallbackNavigation: Navigation = {
+  mainLinks: [
+    { label: "Results", href: "/#results" },
+    { label: "About", href: "/about" },
+    { label: "Blog", href: "/blog" },
+  ],
+  headerCtaLabel: "Free audit",
+  footerCompanyLinks: [
+    { label: "About", href: "/about" },
+    { label: "Results", href: "/#results" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+    { label: "Free growth audit", href: "/contact" },
+  ],
+};
+
+export async function getNavigation(): Promise<Navigation> {
+  const data = await sanityFetch<Partial<Navigation>>(
+    `*[_id == "navigation"][0]{"mainLinks": mainLinks[]{label, href}, headerCtaLabel, "footerCompanyLinks": footerCompanyLinks[]{label, href}}`,
+    {},
+    ["navigation"],
+  );
+  const f = fallbackNavigation;
+  return {
+    mainLinks: pickList(data?.mainLinks?.filter((l) => l?.label && l?.href), f.mainLinks),
+    headerCtaLabel: pick(data?.headerCtaLabel, f.headerCtaLabel),
+    footerCompanyLinks: pickList(data?.footerCompanyLinks?.filter((l) => l?.label && l?.href), f.footerCompanyLinks),
   };
 }
 
@@ -471,38 +309,131 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   }));
 }
 
+export async function getCaseStudies(): Promise<CaseStudy[]> {
+  const data = await sanityFetch<(CaseStudy & { attribution?: string })[]>(
+    `*[_type == "caseStudy" && defined(client)] | order(order asc){client, industry, challenge, result, attribution}`,
+    {},
+    ["caseStudy"],
+  );
+  const list: CaseStudy[] = (data ?? []).map((c) => ({
+    client: c.client,
+    industry: c.industry ?? "",
+    challenge: c.challenge ?? "",
+    result: c.result ?? "",
+    metricLabel: c.attribution ?? undefined,
+  }));
+  return pickList(list, fallbackHome.results.cases);
+}
+
+export async function getClientLogos(): Promise<{ name: string; src?: string }[]> {
+  const data = await sanityFetch<{ name: string; src: string | null }[]>(
+    `*[_type == "clientLogo" && defined(logo.asset)] | order(order asc){name, "src": logo.asset->url}`,
+    {},
+    ["clientLogo"],
+  );
+  const list = (data ?? []).filter((l) => l.src).map((l) => ({ name: l.name, src: l.src as string }));
+  return pickList(list, fallbackHome.logos.items);
+}
+
 type SanityHome = Partial<{
   heroEyebrow: string;
   heroHeading: string;
   heroText: string;
+  logosHeading: string;
+  problemEyebrow: string;
+  problemHeading: string;
+  problemBroken: Step[];
+  problemFixes: Step[];
+  servicesEyebrow: string;
+  servicesHeading: string;
+  servicesIntro: string;
+  seEyebrow: string;
+  seHeading: string;
+  seText: string;
+  sePoints: string[];
+  sePlatforms: string[];
+  resultsEyebrow: string;
+  resultsHeading: string;
+  resultsIntro: string;
+  stats: Stat[];
+  resultsFootnote: string;
+  processEyebrow: string;
+  processHeading: string;
+  processIntro: string;
+  process: Step[];
+  industriesEyebrow: string;
+  industriesHeading: string;
+  industryCards: HomeContent["industries"]["cards"];
+  industriesMore: string;
+  aiEyebrow: string;
+  aiHeading: string;
+  aiText: string;
+  aiPoints: Step[];
+  testimonialsEyebrow: string;
+  testimonialsHeading: string;
+  faqEyebrow: string;
+  faqHeading: string;
   faqs: Faq[];
   ctaHeading: string;
   ctaText: string;
   seo: { title?: string; description?: string };
 }>;
 
+const stepsOf = (list: Step[] | undefined) => list?.filter((x) => x?.title).map((x) => ({ title: x.title, text: x.text ?? "" }));
+
 export async function getHomeContent(): Promise<HomeContent> {
-  const data = await sanityFetch<SanityHome>(
-    `*[_id == "homePage"][0]{heroEyebrow, heroHeading, heroText, faqs[]{question, answer}, ctaHeading, ctaText, seo}`,
-    {},
-    ["homePage"],
-  );
+  const [data, cases, logos] = await Promise.all([
+    sanityFetch<SanityHome>(`*[_id == "homePage"][0]`, {}, ["homePage"]),
+    getCaseStudies(),
+    getClientLogos(),
+  ]);
   const f = fallbackHome;
+  const d = data ?? {};
   return {
-    ...f,
-    seo: {
-      title: pick(data?.seo?.title, f.seo.title),
-      description: pick(data?.seo?.description, f.seo.description),
+    seo: { title: pick(d.seo?.title, f.seo.title), description: pick(d.seo?.description, f.seo.description) },
+    hero: { eyebrow: pick(d.heroEyebrow, f.hero.eyebrow), heading: pick(d.heroHeading, f.hero.heading), text: pick(d.heroText, f.hero.text) },
+    logos: { heading: pick(d.logosHeading, f.logos.heading), items: logos },
+    problem: {
+      eyebrow: pick(d.problemEyebrow, f.problem.eyebrow),
+      heading: pick(d.problemHeading, f.problem.heading),
+      broken: pickList(stepsOf(d.problemBroken), f.problem.broken),
+      fixes: pickList(stepsOf(d.problemFixes), f.problem.fixes),
     },
-    hero: {
-      eyebrow: pick(data?.heroEyebrow, f.hero.eyebrow),
-      heading: pick(data?.heroHeading, f.hero.heading),
-      text: pick(data?.heroText, f.hero.text),
+    services: { eyebrow: pick(d.servicesEyebrow, f.services.eyebrow), heading: pick(d.servicesHeading, f.services.heading), intro: pick(d.servicesIntro, f.services.intro) },
+    searchEverywhere: {
+      eyebrow: pick(d.seEyebrow, f.searchEverywhere.eyebrow),
+      heading: pick(d.seHeading, f.searchEverywhere.heading),
+      text: pick(d.seText, f.searchEverywhere.text),
+      points: pickList(d.sePoints, f.searchEverywhere.points),
+      platforms: pickList(d.sePlatforms, f.searchEverywhere.platforms).slice(0, 6),
     },
-    faq: { ...f.faq, items: pickList(data?.faqs, f.faq.items) },
-    cta: {
-      heading: pick(data?.ctaHeading, f.cta.heading),
-      text: pick(data?.ctaText, f.cta.text),
+    results: {
+      eyebrow: pick(d.resultsEyebrow, f.results.eyebrow),
+      heading: pick(d.resultsHeading, f.results.heading),
+      intro: pick(d.resultsIntro, f.results.intro),
+      stats: pickList(d.stats?.filter((x) => x?.value), f.results.stats),
+      cases,
+      footnote: pick(d.resultsFootnote, f.results.footnote),
     },
+    process: {
+      eyebrow: pick(d.processEyebrow, f.process.eyebrow),
+      heading: pick(d.processHeading, f.process.heading),
+      intro: pick(d.processIntro, f.process.intro),
+      steps: pickList(stepsOf(d.process), f.process.steps),
+    },
+    industries: {
+      eyebrow: pick(d.industriesEyebrow, f.industries.eyebrow),
+      heading: pick(d.industriesHeading, f.industries.heading),
+      cards: pickList(d.industryCards?.filter((c) => c?.title && c?.href).map((c) => ({ ...c, tags: c.tags ?? [] })), f.industries.cards),
+      more: pick(d.industriesMore, f.industries.more),
+    },
+    aiCrm: { eyebrow: pick(d.aiEyebrow, f.aiCrm.eyebrow), heading: pick(d.aiHeading, f.aiCrm.heading), text: pick(d.aiText, f.aiCrm.text), points: pickList(stepsOf(d.aiPoints), f.aiCrm.points) },
+    testimonials: { eyebrow: pick(d.testimonialsEyebrow, f.testimonials.eyebrow), heading: pick(d.testimonialsHeading, f.testimonials.heading) },
+    faq: {
+      eyebrow: pick(d.faqEyebrow, f.faq.eyebrow),
+      heading: pick(d.faqHeading, f.faq.heading),
+      items: pickList(d.faqs?.filter((x) => x?.question && x?.answer), f.faq.items),
+    },
+    cta: { heading: pick(d.ctaHeading, f.cta.heading), text: pick(d.ctaText, f.cta.text) },
   };
 }

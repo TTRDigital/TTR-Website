@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { ArrowRight, BarChart3, Clock, Eye, Layers, MapPin, Phone, Sparkles } from "lucide-react";
 import { getSiteSettings } from "@/lib/content";
+import { getCmsPage } from "@/lib/pages";
 import { PageHero } from "@/components/sections/PageHero";
 import { CtaBand } from "@/components/sections/CtaBand";
 import { OfficeMap } from "@/components/sections/OfficeMap";
@@ -11,12 +12,20 @@ import { SocialIcon } from "@/components/ui/icons";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: { absolute: "About TTR Digital Marketing | Miami Marketing Agency" },
+const fallbackSeo = {
+  title: "About TTR Digital Marketing | Miami Marketing Agency",
   description:
     "Meet TTR Digital Marketing, a Miami digital marketing agency helping local businesses grow since 2015 with SEO, ads, websites, CRM and AI.",
-  alternates: { canonical: "/about" },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cms = await getCmsPage("about");
+  return {
+    title: { absolute: cms?.seo?.title || fallbackSeo.title },
+    description: cms?.seo?.description || fallbackSeo.description,
+    alternates: { canonical: "/about" },
+  };
+}
 
 const different = [
   { icon: BarChart3, title: "Outcomes over vanity metrics", text: "We measure success in calls, booked jobs and new patients, and that is what our reports show." },
@@ -33,7 +42,7 @@ const values = [
 ];
 
 export default async function AboutPage() {
-  const settings = await getSiteSettings();
+  const [settings, cms] = await Promise.all([getSiteSettings(), getCmsPage("about")]);
   const address = `${settings.street}, ${settings.city}, ${settings.region} ${settings.postalCode}`;
 
   return (
@@ -41,11 +50,11 @@ export default async function AboutPage() {
       <PageHero
         breadcrumbs={[{ name: "About", href: "/about" }]}
         eyebrow="About TTR"
-        title="Meet your new growth partner."
+        title={cms?.heading || "Meet your new growth partner."}
         intro={
           <p>
-            TTR Digital Marketing is a digital marketing agency on Brickell Avenue in Miami. Since {settings.foundedYear} we have helped local businesses get
-            found online and turn that attention into calls and booked jobs, with SEO, ads, websites, CRM and AI working together.
+            {cms?.intro ||
+              `TTR Digital Marketing is a digital marketing agency on Brickell Avenue in Miami. Since ${settings.foundedYear} we have helped local businesses get found online and turn that attention into calls and booked jobs, with SEO, ads, websites, CRM and AI working together.`}
           </p>
         }
         actions={

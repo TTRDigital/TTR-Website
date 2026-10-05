@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Building2, Check, Phone, Quote, Stethoscope, Wrench } from "lucide-react";
 import { getServiceSummaries, getSiteSettings, getTestimonials } from "@/lib/content";
 import { getPostsForService } from "@/lib/blog";
-import { getServicePage, servicePages } from "@/lib/data/services";
+import { servicePages } from "@/lib/data/services";
+import { getServicePageData } from "@/lib/cms-pages";
 import { isPlaceholder, showPlaceholders } from "@/lib/placeholders";
 import { absoluteUrl } from "@/lib/site";
 import { PageHero } from "@/components/sections/PageHero";
@@ -18,6 +19,7 @@ import { Text } from "@/components/ui/Placeholder";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { ServiceMockup } from "@/components/mockups/ServiceMockups";
 import { PostCard } from "@/components/blog/PostCard";
+import { DarkBody } from "@/components/sections/DarkBody";
 
 export const revalidate = 300;
 export const dynamicParams = false;
@@ -28,7 +30,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps<"/services/[slug]">): Promise<Metadata> {
   const { slug } = await props.params;
-  const page = getServicePage(slug);
+  const page = await getServicePageData(slug, []);
   if (!page) return {};
   return {
     title: { absolute: page.seo.title },
@@ -39,17 +41,16 @@ export async function generateMetadata(props: PageProps<"/services/[slug]">): Pr
 
 export default async function ServicePage(props: PageProps<"/services/[slug]">) {
   const { slug } = await props.params;
-  const page = getServicePage(slug);
-  if (!page) notFound();
-
   const [settings, services, testimonials, posts] = await Promise.all([
     getSiteSettings(),
     getServiceSummaries(),
     getTestimonials(),
     getPostsForService(slug),
   ]);
+  const page = await getServicePageData(slug, testimonials);
+  if (!page) notFound();
   const related = page.related.map((r) => services.find((s) => s.slug === r)).filter((s) => !!s);
-  const testimonial = page.proof.testimonialIndex !== undefined ? testimonials[page.proof.testimonialIndex] : undefined;
+  const testimonial = page.testimonial;
   const showProofPlaceholder = !!page.proof.placeholder && showPlaceholders;
   const hasProof = !!page.proof.stats?.length || !!testimonial || showProofPlaceholder;
 
@@ -125,7 +126,7 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
             </div>
           </div>
           <div className="space-y-12 lg:col-span-7 lg:col-start-6">
-            {page.sections.map((sec) => (
+            {page.body ? <DarkBody value={page.body} /> : page.sections.map((sec) => (
               <article key={sec.heading} data-reveal>
                 <h3 className="text-h3 font-semibold">{sec.heading}</h3>
                 {sec.paragraphs.map((p) => (
