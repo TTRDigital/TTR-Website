@@ -20,8 +20,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       // Slugs from the earlier build
-      { source: "/services/websites", destination: "/services/website-design", permanent: true },
-      { source: "/services/social-media", destination: "/services/social-media-marketing", permanent: true },
+      { source: "/services/websites", destination: "/services/website-design", statusCode: 301 },
+      { source: "/services/social-media", destination: "/services/social-media-marketing", statusCode: 301 },
     ];
   },
 };
