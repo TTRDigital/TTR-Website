@@ -297,3 +297,16 @@ Every placeholder renders as a clearly marked tag on the preview, e.g. `[CLIENT 
 ```
 
 </details>
+
+---
+
+## 8. Phase 2 updates
+
+**Sanity changes made (patches only, nothing deleted)**
+- `homePage`: hero heading set to option A, new hero text, new CTA text, 8 FAQs (adds cost factors, contracts and reporting), SEO title shortened to under 60 characters.
+- `service-websites` slug changed to `website-design`, `service-social-media` slug changed to `social-media-marketing`. 301 redirects from the old paths are in `next.config.ts`.
+
+**New items to confirm**
+- [ ] FAQ "Do you require long contracts?": the answer is written to stay neutral ("we explain the terms, the length and how to cancel before you sign"). Tell me your actual contract terms (month to month, minimum term, notice period) and I will make it specific.
+- [ ] Lead form consent line: "By sending this form you agree we may contact you by phone, text or email about your request." Have it checked alongside the privacy policy, especially for SMS (A2P 10DLC) compliance in GoHighLevel.
+- [ ] The example UI mockups (rankings chart, ad preview, lead pipeline) are labelled "Example view" and use made-up names. They are illustrations, not client data.
