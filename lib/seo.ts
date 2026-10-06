@@ -19,9 +19,13 @@ type SeoInput = {
   authors?: string[];
 };
 
+/** Bump OG_VERSION after changing the share image design, so apps that saved an older image fetch it again. */
+const OG_VERSION = "2";
+
 export function ogImageUrl(title: string, eyebrow?: string) {
   const q = new URLSearchParams({ title });
   if (eyebrow) q.set("eyebrow", eyebrow);
+  q.set("v", OG_VERSION);
   return `/og?${q.toString()}`;
 }
 

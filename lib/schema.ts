@@ -1,5 +1,6 @@
 import type { SiteSettings } from "@/lib/content";
 import { absoluteUrl, siteUrl } from "@/lib/site";
+import { ogImageUrl } from "@/lib/seo";
 
 /** 1000 Brickell Ave, Miami. */
 const GEO = { latitude: 25.7645, longitude: -80.1923 };
@@ -19,7 +20,7 @@ export function siteSchema(settings: SiteSettings) {
         name: settings.name,
         url: siteUrl,
         logo: { "@type": "ImageObject", url: absoluteUrl("/brand/ttr-logo-on-light.svg") },
-        image: absoluteUrl("/og?title=Get%20found%20everywhere%20your%20customers%20search."),
+        image: absoluteUrl(ogImageUrl("Get found everywhere your customers search.", "Digital marketing agency")),
         description:
           "Digital marketing agency for local businesses: SEO, AI search optimization, Google Ads, Meta Ads, websites, social media, GoHighLevel CRM and AI agents.",
         telephone: settings.phoneHref.replace(/^tel:/, ""),
