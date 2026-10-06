@@ -2,6 +2,7 @@ import type { CmsPage } from "@/lib/pages";
 import { PageHero } from "@/components/sections/PageHero";
 import { PortableBody } from "@/components/blog/PortableBody";
 import { TriangleAlert } from "lucide-react";
+import { showPlaceholders } from "@/lib/placeholders";
 
 /** Simple, readable layout for legal pages. */
 export function LegalTemplate({ page, fallbackTitle, href, settings }: { page: CmsPage | null; fallbackTitle: string; href: string; settings: { phone: string; phoneHref: string; email: string } }) {
@@ -12,14 +13,17 @@ export function LegalTemplate({ page, fallbackTitle, href, settings }: { page: C
       <section data-surface="light" className="surface-light py-16 lg:py-24">
         <div className="container-page">
           <div className="mx-auto max-w-[68ch]">
-            <p role="note" className="flex gap-3 rounded-2xl border border-amber-700/20 bg-amber-50 p-5 text-small text-amber-950">
-              <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
-              <span>
-                <strong className="font-semibold">Starter text.</strong> This page is a plain-English starting point and must be reviewed by a lawyer before
-                it is relied on.
-              </span>
-            </p>
-            <div className="mt-12">
+            {/* Review note, shown only when placeholders are shown (previews). */}
+            {showPlaceholders ? (
+              <p role="note" className="mb-12 flex gap-3 rounded-2xl border border-amber-700/20 bg-amber-50 p-5 text-small text-amber-950">
+                <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+                <span>
+                  <strong className="font-semibold">Starter text.</strong> This page is a plain-English starting point and must be reviewed by a lawyer
+                  before it is relied on.
+                </span>
+              </p>
+            ) : null}
+            <div>
               {page?.body?.length ? (
                 <PortableBody value={page.body} />
               ) : (

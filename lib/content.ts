@@ -8,7 +8,7 @@ import { sanityFetch } from "@/lib/sanity/fetch";
    breaks when a field is empty.
 
    Placeholders use the [ALL CAPS] format and render as clearly marked tags.
-   Set NEXT_PUBLIC_HIDE_PLACEHOLDERS=true to hide blocks that still contain one.
+   Blocks that still contain one are hidden unless NEXT_PUBLIC_SHOW_PLACEHOLDERS=true.
    ========================================================================== */
 
 export { isPlaceholder, showPlaceholders } from "@/lib/placeholders";

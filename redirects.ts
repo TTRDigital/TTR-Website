@@ -28,6 +28,17 @@ const map: [string, string][] = [
   ["/digital-marketing-services/health-care", "/dental-marketing"],
   ["/digital-marketing-services/automotive", "/services"],
   ["/digital-marketing-services/insurance", "/services"],
+  // WordPress system URLs that search engines have indexed
+  ["/sitemap_index.xml", "/sitemap.xml"],
+  ["/page-sitemap.xml", "/sitemap.xml"],
+  ["/post-sitemap.xml", "/sitemap.xml"],
+  ["/category-sitemap.xml", "/sitemap.xml"],
+  ["/wp-sitemap.xml", "/sitemap.xml"],
+  ["/feed", "/blog"],
+  ["/blog/feed", "/blog"],
+  ["/category/:slug*", "/blog"],
+  ["/tag/:slug*", "/blog"],
+  ["/author/:slug*", "/about"],
   // Slugs from the earlier build of this site
   ["/services/websites", "/services/website-design"],
   ["/services/social-media", "/services/social-media-marketing"],
