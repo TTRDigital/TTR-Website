@@ -13,7 +13,7 @@ export const revalidate = 300;
 const fallbackSeo = {
   title: "Contact TTR Digital Marketing | Free Growth Audit",
   description:
-    "Call (786) 460-1311 or send a message to book your free growth audit. TTR Digital Marketing, 1000 Brickell Ave Ste 715, Miami, FL.",
+    "Call (786) 460-1311 or send a message to book your free growth audit with TTR Digital Marketing. We reply within one business day.",
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -42,8 +42,8 @@ const faqs = [
   { question: "Is the audit really free?", answer: "Yes. There is no cost and no obligation. No sales pitches, just honest, practical feedback." },
   { question: "How quickly will I hear back?", answer: "Within one business day. If it is urgent, call us at (786) 460-1311 during business hours." },
   {
-    question: "Do you only work with businesses in Miami?",
-    answer: "Our office is on Brickell Avenue in Miami and many of our clients are in South Florida, but we work with businesses across the United States.",
+    question: "Can we work together remotely?",
+    answer: "Yes. Your audit, strategy calls and monthly reports all happen over video, phone and email, so working with us is easy wherever your business is.",
   },
 ];
 
@@ -66,7 +66,7 @@ export default async function ContactPage() {
         intro={
           <p>
             {cms?.intro ||
-              "Call us, stop by our Brickell office or send a quick message. We will get back to you within one business day to set up your free growth audit."}
+              "Call us or send a quick message. We will get back to you within one business day to set up your free growth audit."}
           </p>
         }
       />

@@ -1,4 +1,4 @@
-import { ArrowRight, MapPin, Phone, Star } from "lucide-react";
+import { ArrowRight, Layers, Phone, Star } from "lucide-react";
 import type { HomeContent, SiteSettings } from "@/lib/content";
 import { isPlaceholder, showPlaceholders } from "@/lib/placeholders";
 import { Button } from "@/components/ui/Button";
@@ -59,8 +59,8 @@ export function Hero({ hero, settings }: { hero: HomeContent["hero"]; settings: 
               helping local businesses grow
             </li>
             <li className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
-              Brickell, Miami office
+              <Layers className="h-4 w-4 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
+              8 services, one team
             </li>
             {showRating ? (
               <li className="flex flex-wrap items-center gap-x-2 gap-y-1">

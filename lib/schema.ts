@@ -21,7 +21,7 @@ export function siteSchema(settings: SiteSettings) {
         logo: { "@type": "ImageObject", url: absoluteUrl("/brand/ttr-logo-on-light.svg") },
         image: absoluteUrl("/og?title=Get%20found%20everywhere%20your%20customers%20search."),
         description:
-          "Miami digital marketing agency for local businesses: SEO, AI search optimization, Google Ads, Meta Ads, websites, social media, GoHighLevel CRM and AI agents.",
+          "Digital marketing agency for local businesses: SEO, AI search optimization, Google Ads, Meta Ads, websites, social media, GoHighLevel CRM and AI agents.",
         telephone: settings.phoneHref.replace(/^tel:/, ""),
         email: settings.email,
         foundingDate: String(settings.foundedYear),
@@ -44,7 +44,7 @@ export function siteSchema(settings: SiteSettings) {
             closes: "17:00",
           },
         ],
-        areaServed: [{ "@type": "City", name: "Miami" }, { "@type": "Country", name: "United States" }],
+        areaServed: { "@type": "Country", name: "United States" },
         knowsAbout: ["Local SEO", "AI search optimization", "Google Ads", "Meta Ads", "Website design", "Social media marketing", "GoHighLevel CRM", "AI agents"],
         sameAs: settings.social.map((s) => s.href),
       },

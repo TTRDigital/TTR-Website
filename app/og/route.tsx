@@ -50,7 +50,7 @@ export async function GET(request: Request) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={logo} width={381} height={48} alt="" />
-          <div style={{ fontSize: 24, color: "#B9B3C9" }}>Miami · (786) 460-1311</div>
+          <div style={{ fontSize: 24, color: "#B9B3C9" }}>ttrdigitalmarketing.com · (786) 460-1311</div>
         </div>
       </div>
     ),

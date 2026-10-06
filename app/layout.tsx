@@ -32,7 +32,7 @@ const fontScript = `(function(){var d=document.documentElement,k="ttr-fonts";fun
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "TTR Digital Marketing | Miami Digital Marketing Agency",
+    default: "TTR Digital Marketing | Digital Marketing Agency",
     template: "%s | TTR Digital Marketing",
   },
   description:

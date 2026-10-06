@@ -4,12 +4,12 @@ import type { HomeContent } from "@/lib/content";
 
 export const fallbackHome: HomeContent = {
   seo: {
-    title: "Miami Digital Marketing Agency for Local Businesses | TTR",
+    title: "Digital Marketing Agency for Local Businesses | TTR",
     description:
       "TTR Digital Marketing gets local businesses found on Google, ads and AI search, then turns that traffic into booked calls. Free growth audit.",
   },
   hero: {
-    eyebrow: "Miami digital marketing agency",
+    eyebrow: "Digital marketing agency",
     heading: "Get found everywhere your customers search.",
     text: "Google, Maps, ads and AI answers like ChatGPT and Gemini. We put your business in front of people ready to buy, then turn those searches into booked calls.",
   },
@@ -204,9 +204,9 @@ export const fallbackHome: HomeContent = {
           "Mostly local service businesses. Dental practices and home service companies like HVAC, plumbing, roofing and cleaning are our main focus, along with other small and mid-sized businesses that live on calls and booked appointments.",
       },
       {
-        question: "Do you only work with businesses in Miami?",
+        question: "Can we work together remotely?",
         answer:
-          "Our office is on Brickell Avenue in Miami and many of our clients are in South Florida, but we work with businesses across the United States.",
+          "Yes. Your audit, strategy calls and monthly reports all happen over video, phone and email, so working with us is easy wherever your business is.",
       },
     ],
   },
