@@ -61,10 +61,32 @@ Pages refresh from Sanity every 5 minutes on their own. The webhook makes a publ
 
 Without the secret the route answers `503` and the site keeps its 5 minute refresh.
 
+## Leads (GoHighLevel)
+
+The form posts to `/api/lead`. It checks the fields, the hidden honeypot, the time taken to fill the form and a per-IP limit, then:
+
+1. Upserts the contact in GoHighLevel (API v2, `services.leadconnectorhq.com`) with source "Website form".
+2. Adds the tags `website-lead` and `service-<interest>`, for example `service-google-ads`. Existing tags are kept.
+3. Adds a note with the message, the page, the referrer and any UTM, gclid or fbclid values.
+
+To switch it on, add these in Vercel and redeploy:
+
+- `GHL_LOCATION_ID`: GoHighLevel > Settings > Business Profile > Location ID.
+- `GHL_API_KEY`: GoHighLevel > Settings > Private Integrations > create a token with the **contacts.write** scope.
+
+Without them, the form still shows success and the server logs a warning, but leads are not saved anywhere. If GoHighLevel rejects a lead, the visitor sees a message asking them to call.
+
+## Analytics
+
+- `NEXT_PUBLIC_GA_ID` (GA4) and/or `NEXT_PUBLIC_GTM_ID` (Tag Manager). Nothing loads when both are empty. When set, the tags load on the visitor's first scroll, tap or key press, so they never slow the first paint.
+- Events: `generate_lead` (form sent), `click_to_call` (any phone link), `audit_cta_click` (any "free audit" button). Each carries `link_url`, `link_text` and `page_path`; `generate_lead` carries `service` and `form`.
+- If you set both IDs, events go to GA4 directly and to the GTM dataLayer. Do not also forward them to GA4 inside GTM, or they will be counted twice.
+- In GA4, mark `generate_lead` as a key event (Admin > Events).
+- Vercel Analytics and Speed Insights load automatically on Vercel. Turn them on once in the Vercel project (Analytics tab and Speed Insights tab).
+
 ## Optional next steps
 
 - **Live preview in the studio** (Presentation tool and draft mode) needs a Viewer token in `SANITY_API_READ_TOKEN`. It is not set up yet.
-- **GoHighLevel** and **analytics** turn on when their variables in `.env.example` are filled in.
 
 ## Scripts
 
