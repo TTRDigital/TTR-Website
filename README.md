@@ -103,7 +103,7 @@ If both are set, both run and the lead counts as saved when either succeeds. Wit
 - Schema: Organization + ProfessionalService and WebSite on every page (`lib/schema.ts`), Service on service pages, FAQPage wherever there are FAQs, Article on posts, and BreadcrumbList everywhere except the home page.
 - `/sitemap.xml`, `/robots.txt` (search and AI crawlers allowed; `/cms`, `/api` and `/thank-you` blocked) and `/llms.txt` are generated from the same content.
 - Old WordPress URLs redirect with a single 301. See `REDIRECTS.md`.
-- Canonicals, the sitemap, schema and share images use `https://ttrdigitalmarketing.com` (`lib/site.ts`). Set `NEXT_PUBLIC_SITE_URL` only to use a different domain.
+- Canonicals, the sitemap, schema and share images use `https://www.ttrdigitalmarketing.com` (`lib/site.ts`; www is the primary domain in Vercel and the bare domain redirects to it). Set `NEXT_PUBLIC_SITE_URL` only to use a different domain.
 
 ## Security headers
 
