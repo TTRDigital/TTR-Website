@@ -54,7 +54,7 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
   if (!page) notFound();
   const related = page.related.map((r) => services.find((s) => s.slug === r)).filter((s) => !!s);
   const testimonial = page.testimonial;
-  const showProofPlaceholder = !!page.proof.placeholder && showPlaceholders;
+  const showProofPlaceholder = !!page.proof.placeholder && (showPlaceholders || !isPlaceholder(page.proof.placeholder));
   const hasProof = !!page.proof.stats?.length || !!testimonial || showProofPlaceholder;
 
   const audiences = [
