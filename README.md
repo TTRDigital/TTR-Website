@@ -84,6 +84,19 @@ Without them, the form still shows success and the server logs a warning, but le
 - In GA4, mark `generate_lead` as a key event (Admin > Events).
 - Vercel Analytics and Speed Insights load automatically on Vercel. Turn them on once in the Vercel project (Analytics tab and Speed Insights tab).
 
+## SEO
+
+- Each page sets its title, description, canonical, Open Graph and Twitter tags through `pageMetadata` in `lib/seo.ts`. SEO fields in the studio override the built-in ones.
+- Share images are generated at `/og?title=...&eyebrow=...` in the brand style. A blog post with a real cover image uses the cover instead.
+- Schema: Organization + ProfessionalService and WebSite on every page (`lib/schema.ts`), Service on service pages, FAQPage wherever there are FAQs, Article on posts, and BreadcrumbList everywhere except the home page.
+- `/sitemap.xml`, `/robots.txt` (search and AI crawlers allowed; `/cms`, `/api` and `/thank-you` blocked) and `/llms.txt` are generated from the same content.
+- Old WordPress URLs redirect with a single 301. See `REDIRECTS.md`.
+- **When the domain moves to Vercel**, set `NEXT_PUBLIC_SITE_URL=https://ttrdigitalmarketing.com` in Vercel and redeploy. Canonicals, the sitemap, schema and share images all use it. Until then they point at `ttr-website-nu.vercel.app`.
+
+## Security headers
+
+`next.config.ts` sends a Content Security Policy that only allows this site, Google Analytics / Tag Manager, Vercel Analytics and Sanity images. If you add a tag in GTM that loads another script (for example the Meta Pixel), add its domain to the `csp` list there, or the browser will block it. The studio at `/cms` is excluded from the CSP.
+
 ## Optional next steps
 
 - **Live preview in the studio** (Presentation tool and draft mode) needs a Viewer token in `SANITY_API_READ_TOKEN`. It is not set up yet.
