@@ -49,8 +49,11 @@ export default async function ServicesPage() {
         }
       />
 
-      <section aria-label="All services" className="relative pb-24 lg:pb-32">
+      <section aria-labelledby="all-services-title" className="relative pb-24 lg:pb-32">
         <div className="container-page">
+          <h2 id="all-services-title" className="sr-only">
+            All services
+          </h2>
           <ServiceGrid services={services} />
         </div>
       </section>

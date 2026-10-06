@@ -73,7 +73,7 @@ export function Footer({ settings, services, nav }: { settings: SiteSettings; se
                 <ul className="mt-5 space-y-1">
                   {col.links.map((l) => (
                     <li key={l.label + l.href}>
-                      <Link href={l.href} className="inline-flex min-h-9 items-center text-small text-body transition-colors hover:text-hi">
+                      <Link href={l.href} className="inline-flex min-h-11 items-center text-small text-body transition-colors hover:text-hi">
                         <span className="link-underline">{l.label}</span>
                       </Link>
                     </li>
@@ -85,8 +85,8 @@ export function Footer({ settings, services, nav }: { settings: SiteSettings; se
 
           <div className="lg:col-span-3">
             <h2 className="font-sans text-micro font-medium uppercase tracking-[0.18em] text-meta">Visit or call</h2>
-            <address className="mt-5 space-y-4 text-small not-italic text-body">
-              <a href={settings.mapsUrl} target="_blank" rel="noopener noreferrer" className="flex gap-3 hover:text-hi">
+            <address className="mt-5 space-y-1 text-small not-italic text-body">
+              <a href={settings.mapsUrl} target="_blank" rel="noopener noreferrer" className="flex min-h-11 gap-3 py-2.5 hover:text-hi">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
                 <span>
                   {settings.street}
@@ -95,15 +95,15 @@ export function Footer({ settings, services, nav }: { settings: SiteSettings; se
                   <span className="sr-only"> (opens Google Maps)</span>
                 </span>
               </a>
-              <a href={settings.phoneHref} data-track="click_to_call" className="flex gap-3 hover:text-hi">
-                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
+              <a href={settings.phoneHref} data-track="click_to_call" className="flex min-h-11 items-center gap-3 hover:text-hi">
+                <Phone className="h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
                 {settings.phone}
               </a>
-              <a href={`mailto:${settings.email}`} className="flex gap-3 break-all hover:text-hi">
-                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
+              <a href={`mailto:${settings.email}`} className="flex min-h-11 items-center gap-3 break-all hover:text-hi">
+                <Mail className="h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
                 {settings.email}
               </a>
-              <p className="flex gap-3">
+              <p className="flex gap-3 py-2.5">
                 <Clock className="mt-0.5 h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
                 {settings.hoursText}
               </p>
@@ -124,13 +124,13 @@ export function Footer({ settings, services, nav }: { settings: SiteSettings; se
           </p>
           <ul className="flex gap-6">
             <li>
-              <Link href="/privacy" className="link-underline hover:text-hi">
-                Privacy Policy
+              <Link href="/privacy" className="inline-flex min-h-11 items-center hover:text-hi">
+                <span className="link-underline">Privacy Policy</span>
               </Link>
             </li>
             <li>
-              <Link href="/terms" className="link-underline hover:text-hi">
-                Terms of Service
+              <Link href="/terms" className="inline-flex min-h-11 items-center hover:text-hi">
+                <span className="link-underline">Terms of Service</span>
               </Link>
             </li>
           </ul>

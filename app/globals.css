@@ -77,6 +77,13 @@
   }
 }
 
+/* Inter is applied after the load event (fontScript in app/layout.tsx).
+   Until then text uses its metric-matched fallback, so the font never
+   delays first paint. Unlayered so it beats next/font's variable class. */
+html:not([data-fonts]) {
+  --font-inter: var(--font-inter-fallback);
+}
+
 @theme inline {
   --color-ink-950: var(--ink-950);
   --color-ink-900: var(--ink-900);
@@ -380,7 +387,9 @@
   padding-bottom: 2px;
 }
 .link-underline:hover,
-.link-underline:focus-visible {
+.link-underline:focus-visible,
+a:hover > .link-underline,
+a:focus-visible > .link-underline {
   background-size: 100% 1px;
 }
 

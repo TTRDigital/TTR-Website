@@ -95,7 +95,7 @@ export default async function ContactPage() {
                         href={c.href}
                         data-track={c.track}
                         {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                        className="mt-1 block text-hi [overflow-wrap:anywhere] hover:text-lavender-200"
+                        className="flex min-h-11 items-center text-hi [overflow-wrap:anywhere] hover:text-lavender-200"
                       >
                         {c.value}
                         {c.external ? <span className="sr-only"> (opens Google Maps)</span> : null}

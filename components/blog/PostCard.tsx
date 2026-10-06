@@ -10,7 +10,7 @@ export function PostCard({ post, light = false, priority = false }: { post: Post
   return (
     <article
       data-reveal
-      className={`group/post relative flex h-full flex-col overflow-hidden rounded-[20px] border transition-[transform,border-color,box-shadow] duration-300 ease-out-expo hover:-translate-y-1 ${
+      className={`group/post relative flex h-full flex-col overflow-hidden rounded-[20px] border transition-[transform,border-color,box-shadow] duration-300 ease-out-expo hover:-translate-y-1 has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-violet-400 ${
         light
           ? "border-line-light bg-white hover:shadow-[0_24px_60px_-30px_rgb(14_11_22/0.35)]"
           : "border-line bg-ink-900 hover:border-violet-400/35 hover:shadow-[0_24px_60px_-30px_rgb(138_47_208/0.7)]"

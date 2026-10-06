@@ -195,9 +195,9 @@ export default async function AboutPage() {
                 {settings.hoursText}
               </li>
               <li data-reveal className="flex gap-3">
-                <Phone className="mt-1 h-5 w-5 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
-                <a href={settings.phoneHref} data-track="click_to_call" className="link-underline text-hi">
-                  {settings.phone}
+                <Phone className="mt-3 h-5 w-5 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
+                <a href={settings.phoneHref} data-track="click_to_call" className="inline-flex min-h-11 items-center text-hi">
+                  <span className="link-underline">{settings.phone}</span>
                 </a>
               </li>
             </ul>

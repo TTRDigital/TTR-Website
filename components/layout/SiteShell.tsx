@@ -10,6 +10,7 @@ import { CursorGlow } from "@/components/motion/CursorGlow";
 import { AttributionCapture } from "@/components/forms/AttributionCapture";
 import { HydrationSignal } from "@/components/motion/HydrationSignal";
 import { SiteAnalytics } from "@/components/analytics/SiteAnalytics";
+import { analyticsEnabled } from "@/lib/analytics";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -39,7 +40,7 @@ export async function SiteShell({ children }: { children: ReactNode }) {
       <SmoothScroll />
       <AttributionCapture />
       <HydrationSignal />
-      <SiteAnalytics />
+      {analyticsEnabled ? <SiteAnalytics /> : null}
       {onVercel ? (
         <>
           <Analytics />

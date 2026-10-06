@@ -238,8 +238,8 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
           <div className="container-page">
             <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
               <SectionHeading id="posts-title" eyebrow="From the blog" title="Read more about it." />
-              <Link href="/blog" className="link-underline shrink-0 text-hi">
-                All articles
+              <Link href="/blog" className="inline-flex min-h-11 shrink-0 items-center self-start text-hi">
+                <span className="link-underline">All articles</span>
               </Link>
             </div>
             <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3 lg:gap-5">

@@ -9,6 +9,7 @@ import { getServiceSummaries, getSiteSettings } from "@/lib/content";
 import { formatDate, headingsOf } from "@/lib/text";
 import { absoluteUrl } from "@/lib/site";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { MaskedWords } from "@/components/ui/SectionHeading";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Button } from "@/components/ui/Button";
 import { ServiceIcon } from "@/components/ui/icons";
@@ -106,8 +107,9 @@ export default async function PostPage(props: PageProps<"/blog/[slug]">) {
           />
           <div className="mx-auto mt-10 max-w-4xl lg:mt-14">
             {category ? <p className="hero-fade text-micro font-medium uppercase tracking-[0.18em] text-lavender-200">{category.title}</p> : null}
-            <h1 id="page-title" className="hero-fade mt-4 text-[clamp(2.25rem,1.5rem+3vw,4rem)] font-semibold leading-[1.05] tracking-[-0.03em]" style={{ "--d": "60ms" } as React.CSSProperties}>
-              {post.title}
+            {/* Masked word reveal, not a fade: the title is never transparent, so it paints (and counts as LCP) at once. */}
+            <h1 id="page-title" className="hero-words mt-4 text-[clamp(2.25rem,1.5rem+3vw,4rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
+              <MaskedWords text={post.title} />
             </h1>
             <p className="hero-fade mt-6 text-lead text-body" style={{ "--d": "160ms" } as React.CSSProperties}>
               {post.excerpt}
