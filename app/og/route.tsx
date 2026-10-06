@@ -9,6 +9,13 @@ import { ImageResponse } from "next/og";
 
 const clamp = (s: string | null, max: number) => (s ?? "").replace(/\s+/g, " ").trim().slice(0, max);
 
+/*
+ * Location wording is never drawn, even when an old link that apps saved
+ * still asks for it (e.g. "Miami digital marketing agency").
+ */
+const LOCATION = /\b(miami|brickell|south florida|florida)\b/i;
+const clean = (s: string, fallback: string) => (LOCATION.test(s) ? fallback : s);
+
 let assets: Promise<{ font: Buffer; logo: string }> | undefined;
 function loadAssets() {
   assets ??= Promise.all([
@@ -20,8 +27,9 @@ function loadAssets() {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const title = clamp(searchParams.get("title"), 90) || "Get found everywhere your customers search.";
-  const eyebrow = clamp(searchParams.get("eyebrow"), 40) || "TTR Digital Marketing";
+  const defaultTitle = "Get found everywhere your customers search.";
+  const title = clean(clamp(searchParams.get("title"), 90) || defaultTitle, defaultTitle);
+  const eyebrow = clean(clamp(searchParams.get("eyebrow"), 40) || "Digital marketing agency", "Digital marketing agency");
   const { font, logo } = await loadAssets();
   const size = title.length > 60 ? 60 : title.length > 40 ? 68 : 76;
 
@@ -58,7 +66,8 @@ export async function GET(request: Request) {
       width: 1200,
       height: 630,
       fonts: [{ name: "Sora", data: font, weight: 600, style: "normal" }],
-      headers: { "Cache-Control": "public, max-age=86400, s-maxage=31536000, stale-while-revalidate=86400" },
+      // A day at most, so a design change reaches share previews quickly.
+      headers: { "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=3600" },
     },
   );
 }
