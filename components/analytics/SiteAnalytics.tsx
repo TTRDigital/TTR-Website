@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import { useEffect, useState, type ComponentType } from "react";
 import { GA_ID, GTM_ID, analyticsEnabled, flushQueuedEvents, track, type TrackEvent } from "@/lib/analytics";
 
 const INTERACTIONS = ["pointerdown", "keydown", "touchstart", "scroll"] as const;
@@ -12,13 +11,21 @@ const TRACKED = new Set<string>(["click_to_call", "audit_cta_click", "generate_l
  * Clicks are tracked by delegation: every tel: link fires click_to_call and
  * any element with data-track="<event>" fires that event.
  */
+type Tags = { GoogleAnalytics: ComponentType<{ gaId: string }>; GoogleTagManager: ComponentType<{ gtmId: string }> };
+
 export function SiteAnalytics() {
-  const [load, setLoad] = useState(false);
+  const [tags, setTags] = useState<Tags | null>(null);
+  const load = !!tags;
 
   useEffect(() => {
     if (!analyticsEnabled) return;
-    const start = () => setLoad(true);
-    for (const e of INTERACTIONS) window.addEventListener(e, start, { once: true, passive: true, capture: true });
+    // The tag components are fetched only now, so pages without a visitor
+    // interaction never download them.
+    const start = () => {
+      for (const e of INTERACTIONS) window.removeEventListener(e, start, { capture: true });
+      import("@next/third-parties/google").then((m) => setTags({ GoogleAnalytics: m.GoogleAnalytics, GoogleTagManager: m.GoogleTagManager }));
+    };
+    for (const e of INTERACTIONS) window.addEventListener(e, start, { passive: true, capture: true });
     return () => {
       for (const e of INTERACTIONS) window.removeEventListener(e, start, { capture: true });
     };
@@ -56,11 +63,11 @@ export function SiteAnalytics() {
     return () => document.removeEventListener("click", onClick, { capture: true });
   }, []);
 
-  if (!load) return null;
+  if (!tags) return null;
   return (
     <>
-      {GTM_ID ? <GoogleTagManager gtmId={GTM_ID} /> : null}
-      {GA_ID ? <GoogleAnalytics gaId={GA_ID} /> : null}
+      {GTM_ID ? <tags.GoogleTagManager gtmId={GTM_ID} /> : null}
+      {GA_ID ? <tags.GoogleAnalytics gaId={GA_ID} /> : null}
     </>
   );
 }
