@@ -61,10 +61,45 @@ Pages refresh from Sanity every 5 minutes on their own. The webhook makes a publ
 
 Without the secret the route answers `503` and the site keeps its 5 minute refresh.
 
+## Leads (GoHighLevel)
+
+The form posts to `/api/lead`. It checks the fields, the hidden honeypot, the time taken to fill the form and a per-IP limit, then:
+
+1. Upserts the contact in GoHighLevel (API v2, `services.leadconnectorhq.com`) with source "Website form".
+2. Adds the tags `website-lead` and `service-<interest>`, for example `service-google-ads`. Existing tags are kept.
+3. Adds a note with the message, the page, the referrer and any UTM, gclid or fbclid values.
+
+To switch it on, add these in Vercel and redeploy:
+
+- `GHL_LOCATION_ID`: GoHighLevel > Settings > Business Profile > Location ID.
+- `GHL_API_KEY`: GoHighLevel > Settings > Private Integrations > create a token with the **contacts.write** scope.
+
+Without them, the form still shows success and the server logs a warning, but leads are not saved anywhere. If GoHighLevel rejects a lead, the visitor sees a message asking them to call.
+
+## Analytics
+
+- `NEXT_PUBLIC_GA_ID` (GA4) and/or `NEXT_PUBLIC_GTM_ID` (Tag Manager). Nothing loads when both are empty. When set, the tags load on the visitor's first scroll, tap or key press, so they never slow the first paint.
+- Events: `generate_lead` (form sent), `click_to_call` (any phone link), `audit_cta_click` (any "free audit" button). Each carries `link_url`, `link_text` and `page_path`; `generate_lead` carries `service` and `form`.
+- If you set both IDs, events go to GA4 directly and to the GTM dataLayer. Do not also forward them to GA4 inside GTM, or they will be counted twice.
+- In GA4, mark `generate_lead` as a key event (Admin > Events).
+- Vercel Analytics and Speed Insights load automatically on Vercel. Turn them on once in the Vercel project (Analytics tab and Speed Insights tab).
+
+## SEO
+
+- Each page sets its title, description, canonical, Open Graph and Twitter tags through `pageMetadata` in `lib/seo.ts`. SEO fields in the studio override the built-in ones.
+- Share images are generated at `/og?title=...&eyebrow=...` in the brand style. A blog post with a real cover image uses the cover instead.
+- Schema: Organization + ProfessionalService and WebSite on every page (`lib/schema.ts`), Service on service pages, FAQPage wherever there are FAQs, Article on posts, and BreadcrumbList everywhere except the home page.
+- `/sitemap.xml`, `/robots.txt` (search and AI crawlers allowed; `/cms`, `/api` and `/thank-you` blocked) and `/llms.txt` are generated from the same content.
+- Old WordPress URLs redirect with a single 301. See `REDIRECTS.md`.
+- **When the domain moves to Vercel**, set `NEXT_PUBLIC_SITE_URL=https://ttrdigitalmarketing.com` in Vercel and redeploy. Canonicals, the sitemap, schema and share images all use it. Until then they point at `ttr-website-nu.vercel.app`.
+
+## Security headers
+
+`next.config.ts` sends a Content Security Policy that only allows this site, Google Analytics / Tag Manager, Vercel Analytics and Sanity images. If you add a tag in GTM that loads another script (for example the Meta Pixel), add its domain to the `csp` list there, or the browser will block it. The studio at `/cms` is excluded from the CSP.
+
 ## Optional next steps
 
 - **Live preview in the studio** (Presentation tool and draft mode) needs a Viewer token in `SANITY_API_READ_TOKEN`. It is not set up yet.
-- **GoHighLevel** and **analytics** turn on when their variables in `.env.example` are filled in.
 
 ## Scripts
 

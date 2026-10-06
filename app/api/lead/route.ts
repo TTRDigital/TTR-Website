@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { leadSchema } from "@/lib/lead";
 import { MIN_FILL_MS } from "@/lib/lead-options";
+import { ghlConfig, sendLeadToGhl } from "@/lib/ghl";
 
 /* Best-effort per-IP rate limit (per server instance). */
 const WINDOW_MS = 10 * 60 * 1000;
@@ -44,15 +45,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  const locationId = process.env.GHL_LOCATION_ID;
-  const apiKey = process.env.GHL_API_KEY;
-  if (!locationId || !apiKey) {
+  const cfg = ghlConfig();
+  if (!cfg) {
     console.warn(
       "[lead] GHL_LOCATION_ID / GHL_API_KEY not set. Lead accepted but NOT sent to GoHighLevel. Add both env vars in Vercel to switch it on.",
     );
     return NextResponse.json({ ok: true, delivered: false });
   }
 
-  // GoHighLevel delivery is wired up in Phase 5.
-  return NextResponse.json({ ok: true, delivered: false });
+  try {
+    await sendLeadToGhl(cfg, lead);
+    return NextResponse.json({ ok: true, delivered: true });
+  } catch (err) {
+    // The contact could not be saved. Tell the visitor so they can call
+    // instead of believing a lost lead went through.
+    console.error("[lead] GoHighLevel delivery failed", err);
+    return NextResponse.json({ ok: false, error: "We could not send your request. Please call us instead." }, { status: 502 });
+  }
 }

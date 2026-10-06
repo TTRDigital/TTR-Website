@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { getSiteSettings } from "@/lib/content";
 import { getCmsPage } from "@/lib/pages";
@@ -17,11 +18,13 @@ const fallbackSeo = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const cms = await getCmsPage("contact");
-  return {
-    title: { absolute: cms?.seo?.title || fallbackSeo.title },
+  return pageMetadata({
+    title: cms?.seo?.title || fallbackSeo.title,
     description: cms?.seo?.description || fallbackSeo.description,
-    alternates: { canonical: "/contact" },
-  };
+    path: "/contact",
+    ogTitle: cms?.heading || "Let's talk about growing your business.",
+    eyebrow: "Contact",
+  });
 }
 
 const steps = [

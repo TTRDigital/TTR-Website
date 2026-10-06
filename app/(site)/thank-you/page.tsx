@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowUpRight, Check, Phone } from "lucide-react";
 import { getSiteSettings } from "@/lib/content";
 import { Button } from "@/components/ui/Button";
 
-export const metadata: Metadata = {
-  title: "Thank you",
+export const metadata: Metadata = pageMetadata({
+  title: "Thank You | TTR Digital Marketing",
   description: "We received your request for a free growth audit.",
-  robots: { index: false, follow: true },
-  alternates: { canonical: "/thank-you" },
-};
+  path: "/thank-you",
+  noIndex: true,
+});
 
 const next = [
   { title: "We review your request", text: "A real person looks at your business and your website before we reach out." },
