@@ -20,6 +20,7 @@ export const leadSchema = z.object({
   elapsed_ms: z.number().int().nonnegative().optional(),
   // attribution
   page_url: optionalText(1000),
+  landing_page: optionalText(1000),
   referrer: optionalText(1000),
   utm_source: optionalText(200),
   utm_medium: optionalText(200),

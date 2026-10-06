@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { leadSchema } from "@/lib/lead";
 import { MIN_FILL_MS } from "@/lib/lead-options";
-import { ghlConfig, sendLeadToGhl } from "@/lib/ghl";
+import { ghlConfig, ghlWebhookUrl, sendLeadToGhl, sendLeadToWebhook } from "@/lib/ghl";
 
 /* Best-effort per-IP rate limit (per server instance). */
 const WINDOW_MS = 10 * 60 * 1000;
@@ -45,21 +45,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
+  const webhookUrl = ghlWebhookUrl();
   const cfg = ghlConfig();
-  if (!cfg) {
+  if (!webhookUrl && !cfg) {
     console.warn(
-      "[lead] GHL_LOCATION_ID / GHL_API_KEY not set. Lead accepted but NOT sent to GoHighLevel. Add both env vars in Vercel to switch it on.",
+      "[lead] No delivery configured. Lead accepted but NOT sent anywhere. Add GHL_WEBHOOK_URL (or GHL_LOCATION_ID + GHL_API_KEY) in Vercel.",
     );
     return NextResponse.json({ ok: true, delivered: false });
   }
 
-  try {
-    await sendLeadToGhl(cfg, lead);
-    return NextResponse.json({ ok: true, delivered: true });
-  } catch (err) {
-    // The contact could not be saved. Tell the visitor so they can call
-    // instead of believing a lost lead went through.
-    console.error("[lead] GoHighLevel delivery failed", err);
-    return NextResponse.json({ ok: false, error: "We could not send your request. Please call us instead." }, { status: 502 });
-  }
+  // Webhook and API run side by side; the lead counts as saved if either works.
+  const jobs: { name: string; run: Promise<unknown> }[] = [];
+  if (webhookUrl) jobs.push({ name: "webhook", run: sendLeadToWebhook(webhookUrl, lead) });
+  if (cfg) jobs.push({ name: "api", run: sendLeadToGhl(cfg, lead) });
+  const results = await Promise.allSettled(jobs.map((j) => j.run));
+  results.forEach((r, i) => {
+    if (r.status === "rejected") console.error(`[lead] GoHighLevel ${jobs[i].name} delivery failed`, r.reason);
+  });
+
+  if (results.some((r) => r.status === "fulfilled")) return NextResponse.json({ ok: true, delivered: true });
+  // Nothing saved the lead. Tell the visitor so they can call instead of
+  // believing a lost lead went through.
+  return NextResponse.json({ ok: false, error: "We could not send your request. Please call us instead." }, { status: 502 });
 }
