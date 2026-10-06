@@ -5,7 +5,7 @@ import { ghlConfig, ghlWebhookUrl, sendLeadToGhl, sendLeadToWebhook } from "@/li
 
 /* Best-effort per-IP rate limit (per server instance). */
 const WINDOW_MS = 10 * 60 * 1000;
-const MAX_PER_WINDOW = 5;
+const MAX_PER_WINDOW = 10;
 const hits = new Map<string, number[]>();
 
 function rateLimited(ip: string) {
@@ -39,11 +39,16 @@ export async function POST(request: Request) {
   }
   const lead = parsed.data;
 
-  // Spam: honeypot filled or submitted faster than a person could type.
-  // Answer "ok" so bots learn nothing, but do not forward the lead.
-  if (lead.company_fax || (lead.elapsed_ms !== undefined && lead.elapsed_ms < MIN_FILL_MS)) {
+  // Spam: drop only when both signals agree (hidden field filled AND sent
+  // faster than a person can type). One signal alone can be autofill or a
+  // fast typist, so that lead is delivered with a "suspected-spam" tag.
+  const trapFilled = !!lead.hp_ttr;
+  const tooFast = lead.elapsed_ms !== undefined && lead.elapsed_ms < MIN_FILL_MS;
+  if (trapFilled && tooFast) {
+    console.warn("[lead] Dropped as spam (hidden field filled and sent in", lead.elapsed_ms, "ms)", lead.email);
     return NextResponse.json({ ok: true });
   }
+  const spamCheck = trapFilled ? "suspect: hidden field filled" : tooFast ? `suspect: sent in ${lead.elapsed_ms} ms` : "ok";
 
   const webhookUrl = ghlWebhookUrl();
   const cfg = ghlConfig();
@@ -56,14 +61,17 @@ export async function POST(request: Request) {
 
   // Webhook and API run side by side; the lead counts as saved if either works.
   const jobs: { name: string; run: Promise<unknown> }[] = [];
-  if (webhookUrl) jobs.push({ name: "webhook", run: sendLeadToWebhook(webhookUrl, lead) });
-  if (cfg) jobs.push({ name: "api", run: sendLeadToGhl(cfg, lead) });
+  if (webhookUrl) jobs.push({ name: "webhook", run: sendLeadToWebhook(webhookUrl, lead, spamCheck) });
+  if (cfg) jobs.push({ name: "api", run: sendLeadToGhl(cfg, lead, spamCheck) });
   const results = await Promise.allSettled(jobs.map((j) => j.run));
   results.forEach((r, i) => {
     if (r.status === "rejected") console.error(`[lead] GoHighLevel ${jobs[i].name} delivery failed`, r.reason);
   });
 
-  if (results.some((r) => r.status === "fulfilled")) return NextResponse.json({ ok: true, delivered: true });
+  if (results.some((r) => r.status === "fulfilled")) {
+    console.info("[lead] Delivered via", jobs.filter((_, i) => results[i].status === "fulfilled").map((j) => j.name).join(" + "), spamCheck === "ok" ? "" : `(${spamCheck})`);
+    return NextResponse.json({ ok: true, delivered: true });
+  }
   // Nothing saved the lead. Tell the visitor so they can call instead of
   // believing a lost lead went through.
   return NextResponse.json({ ok: false, error: "We could not send your request. Please call us instead." }, { status: 502 });

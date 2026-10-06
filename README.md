@@ -69,7 +69,7 @@ The form posts to `/api/lead`. It checks the fields, the hidden honeypot, the ti
 
 Every valid submission is POSTed as JSON to the GoHighLevel workflow webhook. Set the URL in Vercel as `GHL_WEBHOOK_URL`; it is not in the code because this repository is public and anyone with the URL could send fake leads. Fields sent:
 
-`source`, `submitted_at`, `name`, `first_name`, `last_name`, `email`, `phone` (E.164, e.g. `+17865550199`), `phone_raw`, `business_name`, `website`, `service_interest`, `message`, `tags` (`website-lead`, `service-<interest>`), `page_url` (where the form was sent), `landing_page` (first page of the visit), `referrer`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `gclid`, `fbclid`.
+`source`, `submitted_at`, `name`, `first_name`, `last_name`, `email`, `phone` (E.164, e.g. `+17865550199`), `phone_raw`, `business_name`, `website`, `service_interest`, `message`, `tags` (`website-lead`, `service-<interest>`, plus `suspected-spam` when flagged), `spam_check` (`ok` or the reason), `page_url` (where the form was sent), `landing_page` (first page of the visit), `referrer`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `gclid`, `fbclid`.
 
 In the workflow, map these to contact fields with "Create/Update Contact", then add your notifications.
 
@@ -83,6 +83,8 @@ To switch it on, add these in Vercel and redeploy:
 
 - `GHL_LOCATION_ID`: GoHighLevel > Settings > Business Profile > Location ID.
 - `GHL_API_KEY`: GoHighLevel > Settings > Private Integrations > create a token with the **contacts.write** scope.
+
+**Spam handling.** A submission is dropped only when both spam signals agree: the hidden field is filled *and* it was sent in under 2.5 seconds. With just one signal (browser autofill can fill hidden fields, and some people type fast) the lead is still delivered, with the tag `suspected-spam` and a `spam_check` field saying why. Every drop and delivery is logged in Vercel (Logs, search `[lead]`).
 
 If both are set, both run and the lead counts as saved when either succeeds. With neither set, the form still shows success and the server logs a warning, but leads are not saved anywhere. If every configured delivery fails (after one retry), the visitor sees a message asking them to call.
 
