@@ -28,7 +28,7 @@ Before every push: `npm run build` must pass. Also run `npx tsc --noEmit` and `n
 
 Sanity wins field by field. An empty field in the studio shows the built-in copy, so a half-filled document never breaks a page.
 
-Text in `[SQUARE BRACKETS]` is a placeholder. Set `NEXT_PUBLIC_HIDE_PLACEHOLDERS=true` to hide every block that still contains one.
+Text in `[SQUARE BRACKETS]` is a placeholder. Any block that still contains one is hidden on the site; fill the field in `/cms` and it appears. Set `NEXT_PUBLIC_SHOW_PLACEHOLDERS=true` (on a preview only) to see them marked up.
 
 ## One-time Sanity setup
 
@@ -103,7 +103,7 @@ If both are set, both run and the lead counts as saved when either succeeds. Wit
 - Schema: Organization + ProfessionalService and WebSite on every page (`lib/schema.ts`), Service on service pages, FAQPage wherever there are FAQs, Article on posts, and BreadcrumbList everywhere except the home page.
 - `/sitemap.xml`, `/robots.txt` (search and AI crawlers allowed; `/cms`, `/api` and `/thank-you` blocked) and `/llms.txt` are generated from the same content.
 - Old WordPress URLs redirect with a single 301. See `REDIRECTS.md`.
-- **When the domain moves to Vercel**, set `NEXT_PUBLIC_SITE_URL=https://ttrdigitalmarketing.com` in Vercel and redeploy. Canonicals, the sitemap, schema and share images all use it. Until then they point at `ttr-website-nu.vercel.app`.
+- Canonicals, the sitemap, schema and share images use `https://ttrdigitalmarketing.com` (`lib/site.ts`). Set `NEXT_PUBLIC_SITE_URL` only to use a different domain.
 
 ## Security headers
 
