@@ -15,14 +15,19 @@ const sora = Sora({
   weight: ["500", "600"],
 });
 
-// Body font is not preloaded: text paints at once with a metric-matched
-// fallback, which keeps bandwidth free for the hero poster (LCP).
+// Body font is deferred: text paints at once in the metric-matched fallback
+// and Inter is applied after the load event (see fontScript), so it never
+// competes with the first paint or the hero image. Later pages in the same
+// session use it straight away from cache.
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
   preload: false,
 });
+
+const interFallback = inter.style.fontFamily.split(",").slice(1).join(",").trim() || "sans-serif";
+const fontScript = `(function(){var d=document.documentElement,k="ttr-fonts";function on(){d.setAttribute("data-fonts","");try{sessionStorage.setItem(k,"1")}catch(e){}}try{if(sessionStorage.getItem(k)){on();return}}catch(e){}if(document.readyState==="complete")on();else addEventListener("load",function(){setTimeout(on,0)},{once:true})})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -45,7 +50,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-US" className={`${sora.variable} ${inter.variable}`} suppressHydrationWarning>
+    <html
+      lang="en-US"
+      className={`${sora.variable} ${inter.variable}`}
+      style={{ "--font-inter-fallback": interFallback } as React.CSSProperties}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: fontScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

@@ -77,6 +77,13 @@
   }
 }
 
+/* Inter is applied after the load event (fontScript in app/layout.tsx).
+   Until then text uses its metric-matched fallback, so the font never
+   delays first paint. Unlayered so it beats next/font's variable class. */
+html:not([data-fonts]) {
+  --font-inter: var(--font-inter-fallback);
+}
+
 @theme inline {
   --color-ink-950: var(--ink-950);
   --color-ink-900: var(--ink-900);
