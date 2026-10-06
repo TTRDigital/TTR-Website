@@ -33,10 +33,11 @@ function detectTier(): Tier {
 }
 
 /**
- * Hero visual: a static poster renders immediately in the same box the
- * canvas will use (zero layout shift). The WebGL scene loads later:
- * on desktop after the page is idle, on phones after the first touch or
- * scroll. Then the canvas cross-fades in over the poster.
+ * Hero visual: a poster renders immediately in the same box the canvas
+ * will use (zero layout shift) and slowly turns and breathes with CSS, so
+ * the orb moves from the first frame. The WebGL scene loads later: on
+ * desktop when the page is idle, on phones on the first touch or scroll or
+ * 3 seconds after load. Then the canvas cross-fades in over the poster.
  */
 export function HeroVisual({ posterSrc, heroId }: { posterSrc: string; heroId: string }) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -46,6 +47,16 @@ export function HeroVisual({ posterSrc, heroId }: { posterSrc: string; heroId: s
   const [ready, setReady] = useState(false);
   const [inView, setInView] = useState(true);
   const [tabVisible, setTabVisible] = useState(true);
+  // The poster starts turning only after the page has loaded: a moving
+  // image at first paint would delay how fast the page counts as loaded (LCP).
+  const [posterMoving, setPosterMoving] = useState(false);
+
+  useEffect(() => {
+    const go = () => requestAnimationFrame(() => setPosterMoving(true));
+    if (document.readyState === "complete") go();
+    else window.addEventListener("load", go, { once: true });
+    return () => window.removeEventListener("load", go);
+  }, []);
 
   /* Schedule the 3D load. */
   useEffect(() => {
@@ -75,16 +86,28 @@ export function HeroVisual({ posterSrc, heroId }: { posterSrc: string; heroId: s
       };
     }
 
-    // Lite (phones and modest hardware): wait for real engagement.
+    // Lite (phones and modest hardware): start on the first touch or scroll,
+    // or by itself shortly after the page has loaded, whichever comes first.
+    // The poster is already animating, so the swap is seamless.
     const events = ["pointerdown", "touchstart", "scroll", "keydown", "wheel"] as const;
-    const onEngage = () => {
-      events.forEach((e) => window.removeEventListener(e, onEngage));
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const start = () => {
+      events.forEach((e) => window.removeEventListener(e, start));
+      window.removeEventListener("load", arm);
+      if (timer) clearTimeout(timer);
       load();
     };
-    events.forEach((e) => window.addEventListener(e, onEngage, { passive: true, once: true }));
+    function arm() {
+      timer = setTimeout(start, 3000);
+    }
+    events.forEach((e) => window.addEventListener(e, start, { passive: true, once: true }));
+    if (document.readyState === "complete") arm();
+    else window.addEventListener("load", arm, { once: true });
     return () => {
       cancelled = true;
-      events.forEach((e) => window.removeEventListener(e, onEngage));
+      if (timer) clearTimeout(timer);
+      window.removeEventListener("load", arm);
+      events.forEach((e) => window.removeEventListener(e, start));
     };
   }, []);
 
@@ -139,7 +162,7 @@ export function HeroVisual({ posterSrc, heroId }: { posterSrc: string; heroId: s
         fetchPriority="high"
         quality={50}
         sizes="(min-width: 1024px) 56vw, (min-width: 640px) 92vw, 88vw"
-        className={`object-contain transition-opacity duration-[900ms] ease-out-expo ${ready ? "opacity-0" : "opacity-100"}`}
+        className={`${posterMoving ? "orb-poster " : ""}object-contain transition-opacity duration-[900ms] ease-out-expo ${ready ? "opacity-0" : "opacity-100"}`}
       />
       {Scene && tier ? (
         <div className={`absolute inset-0 transition-opacity duration-[900ms] ease-out-expo ${ready ? "opacity-100" : "opacity-0"}`}>

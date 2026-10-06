@@ -254,7 +254,8 @@ export function GrowthCore({
     const mats = [coreMat.current, ringAMat.current, ringBMat.current];
     mats.forEach((m, i) => {
       if (!m) return;
-      m.uniforms.uTime.value = time + (i === 2 ? 7 : 0);
+      // Shader time runs ~2x real time so the surface visibly ripples and flows.
+      m.uniforms.uTime.value = time * 2 + (i === 2 ? 7 : 0);
       m.uniforms.uScroll.value = sc;
       m.uniforms.uPixelRatio.value = scale * sizeBoost;
     });
@@ -262,8 +263,12 @@ export function GrowthCore({
 
     const g = group.current;
     if (g) {
-      g.rotation.x = 0.18 + tilt.current.x + sc * 0.55;
-      g.rotation.y = time * 0.035 + tilt.current.y;
+      // Steady spin plus a slow sway and breath, so it is alive on touch
+      // screens too (no pointer to follow there).
+      g.rotation.x = 0.18 + Math.sin(time * 0.45) * 0.09 + tilt.current.x + sc * 0.55;
+      g.rotation.y = time * 0.16 + tilt.current.y;
+      g.rotation.z = Math.sin(time * 0.3) * 0.05;
+      g.scale.setScalar(1 + Math.sin(time * 0.9) * 0.025);
     }
   });
 
