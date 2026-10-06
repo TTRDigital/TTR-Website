@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: home.seo.description,
     path: "/",
     ogTitle: "Get found everywhere your customers search.",
-    eyebrow: "Miami digital marketing agency",
+    eyebrow: "Digital marketing agency",
   });
 }
 

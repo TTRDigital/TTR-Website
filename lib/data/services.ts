@@ -36,9 +36,9 @@ export const servicePages: ServicePage[] = [
     slug: "seo",
     title: "SEO",
     seo: {
-      title: "Local SEO Services in Miami | TTR Digital Marketing",
+      title: "Local SEO Services | TTR Digital Marketing",
       description:
-        "Local SEO that gets your business into Google search and the map pack, then turns that traffic into calls. Free SEO audit from our Miami team.",
+        "Local SEO that gets your business into Google search and the map pack, then turns that traffic into calls. Free SEO audit from our team.",
     },
     eyebrow: "Local SEO",
     heading: "SEO that puts you in front of local customers ready to call.",
@@ -135,7 +135,7 @@ export const servicePages: ServicePage[] = [
     seo: {
       title: "Search Everywhere Optimization: Google + AI Search | TTR",
       description:
-        "Get found and recommended in Google, Maps, AI Overviews, ChatGPT, Gemini and Perplexity. Search Everywhere Optimization from TTR in Miami.",
+        "Get found and recommended in Google, Maps, AI Overviews, ChatGPT, Gemini and Perplexity. Search Everywhere Optimization from TTR.",
     },
     eyebrow: "AI search and SEO",
     heading: "Be the business Google, Maps and AI tools recommend.",
@@ -154,7 +154,7 @@ export const servicePages: ServicePage[] = [
       {
         heading: "Why classic SEO is no longer enough",
         paragraphs: [
-          "More searches now end with an AI summary instead of a click. A customer asks ChatGPT for a good dentist nearby, or reads Google's AI Overview for \"best roofer in Miami\", and calls one of the names they see. If your business is not part of that answer, you can lose leads even when you rank well in the regular results.",
+          "More searches now end with an AI summary instead of a click. A customer asks ChatGPT for a good dentist nearby, or reads Google's AI Overview for \"best roofer near me\", and calls one of the names they see. If your business is not part of that answer, you can lose leads even when you rank well in the regular results.",
         ],
       },
       {
@@ -224,9 +224,9 @@ export const servicePages: ServicePage[] = [
     slug: "google-ads",
     title: "Google Ads",
     seo: {
-      title: "Google Ads Management in Miami | TTR Digital Marketing",
+      title: "Google Ads Management Services | TTR Digital Marketing",
       description:
-        "Google Ads built for calls and booked appointments. Search, Local Services Ads and Performance Max managed by TTR Digital in Miami.",
+        "Google Ads built for calls and booked appointments. Search, Local Services Ads and Performance Max managed by TTR Digital Marketing.",
     },
     eyebrow: "Google Ads management",
     heading: "Google Ads that bring calls, not just clicks.",
@@ -395,9 +395,9 @@ export const servicePages: ServicePage[] = [
     slug: "website-design",
     title: "Website Design",
     seo: {
-      title: "Website Design for Local Businesses in Miami | TTR",
+      title: "Website Design for Local Businesses | TTR",
       description:
-        "Fast, mobile-first websites built to rank on Google and turn visitors into calls and form leads. Website design from TTR Digital in Miami.",
+        "Fast, mobile-first websites built to rank on Google and turn visitors into calls and form leads. Website design from TTR Digital Marketing.",
     },
     eyebrow: "Website design",
     heading: "Websites built to rank and turn visitors into customers.",
@@ -480,7 +480,7 @@ export const servicePages: ServicePage[] = [
     seo: {
       title: "Social Media Marketing for Local Businesses | TTR",
       description:
-        "Social media management that keeps your profiles active, builds trust and supports your ads and SEO. Social media marketing from TTR in Miami.",
+        "Social media management that keeps your profiles active, builds trust and supports your ads and SEO. Social media marketing from TTR.",
     },
     eyebrow: "Social media marketing",
     heading: "Social media that builds trust before people call.",
@@ -566,7 +566,7 @@ export const servicePages: ServicePage[] = [
     seo: {
       title: "GoHighLevel CRM Setup and Automation | TTR Digital",
       description:
-        "GoHighLevel setup, pipelines and automatic text and email follow up so no lead slips through. CRM and automation services from TTR in Miami.",
+        "GoHighLevel setup, pipelines and automatic text and email follow up so no lead slips through. CRM and automation services from TTR.",
     },
     eyebrow: "GoHighLevel CRM",
     heading: "GoHighLevel CRM so no lead slips through the cracks.",
@@ -650,7 +650,7 @@ export const servicePages: ServicePage[] = [
     seo: {
       title: "AI Agents for Calls, Chat and Booking | TTR Digital",
       description:
-        "AI agents that answer calls and chats, qualify leads and book appointments 24/7, connected to your CRM. AI automation from TTR in Miami.",
+        "AI agents that answer calls and chats, qualify leads and book appointments 24/7, connected to your CRM. AI automation from TTR.",
     },
     eyebrow: "AI agents",
     heading: "AI agents that answer, qualify and book around the clock.",

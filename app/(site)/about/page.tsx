@@ -14,9 +14,9 @@ import { SocialIcon } from "@/components/ui/icons";
 export const revalidate = 300;
 
 const fallbackSeo = {
-  title: "About TTR Digital Marketing | Miami Marketing Agency",
+  title: "About TTR Digital Marketing | Digital Marketing Agency",
   description:
-    "Meet TTR Digital Marketing, a Miami digital marketing agency helping local businesses grow since 2015 with SEO, ads, websites, CRM and AI.",
+    "Meet TTR Digital Marketing, a digital marketing agency helping local businesses grow since 2015 with SEO, ads, websites, CRM and AI.",
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -57,7 +57,7 @@ export default async function AboutPage() {
         intro={
           <p>
             {cms?.intro ||
-              `TTR Digital Marketing is a digital marketing agency on Brickell Avenue in Miami. Since ${settings.foundedYear} we have helped local businesses get found online and turn that attention into calls and booked jobs, with SEO, ads, websites, CRM and AI working together.`}
+              `TTR Digital Marketing is a digital marketing agency for local businesses. Since ${settings.foundedYear} we have helped local businesses get found online and turn that attention into calls and booked jobs, with SEO, ads, websites, CRM and AI working together.`}
           </p>
         }
         actions={
@@ -70,7 +70,7 @@ export default async function AboutPage() {
           <dl className="glass grid grid-cols-2 gap-px overflow-hidden rounded-[24px]">
             {[
               { k: `Since ${settings.foundedYear}`, v: "Helping local businesses grow" },
-              { k: "Brickell, Miami", v: "Our office on Brickell Avenue" },
+              { k: "Remote-friendly", v: "Calls, audits and reports wherever you are" },
               { k: "8 services", v: "One team, one system" },
               { k: "1 business day", v: "To reply to every audit request" },
             ].map((f) => (
@@ -182,8 +182,8 @@ export default async function AboutPage() {
             <SectionHeading
               id="office-title"
               eyebrow="Our office"
-              title="Based in Brickell, working across the US."
-              intro="Our office is on Brickell Avenue in Miami. Many of our clients are in South Florida, and we work with local businesses across the United States."
+              title="Visit us or talk to us from anywhere."
+              intro="Stop by our office, or work with us entirely by video, phone and email. Your audit, strategy calls and monthly reports work the same either way."
             />
             <ul className="mt-10 space-y-4 text-body">
               <li data-reveal className="flex gap-3">

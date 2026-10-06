@@ -73,7 +73,7 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
           serviceType: page.title,
           description: page.intro,
           url: absoluteUrl(`/services/${slug}`),
-          areaServed: [{ "@type": "City", name: "Miami" }, { "@type": "Country", name: "United States" }],
+          areaServed: { "@type": "Country", name: "United States" },
           provider: { "@type": "ProfessionalService", "@id": absoluteUrl("/#organization"), name: settings.name },
         }}
       />

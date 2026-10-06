@@ -12,7 +12,7 @@ export async function GET() {
 
   const text = `# ${settings.name}
 
-> ${settings.name} is a digital marketing agency in Miami, Florida, founded in ${settings.foundedYear}. We help local service businesses, especially dental practices and home service companies (HVAC, plumbing, roofing, electrical), get found on Google, Google Maps, Google Ads, Meta and in AI answers from ChatGPT, Gemini, Perplexity and Google AI Overviews, then turn that attention into booked calls with GoHighLevel CRM and AI agents.
+> ${settings.name} is a digital marketing agency founded in ${settings.foundedYear}. We help local service businesses, especially dental practices and home service companies (HVAC, plumbing, roofing, electrical), get found on Google, Google Maps, Google Ads, Meta and in AI answers from ChatGPT, Gemini, Perplexity and Google AI Overviews, then turn that attention into booked calls with GoHighLevel CRM and AI agents.
 
 ## Contact
 

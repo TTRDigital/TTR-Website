@@ -44,7 +44,7 @@ export function RankingMockup() {
         {[
           ["dentist near me", "Map pack"],
           ["emergency AC repair", "Top 3"],
-          ["best plumber in Miami", "AI answer"],
+          ["best plumber near me", "AI answer"],
         ].map(([q, tag], i) => (
           <li
             key={q}

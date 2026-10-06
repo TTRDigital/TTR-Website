@@ -31,7 +31,7 @@ function AiAnswerMockup() {
         ))}
       </div>
       <p className="mock-row ml-auto mt-4 w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white/[0.07] px-3.5 py-2.5 text-small text-hi" style={{ "--r": 0 } as React.CSSProperties}>
-        Who is a good emergency dentist near Brickell?
+        Who is a good emergency dentist near me?
       </p>
       <div className="mock-row mt-3 rounded-2xl rounded-bl-md border border-line bg-ink-950/70 p-3.5" style={{ "--r": 1 } as React.CSSProperties}>
         <p className="text-small text-body">Based on reviews and up-to-date business info, a few options:</p>
