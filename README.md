@@ -63,7 +63,17 @@ Without the secret the route answers `503` and the site keeps its 5 minute refre
 
 ## Leads (GoHighLevel)
 
-The form posts to `/api/lead`. It checks the fields, the hidden honeypot, the time taken to fill the form and a per-IP limit, then:
+The form posts to `/api/lead`. It checks the fields, the hidden honeypot, the time taken to fill the form and a per-IP limit, then delivers the lead in one or both of these ways.
+
+### Inbound webhook (`GHL_WEBHOOK_URL`)
+
+Every valid submission is POSTed as JSON to the GoHighLevel workflow webhook. Set the URL in Vercel as `GHL_WEBHOOK_URL`; it is not in the code because this repository is public and anyone with the URL could send fake leads. Fields sent:
+
+`source`, `submitted_at`, `name`, `first_name`, `last_name`, `email`, `phone` (E.164, e.g. `+17865550199`), `phone_raw`, `business_name`, `website`, `service_interest`, `message`, `tags` (`website-lead`, `service-<interest>`), `page_url` (where the form was sent), `landing_page` (first page of the visit), `referrer`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `gclid`, `fbclid`.
+
+In the workflow, map these to contact fields with "Create/Update Contact", then add your notifications.
+
+### API (`GHL_LOCATION_ID` + `GHL_API_KEY`, optional)
 
 1. Upserts the contact in GoHighLevel (API v2, `services.leadconnectorhq.com`) with source "Website form".
 2. Adds the tags `website-lead` and `service-<interest>`, for example `service-google-ads`. Existing tags are kept.
@@ -74,7 +84,7 @@ To switch it on, add these in Vercel and redeploy:
 - `GHL_LOCATION_ID`: GoHighLevel > Settings > Business Profile > Location ID.
 - `GHL_API_KEY`: GoHighLevel > Settings > Private Integrations > create a token with the **contacts.write** scope.
 
-Without them, the form still shows success and the server logs a warning, but leads are not saved anywhere. If GoHighLevel rejects a lead, the visitor sees a message asking them to call.
+If both are set, both run and the lead counts as saved when either succeeds. With neither set, the form still shows success and the server logs a warning, but leads are not saved anywhere. If every configured delivery fails (after one retry), the visitor sees a message asking them to call.
 
 ## Analytics
 

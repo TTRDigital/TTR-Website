@@ -100,6 +100,7 @@ export function LeadForm({
           company_fax: honeypot,
           elapsed_ms: Date.now() - startedAt.current,
           page_url: window.location.href,
+          landing_page: attribution.landing_page ?? "",
           referrer: attribution.referrer ?? document.referrer,
           ...Object.fromEntries(attributionKeys.map((k) => [k, attribution[k] ?? ""])),
         }),

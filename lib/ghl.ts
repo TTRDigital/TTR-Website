@@ -81,6 +81,61 @@ function noteFor(lead: LeadInput) {
   return lines.filter((l) => l !== null).join("\n");
 }
 
+/** Inbound webhook URL (GoHighLevel workflow trigger). Kept in env: the repo is public. */
+export function ghlWebhookUrl(): string | null {
+  const url = process.env.GHL_WEBHOOK_URL?.trim();
+  return url && /^https?:\/\//.test(url) ? url : null;
+}
+
+/** Posts every field of the lead, flat, to the webhook. Throws if it is not accepted. */
+export async function sendLeadToWebhook(url: string, lead: LeadInput) {
+  const [firstName, ...rest] = lead.name.trim().split(/\s+/);
+  const payload = {
+    source: "Website form",
+    submitted_at: new Date().toISOString(),
+    name: lead.name.trim(),
+    first_name: firstName,
+    last_name: rest.join(" "),
+    email: lead.email.trim(),
+    phone: normalizePhone(lead.phone),
+    phone_raw: lead.phone.trim(),
+    business_name: lead.business.trim(),
+    website: lead.website || "",
+    service_interest: lead.service,
+    message: lead.message?.trim() || "",
+    tags: ["website-lead", `service-${slugify(lead.service)}`],
+    page_url: lead.page_url || "",
+    landing_page: lead.landing_page || "",
+    referrer: lead.referrer || "",
+    utm_source: lead.utm_source || "",
+    utm_medium: lead.utm_medium || "",
+    utm_campaign: lead.utm_campaign || "",
+    utm_term: lead.utm_term || "",
+    utm_content: lead.utm_content || "",
+    gclid: lead.gclid || "",
+    fbclid: lead.fbclid || "",
+  };
+  let lastError: unknown;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(8000),
+        cache: "no-store",
+      });
+      if (res.ok) return;
+      lastError = new Error(`Lead webhook answered ${res.status}: ${(await res.text().catch(() => "")).slice(0, 300)}`);
+      if (res.status !== 429 && res.status < 500) break;
+    } catch (err) {
+      lastError = err;
+    }
+    await new Promise((r) => setTimeout(r, 600));
+  }
+  throw lastError;
+}
+
 /**
  * Upserts the contact, adds the tags (tags endpoint adds without replacing
  * existing ones) and attaches a note. Throws only if the contact itself could
