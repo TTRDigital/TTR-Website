@@ -35,7 +35,7 @@ These items conflict between the spec, the live site and Sanity. Each one has a 
 - Social: Facebook `facebook.com/TTRDigitalMarketing`, Instagram `instagram.com/ttrdigitalmarketing`, LinkedIn `linkedin.com/company/ttr-digital-marketing`. The old schema also lists Twitter/X `twitter.com/ttrdigital` (unverified, possibly inactive) and Yelp (Fairfax listing).
 - Kia Khamoushi: LinkedIn `linkedin.com/in/kia-kham`. Headshot exists but is only 212x211 px.
 
-**Pages (101 URLs in the WordPress sitemaps)**
+**Pages (100 URLs in the WordPress sitemaps)**
 - Core: home, about-us, about-kia, contact-us, audit, thank-you, thank-you-free-audit, privacy-policy, terms-of-service, sitemap, testing-page, digital-marketing-referral-program.
 - Services: `/digital-marketing-services/` plus `seo`, `ppc`, `social-media`, and industry pages `health-care`, `automotive`, `insurance`.
 - 78 location pages under `/al/ /ca/ /dc/ /fl/ /ga/ /il/ /ma/ /md/ /ny/ /pa/ /va/`.
@@ -191,7 +191,7 @@ Every placeholder renders as a clearly marked tag on the preview, e.g. `[CLIENT 
 | `/services/websites`, `/services/social-media` (earlier build slugs) | `/services/website-design`, `/services/social-media-marketing` |
 
 <details>
-<summary>Full list of the 101 old URLs</summary>
+<summary>Full list of the 100 old URLs</summary>
 
 ```
 /
