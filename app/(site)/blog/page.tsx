@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -12,11 +13,13 @@ import { GeneratedCover } from "@/components/blog/GeneratedCover";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: { absolute: "Marketing Blog for Local Business Owners | TTR Digital" },
+export const metadata: Metadata = pageMetadata({
+  title: "Marketing Blog for Local Business Owners | TTR Digital",
   description: "Plain-English guides on SEO, AI search, Google Ads, social media and lead follow up for local business owners, from TTR Digital Marketing.",
-  alternates: { canonical: "/blog" },
-};
+  path: "/blog",
+  ogTitle: "Plain-English marketing guides for local business owners.",
+  eyebrow: "Blog",
+});
 
 export default async function BlogPage() {
   const [posts, categories, settings] = await Promise.all([getAllPosts(), getCategories(), getSiteSettings()]);

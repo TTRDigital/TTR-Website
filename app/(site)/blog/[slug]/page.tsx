@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -29,19 +30,18 @@ export async function generateMetadata(props: PageProps<"/blog/[slug]">): Promis
   const post = await getPost(slug);
   if (!post) return {};
   const description = post.seo?.description ?? post.excerpt;
-  return {
-    title: { absolute: post.seo?.title ?? `${post.title} | TTR Digital` },
+  return pageMetadata({
+    title: post.seo?.title ?? `${post.title} | TTR Digital`,
     description,
-    alternates: { canonical: `/blog/${slug}` },
-    openGraph: {
-      type: "article",
-      title: post.title,
-      description,
-      publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt ?? undefined,
-      authors: post.author?.name ? [post.author.name] : undefined,
-    },
-  };
+    path: `/blog/${slug}`,
+    ogTitle: post.title,
+    eyebrow: post.categories[0]?.title ?? "Blog",
+    image: post.cover ? { url: post.cover.url, width: post.cover.width, height: post.cover.height, alt: post.cover.alt } : null,
+    type: "article",
+    publishedTime: post.publishedAt,
+    modifiedTime: post.updatedAt ?? undefined,
+    authors: post.author?.name ? [post.author.name] : undefined,
+  });
 }
 
 export default async function PostPage(props: PageProps<"/blog/[slug]">) {

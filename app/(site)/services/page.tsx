@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { ArrowRight, BarChart3, Layers, Sparkles, Zap } from "lucide-react";
 import { getServiceSummaries, getSiteSettings } from "@/lib/content";
 import { PageHero } from "@/components/sections/PageHero";
@@ -9,12 +10,14 @@ import { Button } from "@/components/ui/Button";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: { absolute: "Digital Marketing Services for Local Businesses | TTR" },
+export const metadata: Metadata = pageMetadata({
+  title: "Digital Marketing Services for Local Businesses | TTR",
   description:
     "SEO, AI search, Google Ads, Meta Ads, websites, social media, GoHighLevel CRM and AI agents. One team that turns searches into booked calls.",
-  alternates: { canonical: "/services" },
-};
+  path: "/services",
+  ogTitle: "Digital marketing services that turn searches into booked calls.",
+  eyebrow: "Services",
+});
 
 const why = [
   { icon: Layers, title: "One team, one system", text: "SEO, ads, your website, your CRM and AI agents work together instead of in separate silos." },

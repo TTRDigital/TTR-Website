@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { getHomeContent, getServiceSummaries, getSiteSettings, getTestimonials } from "@/lib/content";
 import { Hero } from "@/components/home/Hero";
 import { LogoRow } from "@/components/home/LogoRow";
@@ -17,11 +18,13 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const home = await getHomeContent();
-  return {
-    title: { absolute: home.seo.title },
+  return pageMetadata({
+    title: home.seo.title,
     description: home.seo.description,
-    alternates: { canonical: "/" },
-  };
+    path: "/",
+    ogTitle: "Get found everywhere your customers search.",
+    eyebrow: "Miami digital marketing agency",
+  });
 }
 
 export default async function HomePage() {

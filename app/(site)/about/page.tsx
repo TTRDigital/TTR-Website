@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import { ArrowRight, BarChart3, Clock, Eye, Layers, MapPin, Phone, Sparkles } from "lucide-react";
 import { getSiteSettings } from "@/lib/content";
@@ -20,11 +21,13 @@ const fallbackSeo = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const cms = await getCmsPage("about");
-  return {
-    title: { absolute: cms?.seo?.title || fallbackSeo.title },
+  return pageMetadata({
+    title: cms?.seo?.title || fallbackSeo.title,
     description: cms?.seo?.description || fallbackSeo.description,
-    alternates: { canonical: "/about" },
-  };
+    path: "/about",
+    ogTitle: cms?.heading || "Meet your new growth partner.",
+    eyebrow: "About TTR",
+  });
 }
 
 const different = [
