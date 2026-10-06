@@ -81,14 +81,20 @@ function noteFor(lead: LeadInput) {
   return lines.filter((l) => l !== null).join("\n");
 }
 
+/** "suspected-spam" is added when one spam signal fired, so nothing real is ever lost. */
+function leadTags(lead: LeadInput, spamCheck: string) {
+  return ["website-lead", `service-${slugify(lead.service)}`, ...(spamCheck === "ok" ? [] : ["suspected-spam"])];
+}
+
 /** Inbound webhook URL (GoHighLevel workflow trigger). Kept in env: the repo is public. */
 export function ghlWebhookUrl(): string | null {
-  const url = process.env.GHL_WEBHOOK_URL?.trim();
+  // Tolerate a value pasted with surrounding quotes or spaces.
+  const url = process.env.GHL_WEBHOOK_URL?.trim().replace(/^["']|["']$/g, "").trim();
   return url && /^https?:\/\//.test(url) ? url : null;
 }
 
 /** Posts every field of the lead, flat, to the webhook. Throws if it is not accepted. */
-export async function sendLeadToWebhook(url: string, lead: LeadInput) {
+export async function sendLeadToWebhook(url: string, lead: LeadInput, spamCheck = "ok") {
   const [firstName, ...rest] = lead.name.trim().split(/\s+/);
   const payload = {
     source: "Website form",
@@ -103,7 +109,8 @@ export async function sendLeadToWebhook(url: string, lead: LeadInput) {
     website: lead.website || "",
     service_interest: lead.service,
     message: lead.message?.trim() || "",
-    tags: ["website-lead", `service-${slugify(lead.service)}`],
+    tags: leadTags(lead, spamCheck),
+    spam_check: spamCheck,
     page_url: lead.page_url || "",
     landing_page: lead.landing_page || "",
     referrer: lead.referrer || "",
@@ -141,7 +148,7 @@ export async function sendLeadToWebhook(url: string, lead: LeadInput) {
  * existing ones) and attaches a note. Throws only if the contact itself could
  * not be saved; tag or note failures are logged.
  */
-export async function sendLeadToGhl(cfg: GhlConfig, lead: LeadInput) {
+export async function sendLeadToGhl(cfg: GhlConfig, lead: LeadInput, spamCheck = "ok") {
   const [firstName, ...rest] = lead.name.trim().split(/\s+/);
   const upsert = await call<{ contact?: { id?: string } }>(cfg, "/contacts/upsert", {
     locationId: cfg.locationId,
@@ -157,7 +164,7 @@ export async function sendLeadToGhl(cfg: GhlConfig, lead: LeadInput) {
   const contactId = upsert.contact?.id;
   if (!contactId) throw new Error("GoHighLevel upsert returned no contact id");
 
-  const tags = ["website-lead", `service-${slugify(lead.service)}`];
+  const tags = leadTags(lead, spamCheck);
   const results = await Promise.allSettled([
     call(cfg, `/contacts/${contactId}/tags`, { tags }),
     call(cfg, `/contacts/${contactId}/notes`, { body: noteFor(lead) }),

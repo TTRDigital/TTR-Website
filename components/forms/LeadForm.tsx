@@ -89,7 +89,7 @@ export function LeadForm({
     } catch {
       /* ignore */
     }
-    const honeypot = (formRef.current?.elements.namedItem("company_fax") as HTMLInputElement | null)?.value ?? "";
+    const honeypot = (formRef.current?.elements.namedItem("hp_ttr") as HTMLInputElement | null)?.value ?? "";
 
     try {
       const res = await fetch("/api/lead", {
@@ -97,7 +97,7 @@ export function LeadForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
-          company_fax: honeypot,
+          hp_ttr: honeypot,
           elapsed_ms: Date.now() - startedAt.current,
           page_url: window.location.href,
           landing_page: attribution.landing_page ?? "",
@@ -228,10 +228,12 @@ export function LeadForm({
         ) : null}
       </div>
 
-      {/* Honeypot: hidden from people, tempting to bots */}
+      {/* Honeypot: hidden from people, tempting to bots. The name and label
+          match nothing browser autofill or password managers know, so a real
+          visitor's autofill never fills it. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
-        <label htmlFor={`${uid}-company_fax`}>Company fax</label>
-        <input id={`${uid}-company_fax`} name="company_fax" type="text" tabIndex={-1} autoComplete="off" />
+        <label htmlFor={`${uid}-hp_ttr`}>Leave this field empty</label>
+        <input id={`${uid}-hp_ttr`} name="hp_ttr" type="text" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" />
       </div>
 
       {status === "error" ? (

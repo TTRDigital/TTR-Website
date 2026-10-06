@@ -16,7 +16,7 @@ export const leadSchema = z.object({
   service: z.enum(serviceOptions, { message: "Please choose a service." }),
   message: optionalText(3000),
   // anti-spam
-  company_fax: optionalText(200),
+  hp_ttr: optionalText(200),
   elapsed_ms: z.number().int().nonnegative().optional(),
   // attribution
   page_url: optionalText(1000),
