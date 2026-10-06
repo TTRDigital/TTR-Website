@@ -30,8 +30,8 @@ export function ServicesBento({ intro, services }: { intro: HomeContent["service
       <div className="container-page">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <SectionHeading id="services-title" eyebrow={intro.eyebrow} title={intro.heading} intro={intro.intro} />
-          <Link href="/services" data-reveal className="link-underline shrink-0 self-start text-hi lg:self-auto">
-            View all services
+          <Link href="/services" data-reveal className="inline-flex min-h-11 shrink-0 items-center self-start text-hi lg:self-auto">
+            <span className="link-underline">View all services</span>
           </Link>
         </div>
 

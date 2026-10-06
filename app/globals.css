@@ -380,7 +380,9 @@
   padding-bottom: 2px;
 }
 .link-underline:hover,
-.link-underline:focus-visible {
+.link-underline:focus-visible,
+a:hover > .link-underline,
+a:focus-visible > .link-underline {
   background-size: 100% 1px;
 }
 

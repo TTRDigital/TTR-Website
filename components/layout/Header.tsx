@@ -120,7 +120,7 @@ export function Header({ services, mainLinks, ctaLabel, phone, phoneHref }: Prop
           }`}
         />
         <div className="container-page flex h-[var(--header-h)] items-center justify-between gap-6">
-          <Link href="/" className="relative z-10 shrink-0 rounded-md" aria-label="TTR Digital Marketing, home">
+          <Link href="/" className="relative z-10 flex min-h-11 shrink-0 items-center rounded-md" aria-label="TTR Digital Marketing, home">
             <Image
               src="/brand/ttr-logo-on-dark.svg"
               alt="TTR Digital Marketing"
