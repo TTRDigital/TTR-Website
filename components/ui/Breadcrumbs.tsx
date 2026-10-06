@@ -23,19 +23,20 @@ export function Breadcrumbs({ items, light = false }: { items: Crumb[]; light?: 
         }}
       />
       <nav aria-label="Breadcrumb" className="hero-fade" style={{ "--d": "0ms" } as React.CSSProperties}>
-        <ol className={`flex flex-wrap items-center gap-1.5 text-small ${light ? "text-ink-meta" : "text-meta"}`}>
+        <ol className={`flex min-w-0 items-center gap-1.5 whitespace-nowrap text-small ${light ? "text-ink-meta" : "text-meta"}`}>
           {all.map((c, i) => {
             const last = i === all.length - 1;
             return (
-              <li key={c.href} className="flex items-center gap-1.5">
+              // One line only: a wrap that changes when the web font loads would shift the page.
+              <li key={c.href} className={`flex items-center gap-1.5 ${last ? "min-w-0" : "shrink-0"}`}>
                 {last ? (
-                  <span aria-current="page" className={light ? "text-ink-text" : "text-hi"}>
+                  <span aria-current="page" className={`truncate ${light ? "text-ink-text" : "text-hi"}`}>
                     {c.name}
                   </span>
                 ) : (
                   <>
-                    <Link href={c.href} className="link-underline hover:text-hi">
-                      {c.name}
+                    <Link href={c.href} className="inline-flex min-h-11 items-center hover:text-hi">
+                      <span className="link-underline">{c.name}</span>
                     </Link>
                     <ChevronRight className="h-3.5 w-3.5 opacity-60" strokeWidth={1.5} aria-hidden="true" />
                   </>
