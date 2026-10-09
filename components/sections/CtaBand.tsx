@@ -4,6 +4,7 @@ import type { serviceOptions } from "@/lib/lead-options";
 import { MaskedWords } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { LeadForm } from "@/components/forms/LeadForm";
+import { turnstileSiteKey } from "@/lib/turnstile";
 
 const auditIncludes = [
   "A review of your website, with clear next steps",
@@ -93,7 +94,7 @@ export function CtaBand({ heading = defaults.heading, text = defaults.text, sett
             <h3 className="font-display text-h3 font-semibold">Get your free growth audit</h3>
             <p className="mt-2 text-small text-meta">Takes about a minute. A real person reads every request.</p>
             <div className="mt-8">
-              <LeadForm phone={settings.phone} phoneHref={settings.phoneHref} defaultService={defaultService} />
+              <LeadForm phone={settings.phone} phoneHref={settings.phoneHref} defaultService={defaultService} captchaSiteKey={turnstileSiteKey()} />
             </div>
           </div>
         </div>
