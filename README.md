@@ -84,13 +84,20 @@ To switch it on, add these in Vercel and redeploy:
 - `GHL_LOCATION_ID`: GoHighLevel > Settings > Business Profile > Location ID.
 - `GHL_API_KEY`: GoHighLevel > Settings > Private Integrations > create a token with the **contacts.write** scope.
 
-**Human check (Cloudflare Turnstile).** Every form shows Cloudflare's human check under the fields. Most visitors pass it automatically; suspicious traffic gets a quick challenge. The server verifies each token with Cloudflare before a lead is sent, so bots that skip the page are blocked too. To switch it on:
+**Human check (Google reCAPTCHA v3).** Every form shows the reCAPTCHA badge inside the form. reCAPTCHA scores each submission in the background (no puzzles for real people), and the server checks the score with Google before a lead is sent:
 
-1. In the Cloudflare dashboard (a free account is enough), open **Turnstile > Add widget**. Name it "TTR website", add the hostnames `ttrdigitalmarketing.com`, `www.ttrdigitalmarketing.com` and `ttr-website-nu.vercel.app`, and choose **Managed** mode.
-2. In Vercel, add `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (the site key; `TURNSTILE_SITE_KEY` also works) and `TURNSTILE_SECRET_KEY` (the secret key) with **Production** ticked, then redeploy.
-3. Open `/api/status` on the live site. `captcha.active: true` means it is on; `variablesSeen` lists the names the deployment can see (never values).
+- score 0.5 or higher: delivered;
+- 0.3 to 0.5: delivered, tagged `suspected-spam` with the score in `spam_check`;
+- below 0.3, no token, or a rejected token: blocked, and the visitor is asked to try again or call.
 
-Without the keys the form works as before, with no human check. If Cloudflare cannot be reached while checking, the lead is still delivered, flagged `suspected-spam`. Blocked attempts are logged in Vercel as `[lead] Blocked by human check`.
+If Google cannot be reached, or the secret key is wrong, leads are still delivered (flagged) so nothing is lost. Blocked attempts are logged in Vercel as `[lead] Blocked by reCAPTCHA`.
+
+Setup:
+
+1. The **site key** is public and built into `lib/recaptcha.ts` (`RECAPTCHA_SITE_KEY` in Vercel overrides it).
+2. Add the **secret key** in Vercel as `RECAPTCHA_SECRET_KEY` with **Production** ticked, then redeploy. It is never put in the code (this repository is public).
+3. In the reCAPTCHA admin console (google.com/recaptcha/admin), the key's **Domains** must include `ttrdigitalmarketing.com` (covers www) and `ttr-website-nu.vercel.app`.
+4. Open `/api/status` on the live site: `captcha.active: true` means it is enforcing.
 
 **Spam handling.** A submission is dropped only when both spam signals agree: the hidden field is filled *and* it was sent in under 2.5 seconds. With just one signal (browser autofill can fill hidden fields, and some people type fast) the lead is still delivered, with the tag `suspected-spam` and a `spam_check` field saying why. Every drop and delivery is logged in Vercel (Logs, search `[lead]`).
 
@@ -115,7 +122,7 @@ If both are set, both run and the lead counts as saved when either succeeds. Wit
 
 ## Security headers
 
-`next.config.ts` sends a Content Security Policy that only allows this site, Google Analytics / Tag Manager, Vercel Analytics, Sanity images and Cloudflare Turnstile. If you add a tag in GTM that loads another script (for example the Meta Pixel), add its domain to the `csp` list there, or the browser will block it. The studio at `/cms` is excluded from the CSP.
+`next.config.ts` sends a Content Security Policy that only allows this site, Google Analytics / Tag Manager, Vercel Analytics, Sanity images and Google reCAPTCHA. If you add a tag in GTM that loads another script (for example the Meta Pixel), add its domain to the `csp` list there, or the browser will block it. The studio at `/cms` is excluded from the CSP.
 
 ## Optional next steps
 

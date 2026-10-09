@@ -6,16 +6,16 @@ const isDev = process.env.NODE_ENV !== "production";
 // Inline scripts are needed for Next's streamed payload and static (ISR)
 // pages, which rule out per-request nonces. Third parties are limited to
 // Google Analytics / Tag Manager, Vercel Analytics, Sanity images and the
-// Cloudflare Turnstile human check on the lead form.
+// Google reCAPTCHA on the lead form.
 // If you add tags in GTM that load other scripts, add their domains here.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://*.googletagmanager.com https://va.vercel-scripts.com https://challenges.cloudflare.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://*.googletagmanager.com https://va.vercel-scripts.com https://www.google.com https://www.gstatic.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://cdn.sanity.io https://*.google-analytics.com https://*.googletagmanager.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
-  "frame-src 'self' https://www.googletagmanager.com https://challenges.cloudflare.com",
+  "connect-src 'self' https://www.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+  "frame-src 'self' https://www.googletagmanager.com https://www.google.com https://recaptcha.google.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

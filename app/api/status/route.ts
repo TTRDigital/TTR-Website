@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { ghlConfig, ghlWebhookUrl } from "@/lib/ghl";
-import { TURNSTILE_SECRET_NAMES, TURNSTILE_SITE_KEY_NAMES, turnstileSecret, turnstileSiteKey } from "@/lib/turnstile";
+import { RECAPTCHA_SECRET_NAMES, RECAPTCHA_SITE_KEY_NAMES, recaptchaSecret, recaptchaSiteKey } from "@/lib/recaptcha";
 
 export const dynamic = "force-dynamic";
 
@@ -9,17 +9,18 @@ export const dynamic = "force-dynamic";
  * only, never values, so it is safe to open in a browser.
  */
 export function GET() {
-  const known = [...TURNSTILE_SITE_KEY_NAMES, ...TURNSTILE_SECRET_NAMES];
+  const known = [...RECAPTCHA_SITE_KEY_NAMES, ...RECAPTCHA_SECRET_NAMES];
   const lookalikes = Object.keys(process.env)
-    .filter((k) => /turnstile|captcha|cloudflare/i.test(k))
+    .filter((k) => /captcha|turnstile/i.test(k))
     .sort();
   return NextResponse.json(
     {
       environment: process.env.VERCEL_ENV ?? process.env.NODE_ENV,
       captcha: {
-        siteKeyFound: !!turnstileSiteKey(),
-        secretKeyFound: !!turnstileSecret(),
-        active: !!turnstileSiteKey() && !!turnstileSecret(),
+        provider: "Google reCAPTCHA v3",
+        siteKeyFound: !!recaptchaSiteKey(),
+        secretKeyFound: !!recaptchaSecret(),
+        active: !!recaptchaSiteKey() && !!recaptchaSecret(),
         variablesSeen: lookalikes,
         unrecognisedNames: lookalikes.filter((k) => !known.includes(k)),
       },
