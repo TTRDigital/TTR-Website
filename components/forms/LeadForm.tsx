@@ -37,7 +37,7 @@ export function LeadForm({
   phoneHref: string;
   defaultService?: (typeof serviceOptions)[number];
   dark?: boolean;
-  /** Google reCAPTCHA v3 site key, read on the server. Empty: no human check. */
+  /** Google reCAPTCHA v2 checkbox site key, read on the server. Empty: no human check. */
   captchaSiteKey?: string;
 }) {
   const router = useRouter();
@@ -85,10 +85,13 @@ export function LeadForm({
       formRef.current?.querySelector<HTMLElement>(`#${CSS.escape(`${uid}-${bad[0]}`)}`)?.focus();
       return;
     }
+    const captchaToken = captchaSiteKey ? (captcha.current?.getToken() ?? null) : null;
+    if (captchaSiteKey && !captchaToken && !captcha.current?.unavailable()) {
+      setSummary("Please tick \u201cI\u2019m not a robot\u201d below the form, then send again.");
+      return;
+    }
     setSummary("");
     setStatus("sending");
-    // reCAPTCHA runs now, at submit time, so the token is fresh.
-    const captchaToken = captchaSiteKey ? await captcha.current?.getToken() : null;
 
     let attribution: Record<string, string> = {};
     try {
@@ -116,6 +119,7 @@ export function LeadForm({
       if (!res.ok) {
         const data = (await res.json().catch(() => null)) as { code?: string; error?: string } | null;
         if (data?.code === "captcha") {
+          captcha.current?.reset();
           setSummary(data.error ?? "We could not confirm you are human. Please try again.");
           setStatus("idle");
           return;
@@ -252,7 +256,7 @@ export function LeadForm({
         <input id={`${uid}-hp_ttr`} name="hp_ttr" type="text" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" />
       </div>
 
-      <Recaptcha siteKey={captchaSiteKey} handleRef={captcha} />
+      <Recaptcha siteKey={captchaSiteKey} theme={dark ? "dark" : "light"} handleRef={captcha} />
 
       {status === "error" ? (
         <p role="alert" className={`mt-5 text-small ${tone.error}`}>

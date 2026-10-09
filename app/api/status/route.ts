@@ -17,7 +17,7 @@ export function GET() {
     {
       environment: process.env.VERCEL_ENV ?? process.env.NODE_ENV,
       captcha: {
-        provider: "Google reCAPTCHA v3",
+        provider: "Google reCAPTCHA v2 checkbox",
         siteKeyFound: !!recaptchaSiteKey(),
         secretKeyFound: !!recaptchaSecret(),
         active: !!recaptchaSiteKey() && !!recaptchaSecret(),
