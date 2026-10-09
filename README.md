@@ -84,6 +84,13 @@ To switch it on, add these in Vercel and redeploy:
 - `GHL_LOCATION_ID`: GoHighLevel > Settings > Business Profile > Location ID.
 - `GHL_API_KEY`: GoHighLevel > Settings > Private Integrations > create a token with the **contacts.write** scope.
 
+**Human check (Cloudflare Turnstile).** Every form shows Cloudflare's human check under the fields. Most visitors pass it automatically; suspicious traffic gets a quick challenge. The server verifies each token with Cloudflare before a lead is sent, so bots that skip the page are blocked too. To switch it on:
+
+1. In the Cloudflare dashboard (a free account is enough), open **Turnstile > Add widget**. Name it "TTR website", add the hostnames `ttrdigitalmarketing.com`, `www.ttrdigitalmarketing.com` and `ttr-website-nu.vercel.app`, and choose **Managed** mode.
+2. In Vercel, add `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (the site key) and `TURNSTILE_SECRET_KEY` (the secret key) for Production and Preview, then redeploy.
+
+Without the keys the form works as before, with no human check. If Cloudflare cannot be reached while checking, the lead is still delivered, flagged `suspected-spam`. Blocked attempts are logged in Vercel as `[lead] Blocked by human check`.
+
 **Spam handling.** A submission is dropped only when both spam signals agree: the hidden field is filled *and* it was sent in under 2.5 seconds. With just one signal (browser autofill can fill hidden fields, and some people type fast) the lead is still delivered, with the tag `suspected-spam` and a `spam_check` field saying why. Every drop and delivery is logged in Vercel (Logs, search `[lead]`).
 
 If both are set, both run and the lead counts as saved when either succeeds. With neither set, the form still shows success and the server logs a warning, but leads are not saved anywhere. If every configured delivery fails (after one retry), the visitor sees a message asking them to call.
@@ -107,7 +114,7 @@ If both are set, both run and the lead counts as saved when either succeeds. Wit
 
 ## Security headers
 
-`next.config.ts` sends a Content Security Policy that only allows this site, Google Analytics / Tag Manager, Vercel Analytics and Sanity images. If you add a tag in GTM that loads another script (for example the Meta Pixel), add its domain to the `csp` list there, or the browser will block it. The studio at `/cms` is excluded from the CSP.
+`next.config.ts` sends a Content Security Policy that only allows this site, Google Analytics / Tag Manager, Vercel Analytics, Sanity images and Cloudflare Turnstile. If you add a tag in GTM that loads another script (for example the Meta Pixel), add its domain to the `csp` list there, or the browser will block it. The studio at `/cms` is excluded from the CSP.
 
 ## Optional next steps
 
