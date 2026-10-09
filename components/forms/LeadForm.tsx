@@ -5,7 +5,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ArrowRight, Check, CircleAlert, LoaderCircle, Phone } from "lucide-react";
 import { ATTRIBUTION_STORAGE_KEY, attributionKeys, serviceOptions } from "@/lib/lead-options";
 import { track } from "@/lib/analytics";
-import { Turnstile, TURNSTILE_SITE_KEY } from "@/components/forms/Turnstile";
+import { Turnstile } from "@/components/forms/Turnstile";
 
 type Field = "name" | "phone" | "email" | "business" | "website" | "service" | "message";
 type Values = Record<Field, string>;
@@ -30,12 +30,15 @@ export function LeadForm({
   phoneHref,
   defaultService,
   dark = true,
+  captchaSiteKey = "",
 }: {
   variant?: "full" | "compact";
   phone: string;
   phoneHref: string;
   defaultService?: (typeof serviceOptions)[number];
   dark?: boolean;
+  /** Cloudflare Turnstile site key, read on the server. Empty: no human check. */
+  captchaSiteKey?: string;
 }) {
   const router = useRouter();
   const uid = useId();
@@ -84,7 +87,7 @@ export function LeadForm({
       formRef.current?.querySelector<HTMLElement>(`#${CSS.escape(`${uid}-${bad[0]}`)}`)?.focus();
       return;
     }
-    if (TURNSTILE_SITE_KEY && !captchaToken) {
+    if (captchaSiteKey && !captchaToken) {
       setSummary("Please complete the security check below the form, then send again.");
       return;
     }
@@ -255,7 +258,7 @@ export function LeadForm({
         <input id={`${uid}-hp_ttr`} name="hp_ttr" type="text" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" />
       </div>
 
-      <Turnstile theme={dark ? "dark" : "light"} onToken={onCaptcha} resetRef={resetCaptcha} />
+      <Turnstile siteKey={captchaSiteKey} theme={dark ? "dark" : "light"} onToken={onCaptcha} resetRef={resetCaptcha} />
 
       {status === "error" ? (
         <p role="alert" className={`mt-5 text-small ${tone.error}`}>

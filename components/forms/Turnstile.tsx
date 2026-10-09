@@ -16,7 +16,6 @@ declare global {
   }
 }
 
-export const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 let loader: Promise<TurnstileApi> | null = null;
@@ -42,10 +41,12 @@ function loadTurnstile(): Promise<TurnstileApi> {
  * or fails. `resetRef.current()` asks for a fresh check after a rejection.
  */
 export function Turnstile({
+  siteKey,
   theme,
   onToken,
   resetRef,
 }: {
+  siteKey: string;
   theme: "dark" | "light";
   onToken: (token: string | null) => void;
   resetRef: React.RefObject<(() => void) | null>;
@@ -59,7 +60,7 @@ export function Turnstile({
 
   useEffect(() => {
     const el = boxRef.current;
-    if (!el || !TURNSTILE_SITE_KEY) return;
+    if (!el || !siteKey) return;
     let widgetId: string | undefined;
     let cancelled = false;
 
@@ -68,7 +69,7 @@ export function Turnstile({
         .then((ts) => {
           if (cancelled || widgetId) return;
           widgetId = ts.render(el, {
-            sitekey: TURNSTILE_SITE_KEY,
+            sitekey: siteKey,
             theme,
             size: "flexible",
             action: "lead_form",
@@ -102,8 +103,8 @@ export function Turnstile({
       if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
       resetRef.current = null;
     };
-  }, [theme, resetRef]);
+  }, [siteKey, theme, resetRef]);
 
-  if (!TURNSTILE_SITE_KEY) return null;
+  if (!siteKey) return null;
   return <div ref={boxRef} className="mt-6 min-h-[65px] w-full" />;
 }

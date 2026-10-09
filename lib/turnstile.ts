@@ -2,7 +2,28 @@ import "server-only";
 
 /* Server-side check of a Cloudflare Turnstile token. */
 
-export const turnstileSecret = () => process.env.TURNSTILE_SECRET_KEY || "";
+/** First non-empty env var among the names people commonly use. Quotes and spaces are ignored. */
+const firstEnv = (names: string[]) => {
+  for (const n of names) {
+    const v = process.env[n]?.trim().replace(/^["']|["']$/g, "").trim();
+    if (v) return v;
+  }
+  return "";
+};
+
+export const TURNSTILE_SITE_KEY_NAMES = [
+  "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+  "TURNSTILE_SITE_KEY",
+  "NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY",
+  "CLOUDFLARE_TURNSTILE_SITE_KEY",
+  "NEXT_PUBLIC_TURNSTILE_SITEKEY",
+  "TURNSTILE_SITEKEY",
+];
+export const TURNSTILE_SECRET_NAMES = ["TURNSTILE_SECRET_KEY", "TURNSTILE_SECRET", "CLOUDFLARE_TURNSTILE_SECRET_KEY", "CLOUDFLARE_TURNSTILE_SECRET"];
+
+/** Read at request/render time on the server, so no special build step is needed. */
+export const turnstileSiteKey = () => firstEnv(TURNSTILE_SITE_KEY_NAMES);
+export const turnstileSecret = () => firstEnv(TURNSTILE_SECRET_NAMES);
 
 export type TurnstileResult =
   | { ok: true }
