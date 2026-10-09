@@ -17,6 +17,7 @@ export const leadSchema = z.object({
   message: optionalText(3000),
   // anti-spam
   hp_ttr: optionalText(200),
+  turnstile_token: optionalText(4096),
   elapsed_ms: z.number().int().nonnegative().optional(),
   // attribution
   page_url: optionalText(1000),

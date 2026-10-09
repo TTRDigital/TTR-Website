@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ArrowRight, Check, CircleAlert, LoaderCircle, Phone } from "lucide-react";
 import { ATTRIBUTION_STORAGE_KEY, attributionKeys, serviceOptions } from "@/lib/lead-options";
 import { track } from "@/lib/analytics";
+import { Turnstile, TURNSTILE_SITE_KEY } from "@/components/forms/Turnstile";
 
 type Field = "name" | "phone" | "email" | "business" | "website" | "service" | "message";
 type Values = Record<Field, string>;
@@ -45,6 +46,9 @@ export function LeadForm({
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [summary, setSummary] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const resetCaptcha = useRef<(() => void) | null>(null);
+  const onCaptcha = useCallback((token: string | null) => setCaptchaToken(token), []);
 
   useEffect(() => {
     startedAt.current = Date.now();
@@ -80,6 +84,10 @@ export function LeadForm({
       formRef.current?.querySelector<HTMLElement>(`#${CSS.escape(`${uid}-${bad[0]}`)}`)?.focus();
       return;
     }
+    if (TURNSTILE_SITE_KEY && !captchaToken) {
+      setSummary("Please complete the security check below the form, then send again.");
+      return;
+    }
     setSummary("");
     setStatus("sending");
 
@@ -98,6 +106,7 @@ export function LeadForm({
         body: JSON.stringify({
           ...values,
           hp_ttr: honeypot,
+          turnstile_token: captchaToken ?? "",
           elapsed_ms: Date.now() - startedAt.current,
           page_url: window.location.href,
           landing_page: attribution.landing_page ?? "",
@@ -105,7 +114,17 @@ export function LeadForm({
           ...Object.fromEntries(attributionKeys.map((k) => [k, attribution[k] ?? ""])),
         }),
       });
-      if (!res.ok) throw new Error(String(res.status));
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as { code?: string; error?: string } | null;
+        if (data?.code === "captcha") {
+          // The human check was rejected or expired: ask for a fresh one.
+          resetCaptcha.current?.();
+          setSummary(data.error ?? "Please complete the security check again.");
+          setStatus("idle");
+          return;
+        }
+        throw new Error(String(res.status));
+      }
       setStatus("success");
       track("generate_lead", { service: values.service, form: variant });
       window.setTimeout(() => router.push("/thank-you"), 1400);
@@ -235,6 +254,8 @@ export function LeadForm({
         <label htmlFor={`${uid}-hp_ttr`}>Leave this field empty</label>
         <input id={`${uid}-hp_ttr`} name="hp_ttr" type="text" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" />
       </div>
+
+      <Turnstile theme={dark ? "dark" : "light"} onToken={onCaptcha} resetRef={resetCaptcha} />
 
       {status === "error" ? (
         <p role="alert" className={`mt-5 text-small ${tone.error}`}>

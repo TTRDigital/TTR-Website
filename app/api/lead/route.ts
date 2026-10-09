@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { leadSchema } from "@/lib/lead";
 import { MIN_FILL_MS } from "@/lib/lead-options";
 import { ghlConfig, ghlWebhookUrl, sendLeadToGhl, sendLeadToWebhook } from "@/lib/ghl";
+import { turnstileSecret, verifyTurnstile } from "@/lib/turnstile";
 
 /* Best-effort per-IP rate limit (per server instance). */
 const WINDOW_MS = 10 * 60 * 1000;
@@ -39,6 +40,25 @@ export async function POST(request: Request) {
   }
   const lead = parsed.data;
 
+  // Human check (Cloudflare Turnstile). On when TURNSTILE_SECRET_KEY is set.
+  // A missing or rejected token blocks the lead and asks the visitor to retry.
+  // If Cloudflare cannot be reached, the lead is delivered with a flag rather
+  // than lost.
+  let captchaNote = "";
+  if (turnstileSecret()) {
+    const captchaError = { ok: false, code: "captcha", error: "Please complete the security check below the form, then send again." };
+    if (!lead.turnstile_token) return NextResponse.json(captchaError, { status: 400 });
+    const check = await verifyTurnstile(lead.turnstile_token, ip);
+    if (!check.ok && !check.unavailable) {
+      console.warn("[lead] Blocked by human check", check.codes.join(","), lead.email);
+      return NextResponse.json(captchaError, { status: 403 });
+    }
+    if (!check.ok) {
+      console.warn("[lead] Human check unavailable, delivering with a flag", check.codes.join(","));
+      captchaNote = "human check unavailable";
+    }
+  }
+
   // Spam: drop only when both signals agree (hidden field filled AND sent
   // faster than a person can type). One signal alone can be autofill or a
   // fast typist, so that lead is delivered with a "suspected-spam" tag.
@@ -48,7 +68,13 @@ export async function POST(request: Request) {
     console.warn("[lead] Dropped as spam (hidden field filled and sent in", lead.elapsed_ms, "ms)", lead.email);
     return NextResponse.json({ ok: true });
   }
-  const spamCheck = trapFilled ? "suspect: hidden field filled" : tooFast ? `suspect: sent in ${lead.elapsed_ms} ms` : "ok";
+  const spamCheck = trapFilled
+    ? "suspect: hidden field filled"
+    : tooFast
+      ? `suspect: sent in ${lead.elapsed_ms} ms`
+      : captchaNote
+        ? `suspect: ${captchaNote}`
+        : "ok";
 
   const webhookUrl = ghlWebhookUrl();
   const cfg = ghlConfig();
