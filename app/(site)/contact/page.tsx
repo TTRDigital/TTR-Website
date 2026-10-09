@@ -7,7 +7,7 @@ import { PageHero } from "@/components/sections/PageHero";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { LeadForm } from "@/components/forms/LeadForm";
-import { turnstileSiteKey } from "@/lib/turnstile";
+import { recaptchaSiteKey } from "@/lib/recaptcha";
 
 export const revalidate = 300;
 
@@ -78,7 +78,7 @@ export default async function ContactPage() {
             <h2 className="font-display text-h3 font-semibold">Get your free growth audit</h2>
             <p className="mt-2 text-small text-meta">Takes about a minute. A real person reads every request.</p>
             <div className="mt-8">
-              <LeadForm phone={settings.phone} phoneHref={settings.phoneHref} captchaSiteKey={turnstileSiteKey()} />
+              <LeadForm phone={settings.phone} phoneHref={settings.phoneHref} captchaSiteKey={recaptchaSiteKey()} />
             </div>
           </div>
 

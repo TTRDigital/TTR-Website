@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { leadSchema } from "@/lib/lead";
 import { MIN_FILL_MS } from "@/lib/lead-options";
 import { ghlConfig, ghlWebhookUrl, sendLeadToGhl, sendLeadToWebhook } from "@/lib/ghl";
-import { turnstileSecret, verifyTurnstile } from "@/lib/turnstile";
+import { recaptchaSecret, verifyRecaptcha } from "@/lib/recaptcha";
 
 /* Best-effort per-IP rate limit (per server instance). */
 const WINDOW_MS = 10 * 60 * 1000;
@@ -40,23 +40,27 @@ export async function POST(request: Request) {
   }
   const lead = parsed.data;
 
-  // Human check (Cloudflare Turnstile). On when TURNSTILE_SECRET_KEY is set.
-  // A missing or rejected token blocks the lead and asks the visitor to retry.
-  // If Cloudflare cannot be reached, the lead is delivered with a flag rather
-  // than lost.
+  // Human check (Google reCAPTCHA v3). On when RECAPTCHA_SECRET_KEY is set.
+  // No token or a clear bot score blocks the lead and the visitor is asked to
+  // retry or call. A borderline score, or reCAPTCHA being unreachable, still
+  // delivers the lead with a flag, so a real person is never lost.
   let captchaNote = "";
-  if (turnstileSecret()) {
-    const captchaError = { ok: false, code: "captcha", error: "Please complete the security check below the form, then send again." };
-    if (!lead.turnstile_token) return NextResponse.json(captchaError, { status: 400 });
-    const check = await verifyTurnstile(lead.turnstile_token, ip);
-    if (!check.ok && !check.unavailable) {
-      console.warn("[lead] Blocked by human check", check.codes.join(","), lead.email);
+  if (recaptchaSecret()) {
+    const captchaError = {
+      ok: false,
+      code: "captcha",
+      error: "We could not confirm you are human. Please try again, or call us and we will help right away.",
+    };
+    if (!lead.captcha_token) {
+      console.warn("[lead] Blocked: no reCAPTCHA token", lead.email);
+      return NextResponse.json(captchaError, { status: 400 });
+    }
+    const check = await verifyRecaptcha(lead.captcha_token, ip);
+    if (check.verdict === "block") {
+      console.warn("[lead] Blocked by reCAPTCHA:", check.note, lead.email);
       return NextResponse.json(captchaError, { status: 403 });
     }
-    if (!check.ok) {
-      console.warn("[lead] Human check unavailable, delivering with a flag", check.codes.join(","));
-      captchaNote = "human check unavailable";
-    }
+    if (check.verdict === "flag") captchaNote = check.note;
   }
 
   // Spam: drop only when both signals agree (hidden field filled AND sent
