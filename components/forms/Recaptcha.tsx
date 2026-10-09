@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /*
- * Google reCAPTCHA v3, rendered as the inline reCAPTCHA badge inside the form
- * (not floating over the page). It loads once the form is near the screen.
- * getToken() runs the check at submit time, so the token is always fresh.
+ * Google reCAPTCHA v2 "I'm not a robot" checkbox, inside the form. It loads
+ * once the form is near the screen. The compact layout is used when the
+ * form is narrower than the standard 304px widget (small phones).
  */
 
 type Grecaptcha = {
-  ready: (cb: () => void) => void;
   render: (el: HTMLElement, opts: Record<string, unknown>) => number;
-  execute: (id: number, opts: { action: string }) => Promise<string>;
+  getResponse: (id?: number) => string;
+  reset: (id?: number) => void;
 };
 
 declare global {
@@ -38,43 +38,76 @@ function loadRecaptcha(): Promise<Grecaptcha> {
   return loader;
 }
 
-export type CaptchaHandle = { getToken: () => Promise<string | null> };
+export type CaptchaHandle = {
+  /** The checkbox answer, or null if not ticked (or expired). */
+  getToken: () => string | null;
+  /** True when the widget could not load (e.g. blocked); the server then decides. */
+  unavailable: () => boolean;
+  reset: () => void;
+};
 
-export function Recaptcha({ siteKey, handleRef }: { siteKey: string; handleRef: React.RefObject<CaptchaHandle | null> }) {
+export function Recaptcha({
+  siteKey,
+  theme,
+  handleRef,
+  onChange,
+}: {
+  siteKey: string;
+  theme: "dark" | "light";
+  handleRef: React.RefObject<CaptchaHandle | null>;
+  onChange?: (ticked: boolean) => void;
+}) {
   const boxRef = useRef<HTMLDivElement>(null);
+  const [failed, setFailed] = useState(false);
+  const changeRef = useRef(onChange);
+
+  useEffect(() => {
+    changeRef.current = onChange;
+  }, [onChange]);
 
   useEffect(() => {
     const el = boxRef.current;
     if (!el || !siteKey) return;
-    let widget: Promise<{ g: Grecaptcha; id: number }> | null = null;
-
-    const mount = () =>
-      (widget ??= loadRecaptcha().then(
-        (g) =>
-          new Promise((resolve) =>
-            g.ready(() => resolve({ g, id: g.render(el, { sitekey: siteKey, badge: "inline", size: "invisible" }) })),
-          ),
-      ));
+    let g: Grecaptcha | null = null;
+    let id: number | null = null;
+    let loadFailed = false;
+    let started = false;
 
     handleRef.current = {
-      getToken: async () => {
-        try {
-          const { g, id } = await mount();
-          return await Promise.race([
-            g.execute(id, { action: "lead_form" }),
-            new Promise<null>((r) => setTimeout(() => r(null), 8000)),
-          ]);
-        } catch {
-          return null;
-        }
+      getToken: () => (g && id !== null ? g.getResponse(id) || null : null),
+      unavailable: () => loadFailed,
+      reset: () => {
+        if (g && id !== null) g.reset(id);
+        changeRef.current?.(false);
       },
+    };
+
+    const mount = () => {
+      if (started) return;
+      started = true;
+      loadRecaptcha()
+        .then((api) => {
+          g = api;
+          id = api.render(el, {
+            sitekey: siteKey,
+            theme,
+            size: el.clientWidth < 304 ? "compact" : "normal",
+            callback: () => changeRef.current?.(true),
+            "expired-callback": () => changeRef.current?.(false),
+            "error-callback": () => changeRef.current?.(false),
+          });
+        })
+        .catch(() => {
+          loadFailed = true;
+          setFailed(true);
+        });
     };
 
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
           io.disconnect();
-          mount().catch(() => {});
+          mount();
         }
       },
       { rootMargin: "600px 0px" },
@@ -84,8 +117,13 @@ export function Recaptcha({ siteKey, handleRef }: { siteKey: string; handleRef: 
       io.disconnect();
       handleRef.current = null;
     };
-  }, [siteKey, handleRef]);
+  }, [siteKey, theme, handleRef]);
 
   if (!siteKey) return null;
-  return <div ref={boxRef} className="mt-6 min-h-[60px]" aria-label="Protected by Google reCAPTCHA" />;
+  return (
+    <div className="mt-6">
+      <div ref={boxRef} className="min-h-[78px] w-full" />
+      {failed ? <p className="mt-2 text-small text-meta">The security check could not load. You can still send the form.</p> : null}
+    </div>
+  );
 }

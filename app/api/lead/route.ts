@@ -40,16 +40,16 @@ export async function POST(request: Request) {
   }
   const lead = parsed.data;
 
-  // Human check (Google reCAPTCHA v3). On when RECAPTCHA_SECRET_KEY is set.
-  // No token or a clear bot score blocks the lead and the visitor is asked to
-  // retry or call. A borderline score, or reCAPTCHA being unreachable, still
-  // delivers the lead with a flag, so a real person is never lost.
+  // Human check (Google reCAPTCHA "I'm not a robot"). On when
+  // RECAPTCHA_SECRET_KEY is set. No tick or a rejected answer blocks the lead
+  // and the visitor is asked to tick again or call. reCAPTCHA being
+  // unreachable still delivers the lead with a flag, so nobody is lost.
   let captchaNote = "";
   if (recaptchaSecret()) {
     const captchaError = {
       ok: false,
       code: "captcha",
-      error: "We could not confirm you are human. Please try again, or call us and we will help right away.",
+      error: "Please tick \u201cI\u2019m not a robot\u201d below the form and send again, or call us and we will help right away.",
     };
     if (!lead.captcha_token) {
       console.warn("[lead] Blocked: no reCAPTCHA token", lead.email);

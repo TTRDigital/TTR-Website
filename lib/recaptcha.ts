@@ -1,12 +1,14 @@
 import "server-only";
 
 /*
- * Google reCAPTCHA v3 (score based). The site key is public and built in;
- * the secret key comes from the environment only (this repository is public).
+ * Google reCAPTCHA v2 "I'm not a robot" checkbox. The site key is public and
+ * built in; the secret key comes from the environment only (this repository
+ * is public). verifyRecaptcha also understands v3 scores, should the key
+ * ever be swapped for a v3 one.
  */
 
-/** Public site key for www.ttrdigitalmarketing.com (safe to publish). */
-const DEFAULT_SITE_KEY = "6Lc5J-ctAAAAAJuaTV1APWFGEOFny47Uwf_4rmDV";
+/** Public v2 checkbox site key for ttrdigitalmarketing.com (safe to publish). */
+const DEFAULT_SITE_KEY = "6LfUOuctAAAAAAb8QMnNpDJuTzA6pb-H8tEiJC02";
 
 const firstEnv = (names: string[]) => {
   for (const n of names) {
@@ -57,6 +59,7 @@ export async function verifyRecaptcha(token: string, ip: string): Promise<Recapt
   if (!data.success) return { verdict: "block", note: `reCAPTCHA rejected (${codes.join(",") || "failed"})` };
   if (data.action && data.action !== "lead_form") return { verdict: "block", note: `reCAPTCHA wrong action (${data.action})` };
 
+  // v2 checkbox answers have no score: a successful tick passes.
   const score = typeof data.score === "number" ? data.score : 1;
   if (score >= PASS) return { verdict: "pass" };
   if (score >= FLAG) return { verdict: "flag", note: `low reCAPTCHA score ${score}` };

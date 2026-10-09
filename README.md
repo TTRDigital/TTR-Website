@@ -84,13 +84,7 @@ To switch it on, add these in Vercel and redeploy:
 - `GHL_LOCATION_ID`: GoHighLevel > Settings > Business Profile > Location ID.
 - `GHL_API_KEY`: GoHighLevel > Settings > Private Integrations > create a token with the **contacts.write** scope.
 
-**Human check (Google reCAPTCHA v3).** Every form shows the reCAPTCHA badge inside the form. reCAPTCHA scores each submission in the background (no puzzles for real people), and the server checks the score with Google before a lead is sent:
-
-- score 0.5 or higher: delivered;
-- 0.3 to 0.5: delivered, tagged `suspected-spam` with the score in `spam_check`;
-- below 0.3, no token, or a rejected token: blocked, and the visitor is asked to try again or call.
-
-If Google cannot be reached, or the secret key is wrong, leads are still delivered (flagged) so nothing is lost. Blocked attempts are logged in Vercel as `[lead] Blocked by reCAPTCHA`.
+**Human check (Google reCAPTCHA v2, "I'm not a robot" checkbox).** Every form shows the checkbox under the fields (the compact version on small phones). The form will not send until it is ticked, and the server confirms each tick with Google before a lead is sent. A missing or rejected tick is blocked and the visitor is asked to tick again or call. If Google cannot be reached, or the secret key is wrong, leads are still delivered (flagged `suspected-spam`) so nothing is lost. Blocked attempts are logged in Vercel as `[lead] Blocked by reCAPTCHA`.
 
 Setup:
 
