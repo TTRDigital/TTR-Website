@@ -51,7 +51,24 @@ const map: [string, string][] = [
   [`/:state(${STATES})`, "/"],
 ];
 
-export const redirects: Redirect[] = [
+type HostRedirect = { source: string; has: { type: "host"; value: string }[]; destination: string; statusCode: 301 };
+
+/*
+ * The vercel.app address sends visitors to the main domain (reCAPTCHA and
+ * Google only trust the main domain). /api stays on vercel.app so webhooks
+ * pointed there keep working.
+ */
+const hostRedirects: HostRedirect[] = [
+  {
+    source: "/:path((?!api/).*)",
+    has: [{ type: "host", value: "ttr-website-nu.vercel.app" }],
+    destination: "https://www.ttrdigitalmarketing.com/:path",
+    statusCode: 301,
+  },
+];
+
+export const redirects: (Redirect | HostRedirect)[] = [
+  ...hostRedirects,
   ...map.map(([source, destination]) => ({ source: `${source}{/}?`, destination, statusCode: 301 as const })),
   // Any other old URL with a trailing slash (blog posts keep their slugs)
   { source: "/:path+/", destination: "/:path+", statusCode: 301 },
