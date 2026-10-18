@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Building2, Clock, Mail, MapPin, Phone } from "lucide-react";
 import { getSiteSettings } from "@/lib/content";
 import { getCmsPage } from "@/lib/pages";
 import { PageHero } from "@/components/sections/PageHero";
@@ -8,6 +8,7 @@ import { FaqSection } from "@/components/sections/FaqSection";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { recaptchaSiteKey } from "@/lib/recaptcha";
+import { legalName } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -51,6 +52,7 @@ const faqs = [
 export default async function ContactPage() {
   const [settings, cms] = await Promise.all([getSiteSettings(), getCmsPage("contact")]);
   const contact = [
+    { icon: Building2, label: "Company", value: legalName },
     { icon: Phone, label: "Call", value: settings.phone, href: settings.phoneHref, track: "click_to_call" },
     { icon: Mail, label: "Email", value: settings.email, href: `mailto:${settings.email}` },
     { icon: MapPin, label: "Visit", value: `${settings.street}, ${settings.city}, ${settings.region} ${settings.postalCode}`, href: settings.mapsUrl, external: true },

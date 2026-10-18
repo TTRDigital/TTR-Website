@@ -22,7 +22,7 @@ To add a redirect, add a line to the `map` in `redirects.ts`.
 | `/thank-you-free-audit/` | `/thank-you` |
 | `/testing-page/` | `/` |
 | `/sitemap/` | `/` |
-| `/privacy-policy/` | `/privacy` |
+| `/privacy-policy/` | stays at `/privacy-policy` (the new site uses the same URL; `/privacy` redirects here) |
 | `/terms-of-service/` | `/terms` |
 | `/about-us/` | `/about` |
 | `/fl/orlando-digital-marketing/` | `/` |

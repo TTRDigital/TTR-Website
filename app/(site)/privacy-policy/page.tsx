@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return pageMetadata({
     title: page?.seo?.title ?? "Privacy Policy | TTR Digital Marketing",
     description: page?.seo?.description ?? "How TTR Digital Marketing collects, uses and protects the information you share on our website.",
-    path: "/privacy",
+    path: "/privacy-policy",
     ogTitle: "Privacy Policy",
     eyebrow: "Legal",
   });
@@ -19,5 +19,5 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
   const [page, settings] = await Promise.all([getCmsPage("privacy"), getSiteSettings()]);
-  return <LegalTemplate page={page} fallbackTitle="Privacy Policy" href="/privacy" settings={settings} />;
+  return <LegalTemplate page={page} fallbackTitle="Privacy Policy" href="/privacy-policy" settings={settings} />;
 }

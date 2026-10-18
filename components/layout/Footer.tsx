@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import type { Navigation, ServiceSummary, SiteSettings } from "@/lib/content";
 import { SocialIcon } from "@/components/ui/icons";
+import { legalName } from "@/lib/site";
 
 export function Footer({ settings, services, nav }: { settings: SiteSettings; services: ServiceSummary[]; nav: Navigation }) {
   const year = new Date().getFullYear();
@@ -35,6 +36,9 @@ export function Footer({ settings, services, nav }: { settings: SiteSettings; se
             <Image src="/brand/ttr-logo-on-dark.svg" alt="TTR Digital Marketing" width={175} height={22} className="h-[22px] w-auto" />
             <p className="mt-6 max-w-sm text-body">
               We help local businesses get found on Google, ads and AI search, then turn that attention into booked calls.
+            </p>
+            <p className="mt-4 max-w-sm text-small text-meta">
+              TTR Digital Marketing is the business name of {legalName}, the company that provides our services and sends our text messages.
             </p>
             <ul className="mt-8 flex gap-2" aria-label="Social media">
               {settings.social.map((s) => (
@@ -120,17 +124,17 @@ export function Footer({ settings, services, nav }: { settings: SiteSettings; se
 
         <div className="mt-6 flex flex-col gap-4 border-t border-line pt-8 text-micro text-meta sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {settings.name}. All rights reserved.
+            © {year} {legalName}. All rights reserved.
           </p>
           <ul className="flex gap-6">
             <li>
-              <Link href="/privacy" className="inline-flex min-h-11 items-center hover:text-hi">
+              <Link href="/privacy-policy" className="inline-flex min-h-11 items-center hover:text-hi">
                 <span className="link-underline">Privacy Policy</span>
               </Link>
             </li>
             <li>
               <Link href="/terms" className="inline-flex min-h-11 items-center hover:text-hi">
-                <span className="link-underline">Terms of Service</span>
+                <span className="link-underline">Terms &amp; Conditions</span>
               </Link>
             </li>
           </ul>

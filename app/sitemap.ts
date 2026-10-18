@@ -55,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/contact", at(stamps?.pages, "contact"), 0.7),
     entry("/blog", latest(...posts.map((p) => p.updatedAt ?? p.publishedAt)), 0.7, "weekly"),
     ...posts.map((p) => entry(`/blog/${p.slug}`, new Date(p.updatedAt ?? p.publishedAt), 0.6)),
-    entry("/privacy", at(stamps?.pages, "privacy"), 0.2, "yearly"),
+    entry("/privacy-policy", at(stamps?.pages, "privacy"), 0.2, "yearly"),
     entry("/terms", at(stamps?.pages, "terms"), 0.2, "yearly"),
   ];
 }

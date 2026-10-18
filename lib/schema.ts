@@ -1,5 +1,5 @@
 import type { SiteSettings } from "@/lib/content";
-import { absoluteUrl, siteUrl } from "@/lib/site";
+import { absoluteUrl, legalName, siteUrl } from "@/lib/site";
 import { ogImageUrl } from "@/lib/seo";
 
 /** 1000 Brickell Ave, Miami. */
@@ -18,6 +18,7 @@ export function siteSchema(settings: SiteSettings) {
         "@type": ["Organization", "ProfessionalService"],
         "@id": absoluteUrl("/#organization"),
         name: settings.name,
+        legalName,
         url: siteUrl,
         logo: { "@type": "ImageObject", url: absoluteUrl("/brand/ttr-logo-on-light.svg") },
         image: absoluteUrl(ogImageUrl("Get found everywhere your customers search.", "Digital marketing agency")),

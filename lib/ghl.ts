@@ -1,6 +1,37 @@
 import "server-only";
 import type { LeadInput } from "@/lib/lead";
 import { slugify } from "@/lib/text";
+import { SMS_CONSENT, SMS_CONSENT_VERSION } from "@/lib/sms-consent";
+
+/** Who submitted and when, recorded with the SMS consent. */
+export type SubmissionMeta = { at: string; ip: string; userAgent: string };
+
+/**
+ * The SMS consent record for one submission. Each opt-in is kept separately;
+ * the wording is saved only for a box that was ticked, with the version the
+ * person saw. Submitting a phone number alone never opts anyone in.
+ */
+function smsConsent(lead: LeadInput, meta: SubmissionMeta) {
+  const version = lead.sms_consent_version || SMS_CONSENT_VERSION;
+  const service = lead.sms_consent_service === true;
+  const marketing = lead.sms_consent_marketing === true;
+  return {
+    service,
+    marketing,
+    fields: {
+      sms_consent_service: service ? "yes" : "no",
+      sms_consent_marketing: marketing ? "yes" : "no",
+      sms_consent_service_text: service ? SMS_CONSENT.service : "",
+      sms_consent_marketing_text: marketing ? SMS_CONSENT.marketing : "",
+      sms_consent_version: version,
+      sms_consent_at: service || marketing ? meta.at : "",
+      sms_consent_phone: service || marketing ? normalizePhone(lead.phone) : "",
+      sms_consent_page: service || marketing ? lead.page_url || "" : "",
+      sms_consent_ip: service || marketing ? meta.ip : "",
+      sms_consent_user_agent: service || marketing ? meta.userAgent : "",
+    },
+  };
+}
 
 /* GoHighLevel API v2. Keys come from process.env only. */
 
@@ -52,7 +83,7 @@ async function call<T>(cfg: GhlConfig, path: string, body: unknown): Promise<T> 
   throw lastError;
 }
 
-function noteFor(lead: LeadInput) {
+function noteFor(lead: LeadInput, meta: SubmissionMeta) {
   const lines = [
     "New lead from the website form.",
     "",
@@ -78,12 +109,35 @@ function noteFor(lead: LeadInput) {
     ] as const
   ).filter(([, v]) => v);
   if (utm.length) lines.push("", ...utm.map(([k, v]) => `${k}: ${v}`));
+  const consent = smsConsent(lead, meta);
+  lines.push("", `SMS consent (wording version ${consent.fields.sms_consent_version}):`);
+  if (!consent.service && !consent.marketing) lines.push("None given. Do not send text messages to this contact.");
+  else {
+    lines.push(`Recorded ${meta.at} for ${consent.fields.sms_consent_phone} on ${consent.fields.sms_consent_page || "(unknown page)"} from IP ${meta.ip}.`);
+    if (consent.service) lines.push(`Service messages: YES. Agreed to: "${SMS_CONSENT.service}"`);
+    else lines.push("Service messages: no");
+    if (consent.marketing) lines.push(`Marketing messages: YES. Agreed to: "${SMS_CONSENT.marketing}"`);
+    else lines.push("Marketing messages: no");
+  }
   return lines.filter((l) => l !== null).join("\n");
 }
 
-/** "suspected-spam" is added when one spam signal fired, so nothing real is ever lost. */
+/**
+ * "suspected-spam" is added when one spam signal fired, so nothing real is
+ * ever lost. "sms-opt-in-service" and "sms-opt-in-marketing" mark the text
+ * categories the person ticked; "sms-no-consent" means neither was ticked.
+ */
 function leadTags(lead: LeadInput, spamCheck: string) {
-  return ["website-lead", `service-${slugify(lead.service)}`, ...(spamCheck === "ok" ? [] : ["suspected-spam"])];
+  const sms = [
+    ...(lead.sms_consent_service ? ["sms-opt-in-service"] : []),
+    ...(lead.sms_consent_marketing ? ["sms-opt-in-marketing"] : []),
+  ];
+  return [
+    "website-lead",
+    `service-${slugify(lead.service)}`,
+    ...(sms.length ? sms : ["sms-no-consent"]),
+    ...(spamCheck === "ok" ? [] : ["suspected-spam"]),
+  ];
 }
 
 /** Inbound webhook URL (GoHighLevel workflow trigger). Kept in env: the repo is public. */
@@ -94,11 +148,11 @@ export function ghlWebhookUrl(): string | null {
 }
 
 /** Posts every field of the lead, flat, to the webhook. Throws if it is not accepted. */
-export async function sendLeadToWebhook(url: string, lead: LeadInput, spamCheck = "ok") {
+export async function sendLeadToWebhook(url: string, lead: LeadInput, meta: SubmissionMeta, spamCheck = "ok") {
   const [firstName, ...rest] = lead.name.trim().split(/\s+/);
   const payload = {
     source: "Website form",
-    submitted_at: new Date().toISOString(),
+    submitted_at: meta.at,
     name: lead.name.trim(),
     first_name: firstName,
     last_name: rest.join(" "),
@@ -121,6 +175,7 @@ export async function sendLeadToWebhook(url: string, lead: LeadInput, spamCheck 
     utm_content: lead.utm_content || "",
     gclid: lead.gclid || "",
     fbclid: lead.fbclid || "",
+    ...smsConsent(lead, meta).fields,
   };
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt++) {
@@ -148,7 +203,7 @@ export async function sendLeadToWebhook(url: string, lead: LeadInput, spamCheck 
  * existing ones) and attaches a note. Throws only if the contact itself could
  * not be saved; tag or note failures are logged.
  */
-export async function sendLeadToGhl(cfg: GhlConfig, lead: LeadInput, spamCheck = "ok") {
+export async function sendLeadToGhl(cfg: GhlConfig, lead: LeadInput, meta: SubmissionMeta, spamCheck = "ok") {
   const [firstName, ...rest] = lead.name.trim().split(/\s+/);
   const upsert = await call<{ contact?: { id?: string } }>(cfg, "/contacts/upsert", {
     locationId: cfg.locationId,
@@ -167,7 +222,7 @@ export async function sendLeadToGhl(cfg: GhlConfig, lead: LeadInput, spamCheck =
   const tags = leadTags(lead, spamCheck);
   const results = await Promise.allSettled([
     call(cfg, `/contacts/${contactId}/tags`, { tags }),
-    call(cfg, `/contacts/${contactId}/notes`, { body: noteFor(lead) }),
+    call(cfg, `/contacts/${contactId}/notes`, { body: noteFor(lead, meta) }),
   ]);
   for (const r of results) if (r.status === "rejected") console.error("[lead] GoHighLevel follow-up call failed", r.reason);
   return contactId;
