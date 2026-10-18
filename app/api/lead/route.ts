@@ -39,6 +39,7 @@ export async function POST(request: Request) {
     );
   }
   const lead = parsed.data;
+  const meta = { at: new Date().toISOString(), ip, userAgent: request.headers.get("user-agent")?.slice(0, 300) ?? "" };
 
   // Human check (Google reCAPTCHA "I'm not a robot"). On when
   // RECAPTCHA_SECRET_KEY is set. No tick or a rejected answer blocks the lead
@@ -91,15 +92,20 @@ export async function POST(request: Request) {
 
   // Webhook and API run side by side; the lead counts as saved if either works.
   const jobs: { name: string; run: Promise<unknown> }[] = [];
-  if (webhookUrl) jobs.push({ name: "webhook", run: sendLeadToWebhook(webhookUrl, lead, spamCheck) });
-  if (cfg) jobs.push({ name: "api", run: sendLeadToGhl(cfg, lead, spamCheck) });
+  if (webhookUrl) jobs.push({ name: "webhook", run: sendLeadToWebhook(webhookUrl, lead, meta, spamCheck) });
+  if (cfg) jobs.push({ name: "api", run: sendLeadToGhl(cfg, lead, meta, spamCheck) });
   const results = await Promise.allSettled(jobs.map((j) => j.run));
   results.forEach((r, i) => {
     if (r.status === "rejected") console.error(`[lead] GoHighLevel ${jobs[i].name} delivery failed`, r.reason);
   });
 
   if (results.some((r) => r.status === "fulfilled")) {
-    console.info("[lead] Delivered via", jobs.filter((_, i) => results[i].status === "fulfilled").map((j) => j.name).join(" + "), spamCheck === "ok" ? "" : `(${spamCheck})`);
+    console.info(
+      "[lead] Delivered via",
+      jobs.filter((_, i) => results[i].status === "fulfilled").map((j) => j.name).join(" + "),
+      `sms service=${lead.sms_consent_service ? "yes" : "no"} marketing=${lead.sms_consent_marketing ? "yes" : "no"}`,
+      spamCheck === "ok" ? "" : `(${spamCheck})`,
+    );
     return NextResponse.json({ ok: true, delivered: true });
   }
   // Nothing saved the lead. Tell the visitor so they can call instead of

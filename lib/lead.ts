@@ -15,6 +15,10 @@ export const leadSchema = z.object({
   website: optionalText(300),
   service: z.enum(serviceOptions, { message: "Please choose a service." }),
   message: optionalText(3000),
+  // SMS consent: two separate opt-ins, both optional and off by default
+  sms_consent_service: z.boolean().optional().default(false),
+  sms_consent_marketing: z.boolean().optional().default(false),
+  sms_consent_version: optionalText(40),
   // anti-spam
   hp_ttr: optionalText(200),
   captcha_token: optionalText(4096),

@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { ArrowRight, Check, CircleAlert, LoaderCircle, Phone } from "lucide-react";
 import { ATTRIBUTION_STORAGE_KEY, attributionKeys, serviceOptions } from "@/lib/lead-options";
 import { track } from "@/lib/analytics";
 import { Recaptcha, type CaptchaHandle } from "@/components/forms/Recaptcha";
+import { SMS_CONSENT, SMS_CONSENT_VERSION, type SmsConsentType } from "@/lib/sms-consent";
 
 type Field = "name" | "phone" | "email" | "business" | "website" | "service" | "message";
 type Values = Record<Field, string>;
@@ -50,6 +52,8 @@ export function LeadForm({
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [summary, setSummary] = useState("");
   const captcha = useRef<CaptchaHandle | null>(null);
+  // Both SMS opt-ins start unticked and are optional.
+  const [sms, setSms] = useState<Record<SmsConsentType, boolean>>({ service: false, marketing: false });
 
   useEffect(() => {
     startedAt.current = Date.now();
@@ -109,6 +113,9 @@ export function LeadForm({
           ...values,
           hp_ttr: honeypot,
           captcha_token: captchaToken ?? "",
+          sms_consent_service: sms.service,
+          sms_consent_marketing: sms.marketing,
+          sms_consent_version: SMS_CONSENT_VERSION,
           elapsed_ms: Date.now() - startedAt.current,
           page_url: window.location.href,
           landing_page: attribution.landing_page ?? "",
@@ -256,6 +263,36 @@ export function LeadForm({
         <input id={`${uid}-hp_ttr`} name="hp_ttr" type="text" tabIndex={-1} autoComplete="off" data-1p-ignore data-lpignore="true" />
       </div>
 
+      <fieldset className="mt-7">
+        <legend className={`mb-3 text-small font-medium ${tone.label}`}>
+          Text messages <span className={`ml-1 font-normal ${tone.hint}`}>(optional)</span>
+        </legend>
+        <div className="space-y-3">
+          {(["service", "marketing"] as const).map((type) => (
+            <label key={type} htmlFor={`${uid}-sms-${type}`} className={`flex cursor-pointer items-start gap-3 text-small leading-relaxed ${tone.hint}`}>
+              <input
+                id={`${uid}-sms-${type}`}
+                name={`sms_consent_${type}`}
+                type="checkbox"
+                checked={sms[type]}
+                onChange={(e) => setSms((s) => ({ ...s, [type]: e.target.checked }))}
+                className={`mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded ${dark ? "accent-violet-400" : "accent-brand-600"}`}
+              />
+              <span>{SMS_CONSENT[type]}</span>
+            </label>
+          ))}
+        </div>
+        <p className={`mt-3 pl-8 text-small ${tone.hint}`}>
+          <Link href="/privacy-policy" className={`font-medium underline underline-offset-2 ${tone.label}`}>
+            Privacy Policy
+          </Link>
+          <span aria-hidden="true"> · </span>
+          <Link href="/terms" className={`font-medium underline underline-offset-2 ${tone.label}`}>
+            Terms &amp; Conditions
+          </Link>
+        </p>
+      </fieldset>
+
       <Recaptcha siteKey={captchaSiteKey} theme={dark ? "dark" : "light"} handleRef={captcha} />
 
       {status === "error" ? (
@@ -292,7 +329,7 @@ export function LeadForm({
         </a>
       </div>
       <p className={`mt-5 text-micro ${tone.hint}`}>
-        No spam and no pressure. We reply within one business day. By sending this form you agree we may contact you by phone, text or email about your request.
+        No spam and no pressure. We reply within one business day. By sending this form you agree we may contact you by phone or email about your request. We send text messages only if you tick a box above.
       </p>
     </form>
   );

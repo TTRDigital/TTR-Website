@@ -16,7 +16,7 @@ const map: [string, string][] = [
   ["/audit", "/contact"],
   ["/digital-marketing-referral-program", "/contact"],
   ["/thank-you-free-audit", "/thank-you"],
-  ["/privacy-policy", "/privacy"],
+  ["/privacy", "/privacy-policy"],
   ["/terms-of-service", "/terms"],
   ["/sitemap", "/"],
   ["/testing-page", "/"],
