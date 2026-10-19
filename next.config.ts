@@ -34,6 +34,11 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    // Tailwind CSS is small: sending it inside the HTML removes the
+    // render-blocking stylesheet requests before the first paint.
+    inlineCss: true,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [50, 75],

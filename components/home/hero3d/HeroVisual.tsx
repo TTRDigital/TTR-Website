@@ -35,9 +35,9 @@ function detectTier(): Tier {
 /**
  * Hero visual: a poster renders immediately in the same box the canvas
  * will use (zero layout shift) and slowly turns and breathes with CSS, so
- * the orb moves from the first frame. The WebGL scene loads later: on
- * desktop when the page is idle, on phones on the first touch or scroll or
- * 3 seconds after load. Then the canvas cross-fades in over the poster.
+ * the orb moves from the first frame. The WebGL scene loads on the first
+ * scroll, touch, key press or mouse move, then the canvas cross-fades in
+ * over the poster.
  */
 export function HeroVisual({ posterSrc, heroId }: { posterSrc: string; heroId: string }) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -73,40 +73,20 @@ export function HeroVisual({ posterSrc, heroId }: { posterSrc: string; heroId: s
       });
     };
 
-    if (t === "full") {
-      const idle = () =>
-        typeof window.requestIdleCallback === "function"
-          ? window.requestIdleCallback(load, { timeout: 2500 })
-          : setTimeout(load, 1200);
-      if (document.readyState === "complete") idle();
-      else window.addEventListener("load", idle, { once: true });
-      return () => {
-        cancelled = true;
-        window.removeEventListener("load", idle);
-      };
-    }
-
-    // Lite (phones and modest hardware): start on the first touch or scroll,
-    // or by itself shortly after the page has loaded, whichever comes first.
-    // The poster is already animating, so the swap is seamless.
-    const events = ["pointerdown", "touchstart", "scroll", "keydown", "wheel"] as const;
-    let timer: ReturnType<typeof setTimeout> | undefined;
+    // Start on the visitor's first scroll, touch, key press or mouse move,
+    // never on a timer. The poster is already turning, so the swap is
+    // seamless, and the page loads and becomes responsive without paying
+    // for WebGL (about 130 KB of script and a long shader compile) first.
+    const events = ["pointermove", "pointerdown", "touchstart", "scroll", "wheel", "keydown"] as const;
     const start = () => {
       events.forEach((e) => window.removeEventListener(e, start));
-      window.removeEventListener("load", arm);
-      if (timer) clearTimeout(timer);
-      load();
+      // Let the interaction's own frame paint before the heavy work starts.
+      if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(load, { timeout: 800 });
+      else setTimeout(load, 200);
     };
-    function arm() {
-      timer = setTimeout(start, 3000);
-    }
-    events.forEach((e) => window.addEventListener(e, start, { passive: true, once: true }));
-    if (document.readyState === "complete") arm();
-    else window.addEventListener("load", arm, { once: true });
+    events.forEach((e) => window.addEventListener(e, start, { passive: true }));
     return () => {
       cancelled = true;
-      if (timer) clearTimeout(timer);
-      window.removeEventListener("load", arm);
       events.forEach((e) => window.removeEventListener(e, start));
     };
   }, []);
