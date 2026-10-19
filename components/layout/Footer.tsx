@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/ui/IntentLink";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import type { Navigation, ServiceSummary, SiteSettings } from "@/lib/content";
 import { SocialIcon } from "@/components/ui/icons";
