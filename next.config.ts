@@ -10,11 +10,11 @@ const isDev = process.env.NODE_ENV !== "production";
 // If you add tags in GTM that load other scripts, add their domains here.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://*.googletagmanager.com https://va.vercel-scripts.com https://www.google.com https://www.gstatic.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://*.googletagmanager.com https://va.vercel-scripts.com https://www.google.com https://www.gstatic.com https://ttr-portal.vercel.app`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://cdn.sanity.io https://*.google-analytics.com https://*.googletagmanager.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://www.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+  "connect-src 'self' https://ttr-portal.vercel.app https://www.google.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
   "frame-src 'self' https://www.googletagmanager.com https://www.google.com https://recaptcha.google.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
