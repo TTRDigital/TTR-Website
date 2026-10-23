@@ -3,6 +3,10 @@ import type { PortableTextBlock } from "@portabletext/react";
 import { sanityFetch } from "@/lib/sanity/fetch";
 import { canonicalServiceSlug } from "@/lib/content";
 import { sanityImage, type SanityImageRef } from "@/lib/sanity/image";
+import { previewPosts } from "@/lib/data/preview-posts";
+
+/** Draft posts for review (TTR OS): only on Vercel previews, never on the live site. */
+const previewDrafts = () => (process.env.VERCEL_ENV === "preview" ? previewPosts : []);
 
 export type Category = { title: string; slug: string };
 
@@ -63,10 +67,14 @@ export async function getAllPosts(): Promise<PostSummary[]> {
     {},
     ["post"],
   );
-  return (data ?? []).map(toSummary);
+  const drafts: PostSummary[] = previewDrafts().map((p) => ({ slug: p.slug, title: p.title, excerpt: p.excerpt, publishedAt: p.publishedAt,
+    updatedAt: p.updatedAt, categories: p.categories, readingMinutes: p.readingMinutes, cover: p.cover }));
+  return [...drafts, ...(data ?? []).map(toSummary)];
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
+  const draft = previewDrafts().find((p) => p.slug === slug);
+  if (draft) return draft;
   const data = await sanityFetch<
     RawPost & {
       body: PortableTextBlock[];

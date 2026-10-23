@@ -10,6 +10,7 @@ import { CursorGlow } from "@/components/motion/CursorGlow";
 import { AttributionCapture } from "@/components/forms/AttributionCapture";
 import { HydrationSignal } from "@/components/motion/HydrationSignal";
 import { SiteAnalytics } from "@/components/analytics/SiteAnalytics";
+import { ReviewBar } from "@/components/layout/ReviewBar";
 import { analyticsEnabled } from "@/lib/analytics";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -47,6 +48,7 @@ export async function SiteShell({ children }: { children: ReactNode }) {
           <SpeedInsights />
         </>
       ) : null}
+      <ReviewBar />
       <div aria-hidden="true" className="grain" />
       <script dangerouslySetInnerHTML={{ __html: revealScript }} />
     </>
