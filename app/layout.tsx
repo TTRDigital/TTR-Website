@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
 import { siteUrl } from "@/lib/site";
+import { TtrTracker } from "@/components/analytics/TtrTracker";
 
 /*
  * Root layout is intentionally bare: the website's styles and chrome live
@@ -59,7 +60,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: fontScript }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <TtrTracker />
+      </body>
     </html>
   );
 }
