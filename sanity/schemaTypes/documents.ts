@@ -195,6 +195,16 @@ export const homePage = defineType({
     defineField({ name: "resultsIntro", type: "text", rows: 2, group: "proof" }),
     defineField({ name: "stats", type: "array", of: [{ type: "stat" }], group: "proof", description: "Real numbers only. Case studies come from Proof > Case studies." }),
     defineField({ name: "resultsFootnote", type: "string", group: "proof" }),
+    defineField({
+      name: "resultsVideoUrl",
+      title: "Results video (YouTube link)",
+      type: "url",
+      group: "proof",
+      description: "Client video testimonial shown next to the Results heading. Plays muted on its own when scrolled into view. Leave empty for the built-in video.",
+    }),
+    defineField({ name: "resultsVideoTitle", title: "Results video headline", type: "string", group: "proof" }),
+    defineField({ name: "resultsVideoPerson", title: "Results video: client name", type: "string", group: "proof" }),
+    defineField({ name: "resultsVideoBusiness", title: "Results video: business", type: "string", group: "proof" }),
 
     defineField({ name: "faqEyebrow", type: "string", group: "faq" }),
     defineField({ name: "faqHeading", type: "string", group: "faq" }),
