@@ -104,6 +104,12 @@ export const fallbackHome: HomeContent = {
       },
     ],
     footnote: "Results depend on your market, competition, budget and starting point. We never promise rankings.",
+    video: {
+      youtubeId: "ZH0ZslLyzdg",
+      title: "Why Dr. Medi Adili trusts TTR with dental marketing.",
+      person: "Dr. Medi Adili",
+      business: "Ideal Dental Solutions",
+    },
   },
   process: {
     eyebrow: "How we work",
