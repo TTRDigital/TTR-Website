@@ -3,6 +3,7 @@ import { sanityFetch } from "@/lib/sanity/fetch";
 import { getAllPosts } from "@/lib/blog";
 import { servicePages } from "@/lib/data/services";
 import { industryPages } from "@/lib/data/industries";
+import { locationPages } from "@/lib/data/locations";
 import { absoluteUrl } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -51,6 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/services", latest(...(stamps?.services ?? []).map((s) => s.at)), 0.9),
     ...servicePages.map((s) => entry(`/services/${s.slug}`, at(stamps?.services, s.slug), 0.9)),
     ...industryPages.map((p) => entry(`/${p.slug}`, at(stamps?.niches, p.slug), 0.9)),
+    ...locationPages.map((p) => entry(p.path, new Date(p.dateModified), 0.8)),
     entry("/about", at(stamps?.pages, "about"), 0.7),
     entry("/contact", at(stamps?.pages, "contact"), 0.7),
     entry("/blog", latest(...posts.map((p) => p.updatedAt ?? p.publishedAt)), 0.7, "weekly"),

@@ -1,6 +1,7 @@
 import { getAllPosts } from "@/lib/blog";
 import { getServiceSummaries, getSiteSettings } from "@/lib/content";
 import { industryPages } from "@/lib/data/industries";
+import { locationPages } from "@/lib/data/locations";
 import { absoluteUrl } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -29,6 +30,10 @@ ${services.map((s) => `- [${s.title}](${absoluteUrl(`/services/${s.slug}`)}): ${
 ## Industries
 
 ${industryPages.map((p) => `- [${p.name}](${absoluteUrl(`/${p.slug}`)}): ${p.intro}`).join("\n")}
+
+## Miami
+
+${locationPages.map((p) => `- [${p.name}](${absoluteUrl(p.path)}): ${p.seo.description}`).join("\n")}
 
 ## How we work
 
