@@ -103,7 +103,7 @@ export async function POST(request: Request) {
     console.info(
       "[lead] Delivered via",
       jobs.filter((_, i) => results[i].status === "fulfilled").map((j) => j.name).join(" + "),
-      `sms service=${lead.sms_consent_service ? "yes" : "no"} marketing=${lead.sms_consent_marketing ? "yes" : "no"}`,
+      `sms consent=${lead.sms_consent ? "yes" : "no"}`,
       spamCheck === "ok" ? "" : `(${spamCheck})`,
     );
     return NextResponse.json({ ok: true, delivered: true });

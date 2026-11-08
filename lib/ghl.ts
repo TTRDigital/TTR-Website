@@ -1,34 +1,29 @@
 import "server-only";
 import type { LeadInput } from "@/lib/lead";
 import { slugify } from "@/lib/text";
-import { SMS_CONSENT, SMS_CONSENT_VERSION } from "@/lib/sms-consent";
+import { SMS_CONSENT_FULL_TEXT, SMS_CONSENT_VERSION } from "@/lib/sms-consent";
 
 /** Who submitted and when, recorded with the SMS consent. */
 export type SubmissionMeta = { at: string; ip: string; userAgent: string };
 
 /**
- * The SMS consent record for one submission. Each opt-in is kept separately;
- * the wording is saved only for a box that was ticked, with the version the
- * person saw. Submitting a phone number alone never opts anyone in.
+ * The SMS consent record for one submission. The wording is saved only when
+ * the box was ticked, with the version the person saw. Submitting a phone
+ * number alone never opts anyone in.
  */
 function smsConsent(lead: LeadInput, meta: SubmissionMeta) {
-  const version = lead.sms_consent_version || SMS_CONSENT_VERSION;
-  const service = lead.sms_consent_service === true;
-  const marketing = lead.sms_consent_marketing === true;
+  const given = lead.sms_consent === true;
   return {
-    service,
-    marketing,
+    given,
     fields: {
-      sms_consent_service: service ? "yes" : "no",
-      sms_consent_marketing: marketing ? "yes" : "no",
-      sms_consent_service_text: service ? SMS_CONSENT.service : "",
-      sms_consent_marketing_text: marketing ? SMS_CONSENT.marketing : "",
-      sms_consent_version: version,
-      sms_consent_at: service || marketing ? meta.at : "",
-      sms_consent_phone: service || marketing ? normalizePhone(lead.phone) : "",
-      sms_consent_page: service || marketing ? lead.page_url || "" : "",
-      sms_consent_ip: service || marketing ? meta.ip : "",
-      sms_consent_user_agent: service || marketing ? meta.userAgent : "",
+      sms_consent: given ? "yes" : "no",
+      sms_consent_text: given ? SMS_CONSENT_FULL_TEXT : "",
+      sms_consent_version: lead.sms_consent_version || SMS_CONSENT_VERSION,
+      sms_consent_at: given ? lead.sms_consent_at || meta.at : "",
+      sms_consent_phone: given ? normalizePhone(lead.phone) : "",
+      sms_consent_page: given ? lead.sms_consent_page || lead.page_url || "" : "",
+      sms_consent_ip: given ? meta.ip : "",
+      sms_consent_user_agent: given ? meta.userAgent : "",
     },
   };
 }
@@ -111,31 +106,24 @@ function noteFor(lead: LeadInput, meta: SubmissionMeta) {
   if (utm.length) lines.push("", ...utm.map(([k, v]) => `${k}: ${v}`));
   const consent = smsConsent(lead, meta);
   lines.push("", `SMS consent (wording version ${consent.fields.sms_consent_version}):`);
-  if (!consent.service && !consent.marketing) lines.push("None given. Do not send text messages to this contact.");
+  if (!consent.given) lines.push("None given. Do not send text messages to this contact.");
   else {
-    lines.push(`Recorded ${meta.at} for ${consent.fields.sms_consent_phone} on ${consent.fields.sms_consent_page || "(unknown page)"} from IP ${meta.ip}.`);
-    if (consent.service) lines.push(`Service messages: YES. Agreed to: "${SMS_CONSENT.service}"`);
-    else lines.push("Service messages: no");
-    if (consent.marketing) lines.push(`Marketing messages: YES. Agreed to: "${SMS_CONSENT.marketing}"`);
-    else lines.push("Marketing messages: no");
+    lines.push(`Recorded ${consent.fields.sms_consent_at} for ${consent.fields.sms_consent_phone} on ${consent.fields.sms_consent_page || "(unknown page)"} from IP ${meta.ip}.`);
+    lines.push(`Agreed to: "${SMS_CONSENT_FULL_TEXT}"`);
   }
   return lines.filter((l) => l !== null).join("\n");
 }
 
 /**
  * "suspected-spam" is added when one spam signal fired, so nothing real is
- * ever lost. "sms-opt-in-service" and "sms-opt-in-marketing" mark the text
- * categories the person ticked; "sms-no-consent" means neither was ticked.
+ * ever lost. "sms-opt-in" means the text message box was ticked;
+ * "sms-no-consent" means it was not.
  */
 function leadTags(lead: LeadInput, spamCheck: string) {
-  const sms = [
-    ...(lead.sms_consent_service ? ["sms-opt-in-service"] : []),
-    ...(lead.sms_consent_marketing ? ["sms-opt-in-marketing"] : []),
-  ];
   return [
     "website-lead",
     `service-${slugify(lead.service)}`,
-    ...(sms.length ? sms : ["sms-no-consent"]),
+    lead.sms_consent ? "sms-opt-in" : "sms-no-consent",
     ...(spamCheck === "ok" ? [] : ["suspected-spam"]),
   ];
 }

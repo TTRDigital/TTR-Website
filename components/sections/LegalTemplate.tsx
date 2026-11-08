@@ -3,6 +3,7 @@ import { PageHero } from "@/components/sections/PageHero";
 import { PortableBody } from "@/components/blog/PortableBody";
 import { TriangleAlert } from "lucide-react";
 import { showPlaceholders } from "@/lib/placeholders";
+import { hasPublicEmail } from "@/lib/content";
 
 /** Simple, readable layout for legal pages. */
 export function LegalTemplate({ page, fallbackTitle, href, settings }: { page: CmsPage | null; fallbackTitle: string; href: string; settings: { phone: string; phoneHref: string; email: string } }) {
@@ -31,11 +32,15 @@ export function LegalTemplate({ page, fallbackTitle, href, settings }: { page: C
                   This page is being updated. For questions, call{" "}
                   <a className="font-medium text-brand-600 underline" href={settings.phoneHref}>
                     {settings.phone}
-                  </a>{" "}
-                  or email{" "}
-                  <a className="font-medium text-brand-600 underline" href={`mailto:${settings.email}`}>
-                    {settings.email}
                   </a>
+                  {hasPublicEmail(settings.email) ? (
+                    <>
+                      {" "}or email{" "}
+                      <a className="font-medium text-brand-600 underline" href={`mailto:${settings.email}`}>
+                        {settings.email}
+                      </a>
+                    </>
+                  ) : null}
                   .
                 </p>
               )}

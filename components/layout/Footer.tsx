@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { IntentLink as Link } from "@/components/ui/IntentLink";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
-import type { Navigation, ServiceSummary, SiteSettings } from "@/lib/content";
+import { hasPublicEmail, type Navigation, type ServiceSummary, type SiteSettings } from "@/lib/content";
+import { showPlaceholders } from "@/lib/placeholders";
 import { SocialIcon } from "@/components/ui/icons";
 import { legalName } from "@/lib/site";
 
@@ -103,10 +104,17 @@ export function Footer({ settings, services, nav }: { settings: SiteSettings; se
                 <Phone className="h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
                 {settings.phone}
               </a>
-              <a href={`mailto:${settings.email}`} className="flex min-h-11 items-center gap-3 break-all hover:text-hi">
-                <Mail className="h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
-                {settings.email}
-              </a>
+              {hasPublicEmail(settings.email) ? (
+                <a href={`mailto:${settings.email}`} className="flex min-h-11 items-center gap-3 break-all hover:text-hi">
+                  <Mail className="h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
+                  {settings.email}
+                </a>
+              ) : showPlaceholders ? (
+                <p className="flex items-center gap-3 py-2.5">
+                  <Mail className="h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
+                  {settings.email}
+                </p>
+              ) : null}
               <p className="flex gap-3 py-2.5">
                 <Clock className="mt-0.5 h-4 w-4 shrink-0 text-violet-300" strokeWidth={1.5} aria-hidden="true" />
                 {settings.hoursText}

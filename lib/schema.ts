@@ -1,4 +1,4 @@
-import type { SiteSettings } from "@/lib/content";
+import { hasPublicEmail, type SiteSettings } from "@/lib/content";
 import { absoluteUrl, legalName, siteUrl } from "@/lib/site";
 import { ogImageUrl } from "@/lib/seo";
 
@@ -25,7 +25,7 @@ export function siteSchema(settings: SiteSettings) {
         description:
           "Digital marketing agency for local businesses: SEO, AI search optimization, Google Ads, Meta Ads, websites, social media, GoHighLevel CRM and AI agents.",
         telephone: settings.phoneHref.replace(/^tel:/, ""),
-        email: settings.email,
+        ...(hasPublicEmail(settings.email) ? { email: settings.email } : {}),
         foundingDate: String(settings.foundedYear),
         address: {
           "@type": "PostalAddress",

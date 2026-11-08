@@ -1,15 +1,14 @@
 /**
- * SMS consent wording for the lead forms (Twilio A2P 10DLC). The form shows
- * this exact text and every lead records which version the person saw, so
- * change the text only together with a new version.
+ * SMS consent wording for the lead forms (Twilio A2P 10DLC). This must match,
+ * word for word, the opt-in described in the Twilio registration. Every lead
+ * records which version the person saw, so change the text only together with
+ * a new version. The form adds links to the Privacy Policy and Terms after it.
  */
-export const SMS_CONSENT_VERSION = "2026-10-18";
+export const SMS_CONSENT_VERSION = "2026-11-08";
 
-export const SMS_CONSENT = {
-  service:
-    "I agree to receive SMS messages from TTR Digital Marketing about my inquiry, consultation scheduling, appointment reminders, and service updates. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.",
-  marketing:
-    "I agree to receive recurring automated promotional and marketing text messages from TTR Digital Marketing at the number provided. Consent is not a condition of purchase. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help.",
-} as const;
+/** Shown before the "See our Privacy Policy and Terms." sentence. */
+export const SMS_CONSENT_TEXT =
+  "I agree to receive text messages from TTR Digital Marketing about my inquiry and our services. Message frequency varies. Message and data rates may apply. Reply STOP to cancel, HELP for help. Consent is not a condition of purchase.";
 
-export type SmsConsentType = keyof typeof SMS_CONSENT;
+/** The full wording as shown, saved with each consent. */
+export const SMS_CONSENT_FULL_TEXT = `${SMS_CONSENT_TEXT} See our Privacy Policy and Terms.`;

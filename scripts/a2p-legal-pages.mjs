@@ -13,12 +13,17 @@ const client = createClient({
 });
 
 const LEGAL = "TTR Digital Marketing LLC";
-const EMAIL = "ttrdigitalmarketingteam@gmail.com";
+// The support email must be a @ttrdigitalmarketing.com address. None is confirmed
+// yet, so pass it in: BUSINESS_EMAIL=name@ttrdigitalmarketing.com node scripts/a2p-legal-pages.mjs
+const EMAIL = process.env.BUSINESS_EMAIL?.trim() ?? "";
+if (!/^[^\s@]+@ttrdigitalmarketing\.com$/i.test(EMAIL)) {
+  console.error("Set BUSINESS_EMAIL to a @ttrdigitalmarketing.com address first. This script changes the live CMS pages.");
+  process.exit(1);
+}
 const PHONE = "(786) 460-1311";
 const PHONE_HREF = "tel:+17864601311";
 const ADDRESS = "1000 Brickell Ave Ste 715, Miami, FL 33131";
-const PRIVACY_URL = "https://www.ttrdigitalmarketing.com/privacy-policy";
-const UPDATED = "October 18, 2026";
+const UPDATED = "November 8, 2026";
 
 let n = 0;
 const key = () => `a2p${(n++).toString(36)}`;
@@ -64,21 +69,21 @@ const privacy = body([
   "When you fill out a form on this website, we collect:",
   "- Your name, phone number, email address and business name.",
   "- Your website address, the service you are interested in and any message you write, if you give them.",
-  "- Your text message choices: whether you ticked the box for service messages, the box for marketing messages, or neither. When you tick a box, we also record the date and time, the page you were on, the phone number you entered, the exact consent wording and its version, and your IP address and browser type, as a record of your consent.",
+  "- Your mobile phone number, if you enter one as your phone number, and your text message choice: whether you ticked the optional text message box. When you tick it, we also record the date and time, the page you were on, the phone number you entered, the exact consent wording and its version, and your IP address and browser type, as a record of your consent.",
   "- How you found us: the first page you visited, the website that sent you, and any campaign tags in the link (such as UTM, gclid or fbclid values).",
   "## Information collected automatically",
   "Like most websites, our servers and service providers receive basic technical data when you visit, such as your IP address, browser and device type, the pages you view and the time of your visit.",
   "## How we use your information",
   "- To reply to your inquiry, schedule a consultation and provide the services you ask for.",
-  "- To send text messages, but only in the categories you selected (see SMS Communications below).",
+  "- To send text messages, but only if you ticked the optional text message box (see Mobile Numbers and Text Messages below).",
   "- To call or email you about your request.",
   "- To understand how our website is used and improve it.",
   "- To protect our forms from spam and abuse.",
   "- To keep records we need for legal, tax and compliance reasons, including records of SMS consent and opt-outs.",
-  "## SMS Communications",
-  "If you opt in to text messages, TTR Digital Marketing will use your mobile number to send the message categories you selected. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for assistance.",
-  "We do not sell, rent, or share your mobile number, SMS opt-in data, or consent with third parties, affiliates, or lead generators for marketing or promotional purposes. We may disclose information to service providers solely as necessary to operate and deliver our messaging program, subject to confidentiality and use restrictions.",
-  "Giving us your phone number on a form does not sign you up for text messages. We text you only if you tick a text message box, and only in the categories you tick.",
+  "## Mobile Numbers and Text Messages",
+  "When you enter a mobile phone number on our forms, we collect it so we can reply to your inquiry. If you also tick the optional text message box, TTR Digital Marketing will use your mobile number to send you text messages about your inquiry and our services. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help.",
+  "Giving us your phone number on a form does not sign you up for text messages. The text message box is optional and is never ticked for you, and you can send the form without ticking it. Consent is not a condition of purchase.",
+  "**Mobile information is not shared with third parties or affiliates for marketing purposes.** We do not sell, rent or share your mobile number, text message opt-in data or consent with third parties or affiliates, or with lead generators, for their marketing or promotional purposes. We may disclose information to service providers only as needed to operate and deliver our messaging program, and they may use it only for that purpose.",
   "## Service providers that process your information",
   "We use these providers to run our website and business. They process information on our behalf and only as needed to provide their service to us:",
   "- **GoHighLevel (LeadConnector):** our customer relationship management system. It stores form submissions and consent records and sends our emails and text messages.",
@@ -117,14 +122,17 @@ const terms = body([
   "## Our services",
   "Any services we provide are covered by a separate written agreement between you and TTR Digital Marketing. If that agreement conflicts with these terms, the agreement wins.",
   "## Calls and emails",
-  "When you send us a form, we may call or email you about your request. Sending a form does not sign you up for text messages; see the SMS program below.",
-  "## TTR Digital Marketing SMS Program",
-  "By separately opting in, you agree to receive text messages from TTR Digital Marketing in the categories you selected. Service messages may include inquiry responses, consultation scheduling, appointment reminders, and service updates. Marketing messages, if separately selected, may include promotions and service offers.",
-  "Message frequency varies. Message and data rates may apply. Consent to marketing messages is not a condition of purchase.",
-  "Opt out: **Reply STOP to unsubscribe.** You may receive one confirmation message after opting out.",
-  `Help: **Reply HELP for assistance,** email [${EMAIL}](mailto:${EMAIL}), or call [${PHONE}](${PHONE_HREF}).`,
-  "Carriers are not liable for delayed or undelivered messages.",
-  `See our Privacy Policy at [${PRIVACY_URL}](/privacy-policy) for information about how we handle personal information.`,
+  "When you send us a form, we may call or email you about your request. Sending a form does not sign you up for text messages; see the SMS Terms below.",
+  "## SMS Terms",
+  "**Program name:** TTR Digital Marketing.",
+  "By ticking the optional text message box on our forms, you agree to receive text messages from TTR Digital Marketing about your inquiry and our services. Ticking the box is your choice and is not needed to send a form or to buy from us. Consent is not a condition of purchase.",
+  "**Message frequency:** varies.",
+  "**Costs:** message and data rates may apply.",
+  "**Cancel:** reply STOP at any time to cancel. You may get one message confirming that you are unsubscribed.",
+  "**Help:** reply HELP for help.",
+  `**Support:** email [${EMAIL}](mailto:${EMAIL}) or call [${PHONE}](${PHONE_HREF}).`,
+  "**Carriers:** carriers are not liable for delayed or undelivered messages.",
+  "Mobile information is not shared with third parties or affiliates for marketing purposes. See our [Privacy Policy](/privacy-policy) for how we handle personal information.",
   "## Intellectual property",
   "The text, graphics, logos and other content on this site belong to TTR Digital Marketing or its licensors. Please do not copy them without permission.",
   "## Links to other sites",
