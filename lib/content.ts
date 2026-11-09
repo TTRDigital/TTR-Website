@@ -100,14 +100,11 @@ export type HomeContent = {
 /* ---------- Fallbacks ---------- */
 
 /**
- * The public business email must be an @ttrdigitalmarketing.com address. None
- * is confirmed yet, so this marked placeholder stands in for it: it is hidden
- * on the live site (see lib/placeholders.ts) and shows on previews that set
- * NEXT_PUBLIC_SHOW_PLACEHOLDERS=true. A Gmail address saved in the CMS is
- * ignored. Enter the real address in /cms (Site settings > Email) or replace
- * this value.
+ * The public business email must be an @ttrdigitalmarketing.com address (set
+ * by Ben). A Gmail address saved in the CMS is ignored; a CMS address on the
+ * company domain overrides this default.
  */
-const EMAIL_PLACEHOLDER = "[BUSINESS EMAIL]";
+const DEFAULT_EMAIL = "dan@ttrdigitalmarketing.com";
 const COMPANY_EMAIL = /^[^\s@]+@ttrdigitalmarketing\.com$/i;
 
 /** True when the settings hold a real address worth showing as a link. */
@@ -117,7 +114,7 @@ export const fallbackSettings: SiteSettings = {
   name: "TTR Digital Marketing",
   phone: "(786) 460-1311",
   phoneHref: "tel:+17864601311",
-  email: EMAIL_PLACEHOLDER,
+  email: DEFAULT_EMAIL,
   street: "1000 Brickell Ave Ste 715",
   city: "Miami",
   region: "FL",

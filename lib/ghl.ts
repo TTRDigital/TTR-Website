@@ -17,6 +17,9 @@ function smsConsent(lead: LeadInput, meta: SubmissionMeta) {
     given,
     fields: {
       sms_consent: given ? "yes" : "no",
+      // Kept so existing GoHighLevel workflows that read these keep working.
+      sms_consent_service: given ? "yes" : "no",
+      sms_consent_marketing: "no",
       sms_consent_text: given ? SMS_CONSENT_FULL_TEXT : "",
       sms_consent_version: lead.sms_consent_version || SMS_CONSENT_VERSION,
       sms_consent_at: given ? lead.sms_consent_at || meta.at : "",
@@ -116,14 +119,15 @@ function noteFor(lead: LeadInput, meta: SubmissionMeta) {
 
 /**
  * "suspected-spam" is added when one spam signal fired, so nothing real is
- * ever lost. "sms-opt-in" means the text message box was ticked;
- * "sms-no-consent" means it was not.
+ * ever lost. "sms-opt-in-service" means the text message box was ticked (the
+ * wording covers the inquiry and our services; there is no marketing box any
+ * more, so "sms-opt-in-marketing" is not added); "sms-no-consent" means it was not.
  */
 function leadTags(lead: LeadInput, spamCheck: string) {
   return [
     "website-lead",
     `service-${slugify(lead.service)}`,
-    lead.sms_consent ? "sms-opt-in" : "sms-no-consent",
+    lead.sms_consent ? "sms-opt-in-service" : "sms-no-consent",
     ...(spamCheck === "ok" ? [] : ["suspected-spam"]),
   ];
 }

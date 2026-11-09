@@ -14,10 +14,10 @@ const client = createClient({
 
 const LEGAL = "TTR Digital Marketing LLC";
 // The support email must be a @ttrdigitalmarketing.com address. None is confirmed
-// yet, so pass it in: BUSINESS_EMAIL=name@ttrdigitalmarketing.com node scripts/a2p-legal-pages.mjs
-const EMAIL = process.env.BUSINESS_EMAIL?.trim() ?? "";
+// yet beyond dan@ (set by Ben), override with BUSINESS_EMAIL=name@ttrdigitalmarketing.com if needed.
+const EMAIL = process.env.BUSINESS_EMAIL?.trim() || "dan@ttrdigitalmarketing.com";
 if (!/^[^\s@]+@ttrdigitalmarketing\.com$/i.test(EMAIL)) {
-  console.error("Set BUSINESS_EMAIL to a @ttrdigitalmarketing.com address first. This script changes the live CMS pages.");
+  console.error("BUSINESS_EMAIL must be a @ttrdigitalmarketing.com address. This script changes the live CMS pages.");
   process.exit(1);
 }
 const PHONE = "(786) 460-1311";
@@ -83,7 +83,6 @@ const privacy = body([
   "## Mobile Numbers and Text Messages",
   "When you enter a mobile phone number on our forms, we collect it so we can reply to your inquiry. If you also tick the optional text message box, TTR Digital Marketing will use your mobile number to send you text messages about your inquiry and our services. Message frequency varies. Message and data rates may apply. Reply STOP to cancel or HELP for help.",
   "Giving us your phone number on a form does not sign you up for text messages. The text message box is optional and is never ticked for you, and you can send the form without ticking it. Consent is not a condition of purchase.",
-  "You can also agree to receive text messages verbally on a call with our team. When you do, our team records your consent with the date. Mobile information is not shared with third parties or affiliates for marketing purposes.",
   "**Mobile information is not shared with third parties or affiliates for marketing purposes.** We do not sell, rent or share your mobile number, text message opt-in data or consent with third parties or affiliates, or with lead generators, for their marketing or promotional purposes. We may disclose information to service providers only as needed to operate and deliver our messaging program, and they may use it only for that purpose.",
   "## Service providers that process your information",
   "We use these providers to run our website and business. They process information on our behalf and only as needed to provide their service to us:",
