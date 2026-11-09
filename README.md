@@ -71,7 +71,7 @@ The site key is public and lives in `lib/ttr-site-key.ts` (`NEXT_PUBLIC_TTR_SITE
 
 Every form has one optional SMS checkbox, unticked by default. The wording lives in `lib/sms-consent.ts` with a version date (`SMS_CONSENT_VERSION`) and must match the Twilio registration word for word. If you change the wording, change the version too, and update `/privacy-policy` and `/terms` to match. A phone number alone never opts anyone in.
 
-Each lead carries its consent record as fields: `f_sms_consent` (`yes`/`no`), `f_sms_consent_at` (when it was ticked), `f_sms_consent_page`, `f_sms_consent_text` (the exact wording), `f_sms_consent_version`, `f_sms_consent_phone` (E.164) and `f_sms_consent_ip`. They are empty when the box was not ticked. Contacts without consent must not be texted. STOP and HELP are handled by the messaging system, not this website.
+Each lead carries its consent record as fields: `f_sms_consent` (`yes`/`no`), `f_sms_consent_at` (when it was ticked), `f_sms_consent_page`, `f_sms_consent_text` (the exact wording), `f_sms_consent_version`, `f_sms_consent_number` (E.164) and `f_sms_consent_ip`. They are empty when the box was not ticked. Contacts without consent must not be texted. STOP and HELP are handled by the messaging system, not this website.
 
 The legal pages are `/privacy-policy` (`/privacy` redirects there) and `/terms`; their text is in Studio > Pages and was written by `scripts/a2p-legal-pages.mjs`. The legal entity name, `TTR Digital Marketing LLC`, is `legalName` in `lib/site.ts` and shows in the footer, on the contact page and in the schema.
 

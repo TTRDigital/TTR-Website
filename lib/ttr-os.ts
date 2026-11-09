@@ -38,7 +38,6 @@ export async function sendLeadToTtrOs(lead: LeadInput, meta: SubmissionMeta, spa
     name: lead.name.trim(),
     email: lead.email.trim(),
     phone: normalizePhone(lead.phone),
-    phone_raw: lead.phone.trim(),
     business: lead.business.trim(),
     website: lead.website || "",
     service: lead.service,
@@ -57,7 +56,7 @@ export async function sendLeadToTtrOs(lead: LeadInput, meta: SubmissionMeta, spa
     sms_consent_page: given ? lead.sms_consent_page || lead.page_url || "" : "",
     sms_consent_text: given ? SMS_CONSENT_FULL_TEXT : "",
     sms_consent_version: lead.sms_consent_version || SMS_CONSENT_VERSION,
-    sms_consent_phone: given ? normalizePhone(lead.phone) : "",
+    sms_consent_number: given ? normalizePhone(lead.phone) : "",
     sms_consent_ip: given ? meta.ip : "",
   };
   const body = new URLSearchParams({
