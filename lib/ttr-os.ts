@@ -22,7 +22,8 @@ function normalizePhone(raw: string) {
  * r = referrer, u = full landing URL, and every field as f_<name>. The SMS
  * consent travels with the lead: yes/no, when, which page, the exact wording
  * and its version. Consent details are empty unless the box was ticked, so a
- * phone number alone never opts anyone in. Throws if TTR OS does not accept it.
+ * phone number alone never opts anyone in. TTR OS always answers 204, so a
+ * non-2xx answer is the only failure we can see. Throws if it is not accepted.
  */
 export async function sendLeadToTtrOs(lead: LeadInput, meta: SubmissionMeta, spamCheck = "ok") {
   if (!TTR_SITE_KEY) throw new Error("TTR OS site key is off (NEXT_PUBLIC_TTR_SITE_KEY=off)");
@@ -72,7 +73,13 @@ export async function sendLeadToTtrOs(lead: LeadInput, meta: SubmissionMeta, spa
     try {
       const res = await fetch(FORM_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          // TTR OS rejects bot-like user agents and limits forms per IP (first x-forwarded-for value), so identify
+          // as the website and pass the visitor's real IP.
+          "User-Agent": "TTR-Website/1.0",
+          ...(meta.ip && meta.ip !== "unknown" ? { "X-Forwarded-For": meta.ip } : {}),
+        },
         body,
         signal: AbortSignal.timeout(8000),
         cache: "no-store",
