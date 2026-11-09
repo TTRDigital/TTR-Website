@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ghlConfig, ghlWebhookUrl } from "@/lib/ghl";
+import { TTR_SITE_KEY } from "@/lib/ttr-site-key";
 import { RECAPTCHA_SECRET_NAMES, RECAPTCHA_SITE_KEY_NAMES, recaptchaSecret, recaptchaSiteKey } from "@/lib/recaptcha";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +24,7 @@ export function GET() {
         variablesSeen: lookalikes,
         unrecognisedNames: lookalikes.filter((k) => !known.includes(k)),
       },
-      leads: { webhook: !!ghlWebhookUrl(), ghlApi: !!ghlConfig() },
+      leads: { ttrOsSiteKey: !!TTR_SITE_KEY },
     },
     { headers: { "Cache-Control": "no-store" } },
   );

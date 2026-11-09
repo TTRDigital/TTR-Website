@@ -101,10 +101,10 @@ export type HomeContent = {
 
 /**
  * The public business email must be an @ttrdigitalmarketing.com address (set
- * by Ben). A Gmail address saved in the CMS is ignored; a CMS address on the
+ * by Kia). A Gmail address saved in the CMS is ignored; a CMS address on the
  * company domain overrides this default.
  */
-const DEFAULT_EMAIL = "dan@ttrdigitalmarketing.com";
+const DEFAULT_EMAIL = "hello@ttrdigitalmarketing.com";
 const COMPANY_EMAIL = /^[^\s@]+@ttrdigitalmarketing\.com$/i;
 
 /** True when the settings hold a real address worth showing as a link. */

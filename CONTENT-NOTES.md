@@ -153,7 +153,7 @@ Every placeholder renders as a clearly marked tag on the preview, e.g. `[CLIENT 
 - [ ] Privacy Policy and Terms are starter text from the earlier build. They'll be marked "Starter text, to be reviewed by a lawyer" until a lawyer approves them.
 
 **Environment variables (not needed yet)**
-- `GHL_LOCATION_ID`, `GHL_API_KEY`, `NEXT_PUBLIC_GA_ID` and/or `NEXT_PUBLIC_GTM_ID`, `SANITY_REVALIDATE_SECRET`. Everything works without them.
+- `NEXT_PUBLIC_GA_ID` and/or `NEXT_PUBLIC_GTM_ID`, `SANITY_REVALIDATE_SECRET`. Everything works without them.
 
 ---
 

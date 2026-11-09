@@ -14,8 +14,8 @@ const client = createClient({
 
 const LEGAL = "TTR Digital Marketing LLC";
 // The support email must be a @ttrdigitalmarketing.com address. None is confirmed
-// yet beyond dan@ (set by Ben), override with BUSINESS_EMAIL=name@ttrdigitalmarketing.com if needed.
-const EMAIL = process.env.BUSINESS_EMAIL?.trim() || "dan@ttrdigitalmarketing.com";
+// is hello@ (confirmed by Kia), override with BUSINESS_EMAIL=name@ttrdigitalmarketing.com if needed.
+const EMAIL = process.env.BUSINESS_EMAIL?.trim() || "hello@ttrdigitalmarketing.com";
 if (!/^[^\s@]+@ttrdigitalmarketing\.com$/i.test(EMAIL)) {
   console.error("BUSINESS_EMAIL must be a @ttrdigitalmarketing.com address. This script changes the live CMS pages.");
   process.exit(1);
@@ -86,7 +86,7 @@ const privacy = body([
   "**Mobile information is not shared with third parties or affiliates for marketing purposes.** We do not sell, rent or share your mobile number, text message opt-in data or consent with third parties or affiliates, or with lead generators, for their marketing or promotional purposes. We may disclose information to service providers only as needed to operate and deliver our messaging program, and they may use it only for that purpose.",
   "## Service providers that process your information",
   "We use these providers to run our website and business. They process information on our behalf and only as needed to provide their service to us:",
-  "- **GoHighLevel (LeadConnector):** our customer relationship management system. It stores form submissions and consent records and sends our emails and text messages.",
+  "- **TTR OS:** our own business system. It stores form submissions and consent records.",
   "- **Twilio:** delivers our text messages to mobile carriers.",
   "- **Vercel:** hosts this website and provides Vercel Web Analytics and Speed Insights.",
   "- **Google reCAPTCHA:** the \"I'm not a robot\" check on our forms. It is subject to the [Google Privacy Policy](https://policies.google.com/privacy) and [Terms of Service](https://policies.google.com/terms).",

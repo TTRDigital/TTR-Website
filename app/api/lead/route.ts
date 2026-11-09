@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { leadSchema } from "@/lib/lead";
 import { MIN_FILL_MS } from "@/lib/lead-options";
-import { ghlConfig, ghlWebhookUrl, sendLeadToGhl, sendLeadToWebhook } from "@/lib/ghl";
+import { sendLeadToTtrOs } from "@/lib/ttr-os";
 import { recaptchaSecret, verifyRecaptcha } from "@/lib/recaptcha";
 
 /* Best-effort per-IP rate limit (per server instance). */
@@ -81,32 +81,13 @@ export async function POST(request: Request) {
         ? `suspect: ${captchaNote}`
         : "ok";
 
-  const webhookUrl = ghlWebhookUrl();
-  const cfg = ghlConfig();
-  if (!webhookUrl && !cfg) {
-    console.warn(
-      "[lead] No delivery configured. Lead accepted but NOT sent anywhere. Add GHL_WEBHOOK_URL (or GHL_LOCATION_ID + GHL_API_KEY) in Vercel.",
-    );
-    return NextResponse.json({ ok: true, delivered: false });
-  }
-
-  // Webhook and API run side by side; the lead counts as saved if either works.
-  const jobs: { name: string; run: Promise<unknown> }[] = [];
-  if (webhookUrl) jobs.push({ name: "webhook", run: sendLeadToWebhook(webhookUrl, lead, meta, spamCheck) });
-  if (cfg) jobs.push({ name: "api", run: sendLeadToGhl(cfg, lead, meta, spamCheck) });
-  const results = await Promise.allSettled(jobs.map((j) => j.run));
-  results.forEach((r, i) => {
-    if (r.status === "rejected") console.error(`[lead] GoHighLevel ${jobs[i].name} delivery failed`, r.reason);
-  });
-
-  if (results.some((r) => r.status === "fulfilled")) {
-    console.info(
-      "[lead] Delivered via",
-      jobs.filter((_, i) => results[i].status === "fulfilled").map((j) => j.name).join(" + "),
-      `sms consent=${lead.sms_consent ? "yes" : "no"}`,
-      spamCheck === "ok" ? "" : `(${spamCheck})`,
-    );
+  // Everything goes to TTR OS (/api/site/form), our own system.
+  try {
+    await sendLeadToTtrOs(lead, meta, spamCheck);
+    console.info("[lead] Delivered to TTR OS", `sms consent=${lead.sms_consent ? "yes" : "no"}`, spamCheck === "ok" ? "" : `(${spamCheck})`);
     return NextResponse.json({ ok: true, delivered: true });
+  } catch (err) {
+    console.error("[lead] TTR OS delivery failed", err);
   }
   // Nothing saved the lead. Tell the visitor so they can call instead of
   // believing a lost lead went through.
