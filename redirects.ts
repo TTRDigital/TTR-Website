@@ -42,6 +42,9 @@ const map: [string, string][] = [
   // Slugs from the earlier build of this site
   ["/services/websites", "/services/website-design"],
   ["/services/social-media", "/services/social-media-marketing"],
+  // The only old city pages that match a market TTR serves go to the new Miami pages (TTR-1454, see docs/seo/CHANGELOG.md)
+  ["/fl/miami-seo", "/miami-seo"],
+  ["/fl/miami-ppc", "/miami-google-ads"],
   // Old city pages: one service page per channel, the city in the slug is dropped
   [`/:state(${STATES})/:city([a-z-]+)-seo`, "/services/seo"],
   [`/:state(${STATES})/:city([a-z-]+)-ppc`, "/services/google-ads"],

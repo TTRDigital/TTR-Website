@@ -17,6 +17,11 @@ export function Footer({ settings, services, nav }: { settings: SiteSettings; se
       links: [
         { href: "/dental-marketing", label: "Dental marketing" },
         { href: "/home-services-marketing", label: "Home services marketing" },
+        { href: "/law-firm-marketing", label: "Law firm marketing" },
+        { href: "/real-estate-marketing", label: "Real estate marketing" },
+        { href: "/miami-seo", label: "Miami SEO" },
+        { href: "/miami-google-ads", label: "Miami Google Ads" },
+        { href: "/miami-dental-marketing", label: "Miami dental marketing" },
       ],
     },
     {

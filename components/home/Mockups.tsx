@@ -1,7 +1,16 @@
 /* Small HTML/SVG UI mockups used as visuals. Decorative, so hidden from
    assistive tech. Animations play once when the parent reveals. */
 
-export function RankingMockup() {
+export function RankingMockup({ queries }: { queries?: [string, string][] }) {
+  const rows: [string, string][] = queries ?? [
+    ["dentist near me", "Map pack"],
+    ["emergency AC repair", "Top 3"],
+    ["best plumber near me", "AI answer"],
+  ];
+  return <RankingMockupView rows={rows} />;
+}
+
+function RankingMockupView({ rows }: { rows: [string, string][] }) {
   return (
     <div aria-hidden="true" data-anim className="mock relative rounded-2xl border border-line bg-ink-950/70 p-4 sm:p-5">
       <div className="flex items-center justify-between">
@@ -41,11 +50,7 @@ export function RankingMockup() {
       </svg>
 
       <ul className="mt-4 space-y-2">
-        {[
-          ["dentist near me", "Map pack"],
-          ["emergency AC repair", "Top 3"],
-          ["best plumber near me", "AI answer"],
-        ].map(([q, tag], i) => (
+        {rows.map(([q, tag], i) => (
           <li
             key={q}
             className="mock-row flex items-center justify-between rounded-lg border border-line bg-white/[0.02] px-3 py-2"

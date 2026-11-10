@@ -11,6 +11,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { ServiceIcon } from "@/components/ui/icons";
 import { Text } from "@/components/ui/Placeholder";
+import { JsonLd } from "@/components/ui/JsonLd";
+import { landingPageSchema } from "@/lib/schema";
 import { Spotlight } from "@/components/motion/Spotlight";
 import { ServiceMockup } from "@/components/mockups/ServiceMockups";
 
@@ -29,8 +31,18 @@ export function IndustryTemplate({ page, settings, services, testimonials }: Pro
 
   return (
     <>
+      <JsonLd
+        data={landingPageSchema({
+          path: `/${page.slug}`,
+          name: page.name,
+          description: page.seo.description,
+          updated: page.updated,
+          byKia: page.byline,
+          areaServed: page.slug.startsWith("miami-") ? "Miami" : undefined,
+        })}
+      />
       <PageHero
-        breadcrumbs={[{ name: page.name, href: `/${page.slug}` }]}
+        breadcrumbs={[...(page.parent ? [page.parent] : []), { name: page.name, href: `/${page.slug}` }]}
         eyebrow={page.eyebrow}
         title={page.heading}
         intro={<p>{page.intro}</p>}
@@ -46,8 +58,15 @@ export function IndustryTemplate({ page, settings, services, testimonials }: Pro
             </Button>
           </>
         }
-        visual={<ServiceMockup kind={page.mockup} />}
-      />
+        visual={<ServiceMockup kind={page.mockup} queries={page.mockupQueries} />}
+      >
+        {page.byline ? (
+          <p className="hero-fade mt-8 text-small text-meta" style={{ "--d": "500ms" } as React.CSSProperties}>
+            Written by <Link href="/about" className="link-underline text-body">Kia Khamoushi</Link>, founder of {settings.name}.
+            {page.updated ? ` Updated ${new Date(page.updated + "T12:00:00Z").toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" })}.` : ""}
+          </p>
+        ) : null}
+      </PageHero>
 
       {/* Pain points */}
       <section aria-labelledby="pains-title" className="section-pad relative border-t border-line">
@@ -96,11 +115,28 @@ export function IndustryTemplate({ page, settings, services, testimonials }: Pro
         </div>
       </section>
 
+      {page.sections?.length ? (
+        <section aria-label={`More about ${page.name}`} className="relative pb-16 lg:pb-24">
+          <div className="container-page grid gap-12 lg:grid-cols-12">
+            {page.sections.map((sec, i) => (
+              <article key={sec.heading} data-reveal className={`lg:col-span-8 ${i % 2 ? "lg:col-start-5" : ""}`}>
+                <h2 className="text-[clamp(1.5rem,1.2rem+1vw,2.25rem)] font-semibold tracking-[-0.025em] text-hi">{sec.heading}</h2>
+                {sec.paragraphs.map((t) => (
+                  <p key={t.slice(0, 40)} className="mt-4 text-lead text-body">
+                    {t}
+                  </p>
+                ))}
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       {page.trades ? (
         <section aria-labelledby="trades-title" className="relative pb-16 lg:pb-24">
           <div className="container-page">
             <h2 id="trades-title" data-reveal className="font-sans text-micro font-medium uppercase tracking-[0.18em] text-meta">
-              Trades we work with
+              {page.tradesHeading ?? "Trades we work with"}
             </h2>
             <ul className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-[20px] border border-line bg-line sm:grid-cols-4">
               {page.trades.map((t, i) => (
@@ -143,6 +179,26 @@ export function IndustryTemplate({ page, settings, services, testimonials }: Pro
                 </figure>
               ) : null}
             </div>
+          </div>
+        </section>
+      ) : null}
+
+      {page.related?.length ? (
+        <section aria-labelledby="related-title" className="relative pb-16 lg:pb-24">
+          <div className="container-page">
+            <h2 id="related-title" data-reveal className="font-sans text-micro font-medium uppercase tracking-[0.18em] text-meta">
+              Keep reading
+            </h2>
+            <ul className="mt-6 grid gap-4 sm:grid-cols-3">
+              {page.related.map((r) => (
+                <li key={r.href} data-reveal className="card rounded-[20px] p-6">
+                  <Link href={r.href} className="font-display text-[1.125rem] font-semibold text-hi link-underline">
+                    {r.label}
+                  </Link>
+                  <p className="mt-2 text-small text-body">{r.text}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       ) : null}

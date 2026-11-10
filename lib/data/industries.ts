@@ -1,5 +1,6 @@
 import type { Faq, Step } from "@/lib/content";
 import type { MockupKind } from "@/components/mockups/ServiceMockups";
+import { landingPages } from "@/lib/data/landing-pages";
 
 /* Industry (niche) page copy. Fallbacks until Phase 4 moves them to Sanity. */
 
@@ -11,6 +12,8 @@ export type IndustryPage = {
   heading: string;
   intro: string;
   mockup: MockupKind;
+  /** Example searches for the "ranking" mockup: [search, label]. Defaults to dental and home services examples. */
+  mockupQueries?: [string, string][];
   painsHeading: string;
   pains: Step[];
   systemHeading: string;
@@ -21,9 +24,21 @@ export type IndustryPage = {
   proofPlaceholder: string;
   faqs: Faq[];
   ctaHeading: string;
+  /** Heading above `trades`. Defaults to "Trades we work with". */
+  tradesHeading?: string;
+  /** Longer, page-specific writing shown after the system section. */
+  sections?: { heading: string; paragraphs: string[] }[];
+  /** Pages to read next: shown as links, and keep new pages from being orphans. */
+  related?: { label: string; href: string; text: string }[];
+  /** Parent page in the breadcrumb trail, e.g. the national dental page above a city page. */
+  parent?: { name: string; href: string };
+  /** Shows "Written by Kia" under the hero and adds author schema. */
+  byline?: boolean;
+  /** ISO date of the last edit, shown with the byline and used in schema. */
+  updated?: string;
 };
 
-export const industryPages: IndustryPage[] = [
+const coreIndustryPages: IndustryPage[] = [
   {
     slug: "dental-marketing",
     name: "Dental marketing",
@@ -92,6 +107,11 @@ export const industryPages: IndustryPage[] = [
       },
     ],
     ctaHeading: "Ready to fill your schedule with new patients?",
+    related: [
+      { label: "Miami dental marketing", href: "/miami-dental-marketing", text: "How we market practices in the Miami market." },
+      { label: "Local SEO", href: "/services/seo", text: "Win the map pack for your neighborhood." },
+      { label: "Search Everywhere Optimization", href: "/services/search-everywhere-optimization", text: "Be the practice AI tools suggest." },
+    ],
   },
   {
     slug: "home-services-marketing",
@@ -169,7 +189,14 @@ export const industryPages: IndustryPage[] = [
       },
     ],
     ctaHeading: "Ready to keep your crews busy?",
+    related: [
+      { label: "Miami SEO", href: "/miami-seo", text: "How we approach local SEO in Miami." },
+      { label: "Miami Google Ads", href: "/miami-google-ads", text: "Calls first, clicks second." },
+      { label: "Missed-call text back", href: "/services/gohighlevel-crm", text: "Reply to every call, even from the roof." },
+    ],
   },
 ];
+
+export const industryPages: IndustryPage[] = [...coreIndustryPages, ...landingPages];
 
 export const getIndustryPage = (slug: string) => industryPages.find((p) => p.slug === slug) ?? null;
