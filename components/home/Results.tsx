@@ -4,12 +4,15 @@ import { isPlaceholder, showPlaceholders } from "@/lib/placeholders";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Text } from "@/components/ui/Placeholder";
 import { CountUp } from "@/components/motion/CountUp";
+import { withoutUnverifiedStats } from "@/lib/unverified-proof";
 import { ResultsVideo } from "@/components/home/ResultsVideo";
 
 export function Results({ data }: { data: HomeContent["results"] }) {
   const cases = data.cases.filter(
     (c) => showPlaceholders || ![c.client, c.challenge, c.result].some((v) => isPlaceholder(v)),
   );
+
+  const stats = withoutUnverifiedStats(data.stats);
 
   return (
     <section id="results" aria-labelledby="results-title" className="section-pad relative scroll-mt-24 overflow-hidden">
@@ -26,8 +29,9 @@ export function Results({ data }: { data: HomeContent["results"] }) {
           <SectionHeading id="results-title" eyebrow={data.eyebrow} title={data.heading} intro={data.intro} />
         )}
 
-        <dl className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-[24px] border border-line bg-line lg:mt-20 lg:grid-cols-4">
-          {data.stats.map((s, i) => (
+        {stats.length ? (
+        <dl className={`mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-[24px] border border-line bg-line lg:mt-20 ${stats.length >= 4 ? "lg:grid-cols-4" : stats.length === 3 ? "lg:grid-cols-3" : ""}`}>
+          {stats.map((s, i) => (
             <div key={s.label} data-reveal style={{ "--i": i } as React.CSSProperties} className="flex flex-col-reverse justify-end bg-ink-950 p-6 sm:p-8 lg:p-10">
               <dt className="mt-3 text-small text-body">{s.label}</dt>
               <dd className="text-gradient font-display text-[clamp(2.5rem,1.6rem+3.4vw,4.5rem)] font-semibold leading-none tracking-[-0.04em]">
@@ -36,6 +40,7 @@ export function Results({ data }: { data: HomeContent["results"] }) {
             </div>
           ))}
         </dl>
+        ) : null}
 
         <ul className="mt-6 grid gap-4 md:grid-cols-3 lg:gap-5">
           {cases.map((c, i) => (
