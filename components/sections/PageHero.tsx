@@ -39,7 +39,7 @@ export function PageHero({ eyebrow, title, intro, breadcrumbs, actions, visual, 
               <MaskedWords text={title} />
             </h1>
             {intro ? (
-              <div className="hero-fade mt-6 max-w-[40rem] text-lead text-body lg:mt-8" style={{ "--d": "320ms" } as React.CSSProperties}>
+              <div className="hero-rise mt-6 max-w-[40rem] text-lead text-body lg:mt-8">
                 {intro}
               </div>
             ) : null}
