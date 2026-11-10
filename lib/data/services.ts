@@ -36,9 +36,9 @@ export const servicePages: ServicePage[] = [
     slug: "seo",
     title: "SEO",
     seo: {
-      title: "Local SEO Services | TTR Digital Marketing",
+      title: "Miami Local SEO Services | TTR Digital Marketing",
       description:
-        "Local SEO that gets your business into Google search and the map pack, then turns that traffic into calls. Free SEO audit from our team.",
+        "Local SEO from a Miami agency: get into Google search and the map pack, then turn that traffic into calls. Free SEO audit.",
     },
     eyebrow: "Local SEO",
     heading: "SEO that puts you in front of local customers ready to call.",

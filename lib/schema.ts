@@ -101,3 +101,15 @@ export function landingPageSchema(input: { path: string; name: string; descripti
     ],
   };
 }
+
+/** Full Person entry for the About page (same @id as the author reference on landing pages). */
+export function kiaProfileSchema() {
+  return {
+    "@context": "https://schema.org",
+    ...kiaPerson,
+    description: "Founder of TTR Digital Marketing. Previously owner and CEO of an IT company for more than a decade, now focused on search engine optimization for local businesses.",
+    image: absoluteUrl("/team/kia-khamoushi.webp"),
+    url: absoluteUrl("/about"),
+    knowsAbout: ["Local SEO", "AI search optimization", "Google Ads", "Digital marketing"],
+  };
+}
