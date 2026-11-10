@@ -10,6 +10,8 @@ import { OfficeMap } from "@/components/sections/OfficeMap";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { SocialIcon } from "@/components/ui/icons";
+import { JsonLd } from "@/components/ui/JsonLd";
+import { kiaProfileSchema } from "@/lib/schema";
 
 export const revalidate = 300;
 
@@ -50,6 +52,7 @@ export default async function AboutPage() {
 
   return (
     <>
+      <JsonLd data={kiaProfileSchema()} />
       <PageHero
         breadcrumbs={[{ name: "About", href: "/about" }]}
         eyebrow="About TTR"

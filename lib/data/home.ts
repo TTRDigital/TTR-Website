@@ -4,9 +4,9 @@ import type { HomeContent } from "@/lib/content";
 
 export const fallbackHome: HomeContent = {
   seo: {
-    title: "Digital Marketing Agency for Local Businesses | TTR",
+    title: "Miami Digital Marketing Agency for Local Businesses | TTR",
     description:
-      "TTR Digital Marketing gets local businesses found on Google, ads and AI search, then turns that traffic into booked calls. Free growth audit.",
+      "TTR Digital Marketing in Miami gets local businesses found on Google, ads and AI search, then turns that traffic into booked calls. Free audit.",
   },
   hero: {
     eyebrow: "Digital marketing agency",
