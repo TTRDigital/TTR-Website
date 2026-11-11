@@ -440,6 +440,18 @@ a:focus-visible > .link-underline {
   animation: fade-up 800ms var(--ease-out) both;
   animation-delay: var(--d, 300ms);
 }
+/* Intro paragraph is usually the largest paint (LCP): rise into place without starting invisible, so it counts as painted on the first frame. */
+.hero-rise {
+  animation: rise-up 600ms var(--ease-out) both;
+}
+@keyframes rise-up {
+  from {
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    transform: none;
+  }
+}
 
 @keyframes word-up {
   from {
@@ -532,6 +544,9 @@ a:focus-visible > .link-underline {
   }
   .hero-fade {
     animation: vt-in 400ms linear both;
+  }
+  .hero-rise {
+    animation: none;
   }
   .motion-safe-only {
     display: none !important;

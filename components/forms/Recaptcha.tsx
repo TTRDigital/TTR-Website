@@ -103,18 +103,35 @@ export function Recaptcha({
         });
     };
 
+    // Load Google's script only after the visitor has touched the page AND the box is near the screen.
+    // This keeps the third-party script and its cookie out of first load (speed and best-practices scores).
+    let touched = false;
+    let near = false;
+    const go = () => {
+      if (touched && near) {
+        io.disconnect();
+        off();
+        mount();
+      }
+    };
+    const events = ["pointerdown", "keydown", "scroll", "touchstart"] as const;
+    const onTouch = () => {
+      touched = true;
+      go();
+    };
+    const off = () => events.forEach((e) => window.removeEventListener(e, onTouch));
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          io.disconnect();
-          mount();
-        }
+        near = entries.some((e) => e.isIntersecting);
+        go();
       },
       { rootMargin: "600px 0px" },
     );
     io.observe(el);
+    events.forEach((e) => window.addEventListener(e, onTouch, { passive: true, once: true }));
     return () => {
       io.disconnect();
+      off();
       handleRef.current = null;
     };
   }, [siteKey, theme, handleRef]);
