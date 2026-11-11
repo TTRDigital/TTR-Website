@@ -61,3 +61,43 @@ export function siteSchema(settings: SiteSettings) {
     ],
   };
 }
+
+/** Kia as the author and founder. Title is "Founder" until decision 6 in docs/seo/DECISIONS-FOR-KIA.md is answered. */
+export const kiaPerson = {
+  "@type": "Person",
+  "@id": absoluteUrl("/about#kia"),
+  name: "Kia Khamoushi",
+  jobTitle: "Founder",
+  worksFor: { "@id": absoluteUrl("/#organization") },
+  sameAs: ["https://www.linkedin.com/in/kia-kham"],
+};
+
+/** WebPage + Service schema for a service-like landing page written by Kia. */
+export function landingPageSchema(input: { path: string; name: string; description: string; updated?: string; areaServed?: string; byKia?: boolean }) {
+  const url = absoluteUrl(input.path);
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: input.name,
+        description: input.description,
+        inLanguage: "en-US",
+        isPartOf: { "@id": absoluteUrl("/#website") },
+        ...(input.byKia ? { author: kiaPerson } : {}),
+        ...(input.updated ? { dateModified: input.updated } : {}),
+        mainEntity: { "@id": `${url}#service` },
+      },
+      {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        name: input.name,
+        description: input.description,
+        provider: { "@id": absoluteUrl("/#organization") },
+        ...(input.areaServed ? { areaServed: { "@type": "City", name: input.areaServed } } : {}),
+      },
+    ],
+  };
+}

@@ -5,7 +5,7 @@ Every URL from the old site's sitemap (100 URLs, collected in Phase 1) and where
 How the rules work:
 
 - Old pages that have a new home go to it (for example `/about-us/` to `/about`).
-- The old city pages (`/fl/miami-seo/` and similar) go to the matching service page. The site no longer has city pages, as agreed in CONTENT-NOTES.md.
+- The old city pages (`/fl/miami-seo/` and similar) go to the matching service page, except `/fl/miami-seo/` and `/fl/miami-ppc/`, which go to the new Miami pages (`/miami-seo`, `/miami-google-ads`).
 - The old state hub pages (`/fl/` and similar) and the city "digital marketing" pages go to the home page.
 - Blog posts keep their exact WordPress slugs. Only the trailing slash is dropped.
 - Any other old URL with a trailing slash redirects to the same path without it.
@@ -33,7 +33,7 @@ To add a redirect, add a line to the `map` in `redirects.ts`.
 | `/ca/san-francisco-ppc/` | `/services/google-ads` |
 | `/ca/san-francisco-social-media/` | `/services/social-media-marketing` |
 | `/fl/aventura-ppc/` | `/services/google-ads` |
-| `/fl/miami-ppc/` | `/services/google-ads` |
+| `/fl/miami-ppc/` | `/miami-google-ads` |
 | `/fl/orlando-ppc/` | `/services/google-ads` |
 | `/fl/aventura-seo/` | `/services/seo` |
 | `/fl/orlando-seo/` | `/services/seo` |
@@ -95,7 +95,7 @@ To add a redirect, add a line to the `map` in `redirects.ts`.
 | `/ca/san-francisco-seo/` | `/services/seo` |
 | `/pa/philadelphia-seo/` | `/services/seo` |
 | `/ga/atlanta-digital-marketing/` | `/` |
-| `/fl/miami-seo/` | `/services/seo` |
+| `/fl/miami-seo/` | `/miami-seo` |
 | `/fl/` | `/` |
 | `/dc/washington-dc-digital-marketing/` | `/` |
 | `/il/schaumburg-seo/` | `/services/seo` |

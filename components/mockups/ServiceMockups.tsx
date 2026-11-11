@@ -226,10 +226,10 @@ function AgentMockup() {
   );
 }
 
-export function ServiceMockup({ kind }: { kind: MockupKind }) {
+export function ServiceMockup({ kind, queries }: { kind: MockupKind; queries?: [string, string][] }) {
   switch (kind) {
     case "ranking":
-      return <RankingMockup />;
+      return <RankingMockup queries={queries} />;
     case "ads":
       return <AdsMockup />;
     case "ai-answer":
