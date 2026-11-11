@@ -1,3 +1,4 @@
+import { withoutUnverifiedStats } from "@/lib/unverified-proof";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
@@ -55,7 +56,8 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
   const related = page.related.map((r) => services.find((s) => s.slug === r)).filter((s) => !!s);
   const testimonial = page.testimonial;
   const showProofPlaceholder = !!page.proof.placeholder && (showPlaceholders || !isPlaceholder(page.proof.placeholder));
-  const hasProof = !!page.proof.stats?.length || !!testimonial || showProofPlaceholder;
+  const proofStats = withoutUnverifiedStats(page.proof.stats);
+  const hasProof = proofStats.length > 0 || !!testimonial || showProofPlaceholder;
 
   const audiences = [
     { icon: Stethoscope, title: "Dental practices", text: page.audiences.dental, href: "/dental-marketing", cta: "Dental marketing" },
@@ -158,7 +160,7 @@ export default async function ServicePage(props: PageProps<"/services/[slug]">) 
           <div className="container-page">
             <SectionHeading id="proof-title" eyebrow="Results" title="Proof, not promises." />
             <div className="mt-14 grid gap-4 lg:mt-20 lg:grid-cols-12 lg:gap-5">
-              {page.proof.stats?.map((s, i) => (
+              {proofStats.map((s, i) => (
                 <div key={s.label} data-reveal style={{ "--i": i } as React.CSSProperties} className="card rounded-[20px] p-8 lg:col-span-3">
                   <p className="text-gradient font-display text-[clamp(2.5rem,1.8rem+2.6vw,4rem)] font-semibold leading-none tracking-[-0.04em]">{s.value}</p>
                   <p className="mt-3 text-small text-body">{s.label}</p>
