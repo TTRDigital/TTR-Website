@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { Building2, Clock, Mail, MapPin, Phone } from "lucide-react";
-import { getSiteSettings } from "@/lib/content";
+import { getSiteSettings, hasPublicEmail } from "@/lib/content";
+import { showPlaceholders } from "@/lib/placeholders";
 import { getCmsPage } from "@/lib/pages";
 import { PageHero } from "@/components/sections/PageHero";
 import { FaqSection } from "@/components/sections/FaqSection";
@@ -54,7 +55,11 @@ export default async function ContactPage() {
   const contact = [
     { icon: Building2, label: "Company", value: legalName },
     { icon: Phone, label: "Call", value: settings.phone, href: settings.phoneHref, track: "click_to_call" },
-    { icon: Mail, label: "Email", value: settings.email, href: `mailto:${settings.email}` },
+    ...(hasPublicEmail(settings.email)
+      ? [{ icon: Mail, label: "Email", value: settings.email, href: `mailto:${settings.email}` }]
+      : showPlaceholders
+        ? [{ icon: Mail, label: "Email", value: settings.email }]
+        : []),
     { icon: MapPin, label: "Visit", value: `${settings.street}, ${settings.city}, ${settings.region} ${settings.postalCode}`, href: settings.mapsUrl, external: true },
     { icon: Clock, label: "Hours", value: settings.hoursText },
   ];

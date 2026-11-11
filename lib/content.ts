@@ -99,11 +99,22 @@ export type HomeContent = {
 
 /* ---------- Fallbacks ---------- */
 
+/**
+ * The public business email must be an @ttrdigitalmarketing.com address (set
+ * by Kia). A Gmail address saved in the CMS is ignored; a CMS address on the
+ * company domain overrides this default.
+ */
+const DEFAULT_EMAIL = "hello@ttrdigitalmarketing.com";
+const COMPANY_EMAIL = /^[^\s@]+@ttrdigitalmarketing\.com$/i;
+
+/** True when the settings hold a real address worth showing as a link. */
+export const hasPublicEmail = (email: string) => COMPANY_EMAIL.test(email.trim());
+
 export const fallbackSettings: SiteSettings = {
   name: "TTR Digital Marketing",
   phone: "(786) 460-1311",
   phoneHref: "tel:+17864601311",
-  email: "ttrdigitalmarketingteam@gmail.com",
+  email: DEFAULT_EMAIL,
   street: "1000 Brickell Ave Ste 715",
   city: "Miami",
   region: "FL",
@@ -246,7 +257,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     ...f,
     phone,
     phoneHref: digits.length === 10 ? `tel:+1${digits}` : f.phoneHref,
-    email: pick(data?.email, f.email),
+    email: data?.email && COMPANY_EMAIL.test(data.email.trim()) ? data.email.trim() : f.email,
     street: pick(data?.street, f.street),
     city: pick(data?.city, f.city),
     region: pick(data?.region, f.region),

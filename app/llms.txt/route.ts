@@ -1,5 +1,5 @@
 import { getAllPosts } from "@/lib/blog";
-import { getServiceSummaries, getSiteSettings } from "@/lib/content";
+import { getServiceSummaries, getSiteSettings, hasPublicEmail } from "@/lib/content";
 import { industryPages } from "@/lib/data/industries";
 import { absoluteUrl } from "@/lib/site";
 
@@ -17,8 +17,7 @@ export async function GET() {
 ## Contact
 
 - Phone: ${settings.phone}
-- Email: ${settings.email}
-- Office: ${address}
+${hasPublicEmail(settings.email) ? `- Email: ${settings.email}\n` : ""}- Office: ${address}
 - Hours: ${settings.hoursText}
 - Free growth audit: ${absoluteUrl("/contact")}
 

@@ -61,40 +61,17 @@ Pages refresh from Sanity every 5 minutes on their own. The webhook makes a publ
 
 Without the secret the route answers `503` and the site keeps its 5 minute refresh.
 
-## Leads (GoHighLevel)
+## Leads (TTR OS)
 
-The form posts to `/api/lead`. It checks the fields, the hidden honeypot, the time taken to fill the form and a per-IP limit, then delivers the lead in one or both of these ways.
+The form posts to `/api/lead`. It checks the fields, the hidden honeypot, the time taken to fill the form, reCAPTCHA and a per-IP limit, then sends the lead from the server to TTR OS (`/api/site/form`, form-encoded: `k` site key, `p` page, `r` referrer, `u` landing URL, fields as `f_<name>`). If TTR OS does not accept it, the visitor is asked to call. The form carries `data-ttr-skip` so the browser tracker does not post it a second time. Nothing here uses GoHighLevel.
 
-### Inbound webhook (`GHL_WEBHOOK_URL`)
-
-Every valid submission is POSTed as JSON to the GoHighLevel workflow webhook. Set the URL in Vercel as `GHL_WEBHOOK_URL`; it is not in the code because this repository is public and anyone with the URL could send fake leads. Fields sent:
-
-`source`, `submitted_at`, `name`, `first_name`, `last_name`, `email`, `phone` (E.164, e.g. `+17865550199`), `phone_raw`, `business_name`, `website`, `service_interest`, `message`, `tags` (`website-lead`, `service-<interest>`, the SMS tags below, plus `suspected-spam` when flagged), `spam_check` (`ok` or the reason), `page_url` (where the form was sent), `landing_page` (first page of the visit), `referrer`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `gclid`, `fbclid`, and the SMS consent fields below.
-
-In the workflow, map these to contact fields with "Create/Update Contact", then add your notifications.
-
-### API (`GHL_LOCATION_ID` + `GHL_API_KEY`, optional)
-
-1. Upserts the contact in GoHighLevel (API v2, `services.leadconnectorhq.com`) with source "Website form".
-2. Adds the tags `website-lead` and `service-<interest>`, for example `service-google-ads`. Existing tags are kept.
-3. Adds a note with the message, the page, the referrer and any UTM, gclid or fbclid values.
-
-To switch it on, add these in Vercel and redeploy:
-
-- `GHL_LOCATION_ID`: GoHighLevel > Settings > Business Profile > Location ID.
-- `GHL_API_KEY`: GoHighLevel > Settings > Private Integrations > create a token with the **contacts.write** scope.
+The site key is public and lives in `lib/ttr-site-key.ts` (`NEXT_PUBLIC_TTR_SITE_KEY` overrides it, `off` turns TTR OS off). `TTR_OS_FORM_URL` overrides the endpoint.
 
 ### SMS consent (Twilio A2P 10DLC)
 
-Every form has two separate, optional SMS boxes, both unticked by default: **service messages** and **marketing messages**. The wording lives in `lib/sms-consent.ts` with a version date (`SMS_CONSENT_VERSION`). If you change the wording, change the version too, and update `/privacy-policy` and `/terms` to match. A phone number alone never opts anyone in.
+Every form has one optional SMS checkbox, unticked by default. The wording lives in `lib/sms-consent.ts` with a version date (`SMS_CONSENT_VERSION`) and must match the Twilio registration word for word. If you change the wording, change the version too, and update `/privacy-policy` and `/terms` to match. A phone number alone never opts anyone in.
 
-Each lead carries its consent record:
-
-- Tags: `sms-opt-in-service`, `sms-opt-in-marketing`, or `sms-no-consent` when neither box was ticked.
-- Webhook fields: `sms_consent_service` and `sms_consent_marketing` (`yes`/`no`), `sms_consent_service_text` and `sms_consent_marketing_text` (the exact wording agreed to, only for a ticked box), `sms_consent_version`, `sms_consent_at` (server time, ISO), `sms_consent_phone` (E.164), `sms_consent_page`, `sms_consent_ip`, `sms_consent_user_agent`. The time, phone, page, IP and browser fields are empty when neither box was ticked.
-- With the API option, the same record is written to the contact note.
-
-In GoHighLevel, map these fields to contact custom fields so the record is kept, and only send texts from workflows filtered on the matching tag: service texts need `sms-opt-in-service`, marketing texts need `sms-opt-in-marketing`. Contacts tagged `sms-no-consent` must not be texted. STOP and HELP are handled by the messaging system (GoHighLevel / Twilio), not this website.
+Each lead carries its consent record as fields: `f_sms_consent` (`yes`/`no`), `f_sms_consent_at` (when it was ticked), `f_sms_consent_page`, `f_sms_consent_text` (the exact wording), `f_sms_consent_version`, `f_sms_consent_number` (E.164) and `f_sms_consent_ip`. They are empty when the box was not ticked. Contacts without consent must not be texted. STOP and HELP are handled by the messaging system, not this website.
 
 The legal pages are `/privacy-policy` (`/privacy` redirects there) and `/terms`; their text is in Studio > Pages and was written by `scripts/a2p-legal-pages.mjs`. The legal entity name, `TTR Digital Marketing LLC`, is `legalName` in `lib/site.ts` and shows in the footer, on the contact page and in the schema.
 
