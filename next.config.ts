@@ -34,6 +34,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // CSS goes inside the HTML instead of separate files the phone must fetch
+  // before it can draw anything (PageSpeed mobile, Nov 12: about 300 ms of
+  // render-blocking CSS ahead of the hero, TTR-1459).
+  experimental: { inlineCss: true },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [50, 75],
