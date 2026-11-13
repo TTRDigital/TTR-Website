@@ -5,3 +5,8 @@ const TTR_SITE_KEY = process.env.NEXT_PUBLIC_TTR_SITE_KEY === "off" ? "" : proce
 export function TtrTracker() {
   return TTR_SITE_KEY ? <script async src="https://ttr-portal.vercel.app/api/site/script" data-site={TTR_SITE_KEY} /> : null;
 }
+
+// Page editor bar (Feedback Studio). Preview builds only: production output is unchanged.
+export function FeedbackStudioBar() {
+  return process.env.VERCEL_ENV === "preview" ? <script defer src="https://portal.ttrdigitalmarketing.com/api/site/notes/bar" /> : null;
+}
