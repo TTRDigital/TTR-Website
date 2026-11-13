@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
 import { siteUrl } from "@/lib/site";
-import { TtrTracker } from "@/components/analytics/TtrTracker";
+import { TtrTracker, FeedbackStudioBar } from "@/components/analytics/TtrTracker";
 
 /*
  * Root layout is intentionally bare: the website's styles and chrome live
@@ -63,6 +63,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         {children}
         <TtrTracker />
+        <FeedbackStudioBar />
       </body>
     </html>
   );
