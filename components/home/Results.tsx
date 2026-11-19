@@ -4,6 +4,7 @@ import { isPlaceholder, showPlaceholders } from "@/lib/placeholders";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Text } from "@/components/ui/Placeholder";
 import { CountUp } from "@/components/motion/CountUp";
+import { ResultsVideo } from "@/components/home/ResultsVideo";
 
 export function Results({ data }: { data: HomeContent["results"] }) {
   const cases = data.cases.filter(
@@ -14,7 +15,16 @@ export function Results({ data }: { data: HomeContent["results"] }) {
     <section id="results" aria-labelledby="results-title" className="section-pad relative scroll-mt-24 overflow-hidden">
       <div aria-hidden="true" className="leak left-1/2 top-0 h-[480px] w-[720px] -translate-x-1/2 opacity-35" />
       <div className="container-page relative">
-        <SectionHeading id="results-title" eyebrow={data.eyebrow} title={data.heading} intro={data.intro} />
+        {data.video ? (
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
+            <SectionHeading id="results-title" eyebrow={data.eyebrow} title={data.heading} intro={data.intro} className="lg:col-span-5" />
+            <div className="lg:col-span-7">
+              <ResultsVideo video={data.video} />
+            </div>
+          </div>
+        ) : (
+          <SectionHeading id="results-title" eyebrow={data.eyebrow} title={data.heading} intro={data.intro} />
+        )}
 
         <dl className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-[24px] border border-line bg-line lg:mt-20 lg:grid-cols-4">
           {data.stats.map((s, i) => (

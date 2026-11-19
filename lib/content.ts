@@ -64,6 +64,18 @@ export type CaseStudy = {
   metricLabel?: string;
 };
 
+/** A client video testimonial on YouTube. */
+export type TestimonialVideo = { youtubeId: string; title: string; person: string; business: string };
+
+/** The 11-character video id from a YouTube watch, share, shorts or embed URL (or a bare id). */
+export function youtubeId(input?: string | null): string | null {
+  const v = input?.trim();
+  if (!v) return null;
+  if (/^[\w-]{11}$/.test(v)) return v;
+  const m = v.match(/(?:youtu\.be\/|[?&]v=|\/(?:embed|shorts|live)\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
 export type HomeContent = {
   seo: { title: string; description: string };
   hero: { eyebrow: string; heading: string; text: string };
@@ -71,7 +83,7 @@ export type HomeContent = {
   problem: { eyebrow: string; heading: string; broken: Step[]; fixes: Step[] };
   services: { eyebrow: string; heading: string; intro: string };
   searchEverywhere: { eyebrow: string; heading: string; text: string; points: string[]; platforms: string[] };
-  results: { eyebrow: string; heading: string; intro: string; stats: Stat[]; cases: CaseStudy[]; footnote: string };
+  results: { eyebrow: string; heading: string; intro: string; stats: Stat[]; cases: CaseStudy[]; footnote: string; video: TestimonialVideo | null };
   process: { eyebrow: string; heading: string; intro: string; steps: Step[] };
   industries: {
     eyebrow: string;
@@ -357,6 +369,10 @@ type SanityHome = Partial<{
   resultsIntro: string;
   stats: Stat[];
   resultsFootnote: string;
+  resultsVideoUrl: string;
+  resultsVideoTitle: string;
+  resultsVideoPerson: string;
+  resultsVideoBusiness: string;
   processEyebrow: string;
   processHeading: string;
   processIntro: string;
@@ -414,6 +430,17 @@ export async function getHomeContent(): Promise<HomeContent> {
       stats: pickList(d.stats?.filter((x) => x?.value), f.results.stats),
       cases,
       footnote: pick(d.resultsFootnote, f.results.footnote),
+      video: (() => {
+        const id = youtubeId(d.resultsVideoUrl);
+        if (!id) return f.results.video;
+        const same = id === f.results.video?.youtubeId;
+        return {
+          youtubeId: id,
+          title: pick(d.resultsVideoTitle, same ? f.results.video!.title : ""),
+          person: pick(d.resultsVideoPerson, same ? f.results.video!.person : ""),
+          business: pick(d.resultsVideoBusiness, same ? f.results.video!.business : ""),
+        };
+      })(),
     },
     process: {
       eyebrow: pick(d.processEyebrow, f.process.eyebrow),
