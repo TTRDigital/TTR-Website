@@ -3,6 +3,10 @@ import type { PortableTextBlock } from "@portabletext/react";
 import { sanityFetch } from "@/lib/sanity/fetch";
 import { canonicalServiceSlug } from "@/lib/content";
 import { sanityImage, type SanityImageRef } from "@/lib/sanity/image";
+import { previewPosts, publishedPosts } from "@/lib/data/code-posts";
+
+/** Posts kept in code: approved ones everywhere, drafts for review only on Vercel previews, never on the live site. */
+const codePosts = (): Post[] => [...publishedPosts, ...(process.env.VERCEL_ENV === "preview" ? previewPosts : [])];
 
 export type Category = { title: string; slug: string };
 
@@ -63,10 +67,17 @@ export async function getAllPosts(): Promise<PostSummary[]> {
     {},
     ["post"],
   );
-  return (data ?? []).map(toSummary);
+  const fromCode: PostSummary[] = codePosts().map((p) => ({ slug: p.slug, title: p.title, excerpt: p.excerpt, publishedAt: p.publishedAt,
+    updatedAt: p.updatedAt, categories: p.categories, readingMinutes: p.readingMinutes, cover: p.cover }));
+  const codeSlugs = new Set(fromCode.map((p) => p.slug));
+  return [...fromCode, ...(data ?? []).map(toSummary).filter((p) => !codeSlugs.has(p.slug))].sort((a, b) =>
+    (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""),
+  );
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
+  const fromCode = codePosts().find((p) => p.slug === slug);
+  if (fromCode) return fromCode;
   const data = await sanityFetch<
     RawPost & {
       body: PortableTextBlock[];
@@ -101,7 +112,9 @@ export async function getCategories(): Promise<Category[]> {
     {},
     ["category", "post"],
   );
-  return data ?? [];
+  const all = [...(data ?? [])];
+  for (const c of codePosts().flatMap((p) => p.categories)) if (!all.some((x) => x.slug === c.slug)) all.push(c);
+  return all.sort((a, b) => a.title.localeCompare(b.title));
 }
 
 /** Posts that list a given service as related. */
