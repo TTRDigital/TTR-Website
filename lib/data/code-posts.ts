@@ -1,5 +1,6 @@
-import type { PortableTextBlock } from "@portabletext/react";
 import type { Post } from "@/lib/blog";
+import { toBlocks } from "@/lib/data/markdown-blocks";
+import { ttrBatch1Drafts } from "@/lib/data/draft-posts-ttr-batch-1";
 
 /*
  * Blog posts kept in code rather than Sanity (TTR OS).
@@ -12,48 +13,6 @@ import type { Post } from "@/lib/blog";
  * The body is plain Markdown (## and ### headings, paragraphs, "- " lists, **bold** and [links](/path or https://)),
  * turned into the same portable text blocks Sanity stores, so it renders through the site's own components.
  */
-
-type Span = { _type: "span"; _key: string; text: string; marks: string[] };
-type MarkDef = { _type: "link"; _key: string; href: string };
-
-function spans(text: string, key: () => string, defs: MarkDef[]): Span[] {
-  const out: Span[] = [];
-  const re = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*]+)\*\*/g;
-  let last = 0;
-  for (let m = re.exec(text); m; m = re.exec(text)) {
-    if (m.index > last) out.push({ _type: "span", _key: key(), text: text.slice(last, m.index), marks: [] });
-    if (m[1]) {
-      const k = key();
-      defs.push({ _type: "link", _key: k, href: m[2] });
-      out.push({ _type: "span", _key: key(), text: m[1], marks: [k] });
-    } else out.push({ _type: "span", _key: key(), text: m[3], marks: ["strong"] });
-    last = m.index + m[0].length;
-  }
-  if (last < text.length) out.push({ _type: "span", _key: key(), text: text.slice(last), marks: [] });
-  return out;
-}
-
-function toBlocks(md: string): PortableTextBlock[] {
-  let n = 0;
-  const key = () => `p${(n++).toString(36)}`;
-  const blocks: PortableTextBlock[] = [];
-  for (const raw of md.trim().split(/\n{2,}/)) {
-    const lines = raw.trim().split("\n");
-    if (lines.every((l) => l.startsWith("- "))) {
-      for (const l of lines) {
-        const markDefs: MarkDef[] = [];
-        blocks.push({ _type: "block", _key: key(), style: "normal", listItem: "bullet", level: 1, markDefs, children: spans(l.slice(2), key, markDefs) } as PortableTextBlock);
-      }
-      continue;
-    }
-    const h = /^(#{2,3}) (.+)$/.exec(lines[0]);
-    const markDefs: MarkDef[] = [];
-    const style = h ? (h[1] === "##" ? "h2" : "h3") : "normal";
-    const text = h ? h[2] : lines.join(" ");
-    blocks.push({ _type: "block", _key: key(), style, markDefs, children: spans(text, key, markDefs) } as PortableTextBlock);
-  }
-  return blocks;
-}
 
 const LSA_VS_GOOGLE_ADS = `
 For most home service businesses that answer every call, Local Services Ads are the simpler place to start: you pay for leads, not clicks, and your listing sits at the top of Google with a Google Verified badge. Google Ads search campaigns give you more control over the jobs, areas and pages you pay for, so they fit best alongside Local Services Ads once you know which jobs pay.
@@ -178,4 +137,4 @@ export const publishedPosts: Post[] = [
 ];
 
 /** Preview-only drafts, newest first. Never shown on the live site (see lib/blog.ts). */
-export const previewPosts: Post[] = [];
+export const previewPosts: Post[] = [...ttrBatch1Drafts];
