@@ -41,7 +41,7 @@ export default async function BlogPage() {
             <article className="group/feat relative grid overflow-hidden rounded-[28px] border border-line-light bg-white transition-shadow duration-300 hover:shadow-[0_30px_80px_-40px_rgb(14_11_22/0.45)] lg:grid-cols-2">
               <div className="relative">
                 {featured.cover ? (
-                  <Image src={featured.cover.url} alt={featured.cover.alt} fill loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+                  <Image src={featured.cover.url} alt={featured.cover.alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
                 ) : (
                   <GeneratedCover slug={featured.slug} category={featured.categories[0]?.title} />
                 )}

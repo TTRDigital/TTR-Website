@@ -129,7 +129,7 @@ export default async function PostPage(props: PageProps<"/blog/[slug]">) {
           </div>
           <div className="hero-fade mx-auto mt-10 max-w-5xl" style={{ "--d": "260ms" } as React.CSSProperties}>
             {post.cover ? (
-              <Image src={post.cover.url} alt={post.cover.alt} width={post.cover.width} height={post.cover.height} loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 1024px, 100vw" className="h-auto w-full rounded-[24px]" />
+              <Image src={post.cover.url} alt={post.cover.alt} width={post.cover.width} height={post.cover.height} priority sizes="(min-width: 1024px) 1024px, 100vw" className="h-auto w-full rounded-[24px]" />
             ) : (
               <GeneratedCover slug={post.slug} category={category?.title} size="hero" />
             )}
