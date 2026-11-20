@@ -138,7 +138,7 @@ export function HeroVisual({ posterSrc, heroId }: { posterSrc: string; heroId: s
         src={posterSrc}
         alt=""
         fill
-        priority
+        loading="eager"
         fetchPriority="high"
         quality={50}
         sizes="(min-width: 1024px) 56vw, (min-width: 640px) 92vw, 88vw"
