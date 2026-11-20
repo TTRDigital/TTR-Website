@@ -34,6 +34,14 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Next's built-in browser polyfills, trimmed to what the supported
+  // browsers still need. See lib/polyfill-module.js. The key is the exact
+  // import inside next/dist/client/app-globals.js.
+  turbopack: {
+    resolveAlias: {
+      "../build/polyfills/polyfill-module": "./lib/polyfill-module.js",
+    },
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [50, 75],

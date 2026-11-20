@@ -163,9 +163,9 @@ export const publishedPosts: Post[] = [
     cover: null,
     body: toBlocks(LSA_VS_GOOGLE_ADS),
     seo: {
-      title: "Local Services Ads vs Google Ads: Which to Run First | TTR Digital",
+      title: "Local Services Ads vs Google Ads: Which to Run First",
       description:
-        "Local Services Ads charge per lead and Google Ads charge per click. How each one ranks, what you pay for, and which a home service business should start with.",
+        "Local Services Ads charge per lead and Google Ads charge per click. How each ranks, what you pay for, and which a home service business should start with.",
     },
     author: {
       name: "Kia Khamoushi",

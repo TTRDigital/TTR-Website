@@ -126,7 +126,7 @@ export function Header({ services, mainLinks, ctaLabel, phone, phoneHref }: Prop
               alt="TTR Digital Marketing"
               width={175}
               height={22}
-              priority
+              loading="eager"
               className="h-[20px] w-auto lg:h-[22px]"
             />
           </Link>
