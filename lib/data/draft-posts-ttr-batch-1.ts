@@ -340,6 +340,312 @@ A page that never clearly says what the business does and where. If a visitor ca
 - [Google: Local business (LocalBusiness) structured data](https://developers.google.com/search/docs/appearance/structured-data/local-business)
 `;
 
+const HOW_LONG_SEO = `
+SEO usually takes months, not weeks. Google's own guidance for business owners says it typically takes from four months to a year from the time you begin making changes until you start to see the benefits. How long it takes for your business depends on where your website and Google Business Profile start, how many competitors you have and how much work goes in.
+
+## How long does SEO take, according to Google?
+
+Google's page for business owners thinking about hiring an SEO says results take time, "typically from four months to a year from the time you begin making changes until you start to see the benefits" ([Google: Do you need an SEO?](https://developers.google.com/search/docs/fundamentals/do-i-need-seo)). That range comes from Google itself, so be wary of anyone who promises much faster results.
+
+## Why does SEO take so long?
+
+A few steps happen before any change can help you:
+
+- **Google has to find and read your pages again.** Google says crawling "can take anywhere from a few days to a few weeks," and that it cannot predict or guarantee when, or if, a page will be crawled or indexed ([Google: Ask Google to recrawl your URLs](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl)).
+- **Google has to compare you with everyone else.** Your pages are weighed against other businesses that want the same searches. In a busy market, that takes longer.
+- **Trust builds slowly.** For local results, Google lists prominence as a factor, including reviews and what other sites say about you ([Google: How to improve your local ranking](https://support.google.com/business/answer/7091)). Reviews and mentions grow over months, not days.
+
+## What can move faster?
+
+Some fixes can matter sooner than the full four months to a year, though nothing is guaranteed:
+
+- **Fixing a Google Business Profile** with the wrong category, hours, phone number or address.
+- **Removing technical blocks**, such as pages accidentally hidden from Google.
+- **Adding a page for a service you offer but never mentioned** on your website.
+- **Asking every customer for a review**, so your profile shows steady, recent feedback.
+
+## What slows SEO down?
+
+- A brand new domain with little history.
+- A website that changes its addresses (URLs) without redirecting the old ones.
+- Pages that are near copies of each other, with only the town name changed.
+- Different business names, addresses or phone numbers across the web.
+- Stopping and starting the work, so nothing builds on the last month.
+
+## How do I know if SEO is working before rankings move?
+
+Look for signs that come before calls:
+
+- **In Google Search Console:** more of your pages indexed, and more impressions (times you appeared) for searches about your services.
+- **In your Google Business Profile:** more views, calls, website clicks and direction requests over time.
+- **In your phone and forms:** calls and form leads that came from Google search or Maps, which you can only see if you track them.
+
+Ask for these numbers every month, along with what work was done. Our guide on [tracking calls and form leads](/blog/track-calls-and-form-leads) explains how to set that up.
+
+## Should I run ads while SEO builds?
+
+Many businesses do, because ads can bring calls while SEO is still building. We compare the two in [Google Ads vs SEO for home service companies](/blog/google-ads-vs-seo-for-home-service-companies). Our [local SEO](/services/seo) page explains how TTR plans the work month by month.
+
+## Frequently asked questions
+
+### Can anyone guarantee first place on Google?
+
+No. Google says no one can guarantee a number one ranking on Google ([Google: Do you need an SEO?](https://developers.google.com/search/docs/fundamentals/do-i-need-seo)). Treat a guarantee as a warning sign.
+
+### How long does it take Google to see a new page?
+
+Google says crawling can take from a few days to a few weeks, and it cannot guarantee when or if a page will be indexed. You can ask Google to recrawl a page in Search Console, but that does not make it rank.
+
+### Is local SEO faster than regular SEO?
+
+It can feel faster for some fixes, like correcting a Business Profile, but the same Google range of four months to a year is a fair guide for lasting results.
+
+### What happens if I stop SEO?
+
+The work already done, such as pages and reviews, stays. But competitors keep working, so standing still can mean slipping back over time.
+
+### How often should I hear from my SEO provider?
+
+At least monthly, with what was done and what changed in Search Console, your Business Profile and your leads.
+
+## Sources
+
+- [Google: Do you need an SEO?](https://developers.google.com/search/docs/fundamentals/do-i-need-seo)
+- [Google: Ask Google to recrawl your URLs](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl)
+- [Google: How to improve your local ranking on Google](https://support.google.com/business/answer/7091)
+`;
+
+const TRACK_LEADS = `
+If you cannot say where your last ten booked jobs or new patients came from, you cannot tell which marketing is worth the money. Tracking calls and form leads means three things: knowing which channel each lead came from, counting the leads that matter, and checking which of them became real customers.
+
+## Why track calls and form leads at all?
+
+Clicks and visits are easy to count, but they do not pay the bills. A local business needs to know which ads, pages and profiles bring calls and forms, and which of those turn into booked work. Without that, every budget decision is a guess.
+
+## How do you track calls from Google Ads?
+
+Google Ads has call reporting built in. When it is on, Google shows a Google forwarding number in your call ads and call assets and records details such as call length, start time and whether the call connected ([Google Ads: About call reporting](https://support.google.com/google-ads/answer/2454052)).
+
+You can then count calls as conversions. You choose a minimum call length, and every call that lasts at least that long is counted ([Google Ads: About phone call conversion tracking](https://support.google.com/google-ads/answer/6100664)). Pick a length that separates real inquiries from wrong numbers.
+
+Google notes that forwarding numbers belong to Google and can change, so they should not be copied and used outside Google Ads ([Google Ads: Google forwarding number](https://support.google.com/google-ads/answer/2382961)).
+
+## How do you track calls from your website and other channels?
+
+For calls that start on your website, from social media or from print, businesses often use a call tracking service that shows a different number for each source. Things to check before choosing one:
+
+- The number shown on the website should switch back to your main number for anyone who arrives directly.
+- Your main business number should stay the same on your Google Business Profile and in directories, so your details match everywhere.
+- Calls should be recorded only where the law allows, with the notice your state requires. Ask your provider and your lawyer.
+
+Your Google Business Profile also shows its own performance numbers, including calls and website clicks from the profile.
+
+## How do you track form leads?
+
+The simplest reliable method is to send everyone who submits a form to a thank you page, then count visits to that page as a lead in your analytics and ads. In Google Analytics, you can mark the form submission event as a key event so it shows in your reports.
+
+Make sure every form also lands somewhere your team will see it at once, such as a CRM or a shared inbox. A form that is counted but never answered is still a lost lead.
+
+## Should dental practices be careful with tracking?
+
+Yes. In December 2022, the U.S. Department of Health and Human Services issued guidance on how HIPAA applies to online tracking technologies, such as pixels and analytics tags, used by health care providers. A federal court later vacated part of that guidance in June 2024 ([HHS: Use of online tracking technologies by HIPAA covered entities](https://www.hhs.gov/hipaa/for-professionals/privacy/guidance/hipaa-online-tracking/index.html)). Other parts still apply, and the rules for pages behind a patient login, such as patient portals, are stricter.
+
+Practical habits for practices:
+
+- Do not send patient details, such as names, conditions or treatment, from forms into ad platforms or analytics.
+- Keep tracking tags off patient portals and appointment pages that contain health information, unless your vendor signs a business associate agreement.
+- Ask your compliance advisor to review your tracking setup.
+
+## How do you know which leads became customers?
+
+Count leads by source, then check what happened to them. A CRM makes this easier: every call and form goes in with its source, and your team marks it booked, quoted, lost or not a fit. Google Ads also lets you import call conversions from another system, which gives you more control over which calls count ([Google Ads: About importing call conversions](https://support.google.com/google-ads/answer/6301373)).
+
+Even without software, asking every new customer "How did you hear about us?" and writing it down is better than nothing.
+
+Our [GoHighLevel CRM](/services/gohighlevel-crm) service sets up lead tracking and follow up in one place, and our [Google Ads management](/services/google-ads) includes call and form tracking.
+
+## Frequently asked questions
+
+### What is a good minimum call length to count as a lead?
+
+It depends on your business. Pick a length that filters out wrong numbers and hang ups, then check a sample of calls to make sure the setting makes sense.
+
+### Will a tracking number hurt my local SEO?
+
+Keep your main number on your Google Business Profile and in directories so your details match everywhere. Tracking numbers that change only for certain website visitors are set up to avoid that problem.
+
+### Can I track leads without a CRM?
+
+Yes, with a thank you page for forms, call reporting for ads and a simple sheet where your team writes the source of every new customer. A CRM makes it faster and more reliable.
+
+### Is it legal to record calls?
+
+Call recording laws differ by state, and some require everyone on the call to agree. Check your state's rules with a lawyer before turning recording on.
+
+### What should a dental practice avoid when tracking leads?
+
+Sending any patient health information to ad platforms or analytics. Keep tracking general, such as "form submitted," and ask your compliance advisor to review the setup.
+
+## Sources
+
+- [Google Ads: About call reporting](https://support.google.com/google-ads/answer/2454052)
+- [Google Ads: About phone call conversion tracking](https://support.google.com/google-ads/answer/6100664)
+- [Google Ads: Google forwarding number](https://support.google.com/google-ads/answer/2382961)
+- [Google Ads: About importing call conversions](https://support.google.com/google-ads/answer/6301373)
+- [HHS: Use of online tracking technologies by HIPAA covered entities and business associates](https://www.hhs.gov/hipaa/for-professionals/privacy/guidance/hipaa-online-tracking/index.html)
+`;
+
+const META_ADS_LOCAL = `
+Meta ads, on Facebook and Instagram, reach people who are not searching for you yet. That makes them different from Google ads, which reach people already searching. For a local business, Meta works best for reaching the right people nearby before they need you, showing off real work, and collecting leads with simple forms.
+
+## How are Meta ads different from Google ads?
+
+On Google, someone types "emergency plumber" or "dentist near me" and your ad answers that search. On Facebook and Instagram, people are scrolling, so your ad has to earn their attention. That changes what works:
+
+- **Google** fits urgent needs, when people are ready to call now.
+- **Meta** fits planned purchases and services people think about before they buy, such as a remodel, a new patio or cosmetic dental work, and building familiarity so people remember you when they need you.
+
+## How do you target a local area on Meta?
+
+Meta lets you target people by location, including a radius around an address, and by age and other settings ([Meta for Developers: Basic targeting](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting)). Keep the area close to where you actually work. Reaching people you cannot serve wastes budget and fills your inbox with leads you have to turn down.
+
+## What makes a good Meta ad for a local business?
+
+- **Real photos and short videos** of your work, team and customers (with their permission). Before and after photos work for many trades.
+- **One clear offer or next step**, such as booking a free estimate or a first visit.
+- **Plain words that name the service and the area**, so the right people stop scrolling.
+- **Proof**, such as your Google rating or years in business, if you can state it accurately.
+
+## Should I use lead forms or send people to my website?
+
+Meta's lead ads let people send their details through a form inside Facebook or Instagram, without leaving the app ([Meta for Developers: Lead ads](https://developers.facebook.com/documentation/ads-commerce/marketing-api/guides/lead-ads)). They are easy to fill in, which brings more leads, but some will be less serious. Sending people to a landing page asks more of them, which tends to bring fewer but more committed leads.
+
+Whichever you use, answer fast. A lead from a form is fresh for minutes, not days. Connecting your forms to a CRM that texts or emails people back right away helps.
+
+## Are there special rules for dental and health ads on Meta?
+
+Yes. Meta's advertising standards say ads must not assert or imply personal attributes, including physical or mental health and medical conditions ([Meta: Advertising Standards, privacy violations and personal attributes](https://transparency.meta.com/policies/ad-standards/objectionable-content/privacy-violations-personal-attributes/)). For example, "New patients welcome for implant consultations" describes a service. "Are your missing teeth embarrassing you?" implies something about the person reading it.
+
+Meta has also limited the data that some health and wellness advertisers can use to measure and optimize campaigns ([Search Engine Land: Meta ads restrictions for health and wellness campaigns](https://searchengineland.com/meta-ads-restrictions-health-wellness-campaigns-453094)). Practices should also keep patient information out of ad platforms entirely, in line with HIPAA.
+
+## How do you know if Meta ads are working?
+
+Track what happens after the click: leads, calls, booked jobs or appointments. Clicks and likes are easy to get and do not pay the bills. Give a campaign enough time and budget to learn before judging it, and compare the cost of a booked job with your other channels.
+
+Our [Meta ads](/services/meta-ads) page explains how TTR runs Facebook and Instagram campaigns for local businesses.
+
+## Frequently asked questions
+
+### Do Facebook ads work for home service companies?
+
+They can, especially for planned projects and seasonal work, and for staying top of mind. For urgent jobs, search ads usually fit better because people are already looking.
+
+### Can a dental practice advertise on Facebook?
+
+Yes, but the ads must not imply anything about a person's health, and patient information should never go into the ad platform. Describe your services and your practice instead.
+
+### Are lead form leads lower quality?
+
+Lead forms are quick to fill in, so some leads are less serious. Adding a question or two and following up fast both help.
+
+### How far should my ads reach?
+
+Match your real service area. Ads shown to people you cannot serve waste money.
+
+### Should I boost posts or run ads in Ads Manager?
+
+Boosting is quick and simple. Ads Manager gives more control over the audience, the goal and the tracking. For a business that depends on leads, Ads Manager is usually the better tool.
+
+## Sources
+
+- [Meta for Developers: Basic targeting](https://developers.facebook.com/docs/marketing-api/audiences/reference/basic-targeting)
+- [Meta for Developers: Lead ads](https://developers.facebook.com/documentation/ads-commerce/marketing-api/guides/lead-ads)
+- [Meta: Advertising Standards, privacy violations and personal attributes](https://transparency.meta.com/policies/ad-standards/objectionable-content/privacy-violations-personal-attributes/)
+- [Search Engine Land: How to prevent Meta Ads restrictions on health and wellness campaigns](https://searchengineland.com/meta-ads-restrictions-health-wellness-campaigns-453094)
+`;
+
+const CHOOSE_AGENCY = `
+The right marketing agency explains what it will do, how you will measure it and who owns what, without promising results nobody controls. Before you sign, check who owns your accounts, how you will see results each month, and whether the agency understands businesses like yours.
+
+## What should an agency never promise?
+
+Google is clear on this: "No one can guarantee a #1 ranking on Google." Google also warns about anyone who claims a "special relationship" with Google or offers a "priority submit" to Google ([Google: Do you need an SEO?](https://developers.google.com/search/docs/fundamentals/do-i-need-seo)). The same goes for AI answers: no one controls what ChatGPT or Google's AI says.
+
+An honest agency will talk about the work it will do and the numbers it will report, not guaranteed rankings or a set number of leads.
+
+## What questions should I ask before hiring an agency?
+
+Google suggests interviewing a potential SEO, including asking to see examples of past work and whether they follow Google's guidelines ([Google: Do you need an SEO?](https://developers.google.com/search/docs/fundamentals/do-i-need-seo)). Useful questions for any agency:
+
+- What exactly will you do in the first 90 days, and what will you do every month after that?
+- How will you report results, and which numbers will I see?
+- Who will work on my account day to day, and how do I reach them?
+- Have you worked with businesses like mine, and what did you learn?
+- What do you need from me, and how much of my time will it take?
+- How long is the contract, and what happens if I want to leave?
+
+A good agency will also ask you questions: what makes your business different, which jobs or patients are most valuable, who your competitors are and how you handle leads today.
+
+## Who should own my accounts?
+
+You should. Your Google Business Profile, Google Ads account, Meta ad account, website, domain name and analytics are business assets.
+
+For Google Business Profile, Google separates owners from managers. Only owners can add or remove people, and a profile has one primary owner ([Google: Manage Business Profile owners and managers](https://support.google.com/business/answer/3403100)). A common, safe setup is that you are the primary owner and the agency is added as a manager or owner, so you can remove access at any time.
+
+The same idea applies to ad accounts and analytics: the account belongs to your business, and the agency gets access to it.
+
+## What should a monthly report show?
+
+A useful report answers three questions in plain words:
+
+- **What did you do?** Pages written, campaigns changed, reviews requested, fixes made.
+- **What happened?** Calls, forms and booked jobs or appointments by source, compared with earlier months.
+- **What is next?** The plan for the coming month and anything the agency needs from you.
+
+Be wary of reports full of numbers like impressions and likes, with nothing about leads or customers.
+
+## What are the warning signs?
+
+- Guaranteed rankings, guaranteed leads or a "special relationship" with Google or Meta.
+- Accounts set up in the agency's name that you cannot access.
+- Long contracts with no clear way out and no clear list of work.
+- Fake or unverifiable reviews, case studies or badges.
+- No interest in what happens to leads after they arrive.
+
+## Should I choose a specialist or a general agency?
+
+An agency that works with businesses like yours already knows your customers, your busy seasons and the rules you work under. For dental practices, that includes how HIPAA affects reviews and tracking. For home services, it includes service areas, emergency calls and seasonal demand. A general agency can still do good work if it takes the time to learn your business.
+
+TTR works with home service companies and dental practices. Our [home services marketing](/home-services-marketing) and [dental marketing](/dental-marketing) pages explain how we work, and you can [contact us](/contact) for a free growth audit.
+
+## Frequently asked questions
+
+### How long should an agency contract be?
+
+There is no single right length. SEO needs months to show results, so very short trials may not be fair. Whatever the length, the work and the way to end the contract should be written down clearly.
+
+### Should I own my Google Ads account?
+
+Yes. Ask for the account to be in your business's name with the agency given access, so your history and data stay with you if you change agencies.
+
+### Can an agency guarantee results?
+
+No one can guarantee rankings, and Google says so. An agency can commit to the work it will do and to reporting results honestly.
+
+### How do I check an agency's claims?
+
+Ask for examples you can verify, talk to a current client if they can arrange it, and check that badges and partnerships they show are current.
+
+### What should I do before switching agencies?
+
+Make sure you have owner access to every account, and a copy of your website, before you give notice.
+
+## Sources
+
+- [Google: Do you need an SEO?](https://developers.google.com/search/docs/fundamentals/do-i-need-seo)
+- [Google: Manage Business Profile owners and managers](https://support.google.com/business/answer/3403100)
+`;
+
 const words = (md: string) => md.split(/\s+/).filter(Boolean).length;
 const minutes = (md: string) => Math.max(1, Math.round(words(md) / 225));
 
@@ -354,8 +660,68 @@ const draft = ({ md, ...p }: Draft): Post => ({
   author: AUTHOR,
 });
 
-/** Batch 1 drafts, newest first. Preview only until Kia approves each one. */
+/** All 8 drafts on branch rory/ttr-batch-1 (two weekly sets of 4), newest first. Preview only until Kia approves each one. */
 export const ttrBatch1Drafts: Post[] = [
+  draft({
+    slug: "how-long-does-seo-take",
+    title: "How Long Does SEO Take for a Local Business?",
+    excerpt:
+      "Google says SEO typically takes four months to a year to show benefits. Why it takes that long, what can move sooner, what slows it down and how to tell it is working.",
+    publishedAt: "2026-11-27T12:00:00Z",
+    categories: [{ title: "SEO", slug: "seo" }],
+    md: HOW_LONG_SEO,
+    seo: {
+      title: "How Long Does SEO Take? What Google Says | TTR Digital",
+      description:
+        "Google says SEO typically takes four months to a year. What that means for a local business, what can move sooner, and how to tell if SEO is working.",
+    },
+    relatedServices: ["seo", "search-everywhere-optimization"],
+  }),
+  draft({
+    slug: "track-calls-and-form-leads",
+    title: "How to Track Calls and Form Leads for a Local Business",
+    excerpt:
+      "Know which ads, pages and profiles bring calls and forms, and which become customers. Call reporting, form tracking, CRMs, and what dental practices must watch under HIPAA.",
+    publishedAt: "2026-11-27T11:00:00Z",
+    categories: [{ title: "CRM and automation", slug: "crm-and-automation" }],
+    md: TRACK_LEADS,
+    seo: {
+      title: "How to Track Calls and Form Leads | TTR Digital",
+      description:
+        "A plain guide to tracking calls and form leads for local businesses: Google Ads call reporting, form tracking, CRMs and HIPAA cautions for dental practices.",
+    },
+    relatedServices: ["gohighlevel-crm", "google-ads"],
+  }),
+  draft({
+    slug: "meta-ads-for-local-businesses",
+    title: "Meta Ads for Local Businesses: Facebook and Instagram Basics",
+    excerpt:
+      "Facebook and Instagram ads reach people before they search. How local targeting, lead forms and ad rules work, including what dental practices cannot say in ads.",
+    publishedAt: "2026-11-27T10:00:00Z",
+    categories: [{ title: "Ads", slug: "ads" }],
+    md: META_ADS_LOCAL,
+    seo: {
+      title: "Meta Ads for Local Businesses: The Basics | TTR Digital",
+      description:
+        "How Facebook and Instagram ads work for local businesses: targeting your service area, lead forms vs landing pages, and Meta's rules for health ads.",
+    },
+    relatedServices: ["meta-ads", "gohighlevel-crm"],
+  }),
+  draft({
+    slug: "how-to-choose-a-marketing-agency",
+    title: "How to Choose a Marketing Agency for Your Local Business",
+    excerpt:
+      "What an agency should never promise, the questions to ask before you sign, who should own your accounts, and what a useful monthly report looks like.",
+    publishedAt: "2026-11-27T09:00:00Z",
+    categories: [{ title: "Local marketing", slug: "local-marketing" }],
+    md: CHOOSE_AGENCY,
+    seo: {
+      title: "How to Choose a Marketing Agency for a Local Business | TTR Digital",
+      description:
+        "Questions to ask before hiring a marketing agency, who should own your Google and Meta accounts, warning signs, and what a monthly report should show.",
+    },
+    relatedServices: ["seo", "google-ads"],
+  }),
   draft({
     slug: "get-your-business-in-chatgpt-and-google-ai-answers",
     title: "How a Local Business Shows Up in ChatGPT and Google AI Answers",
