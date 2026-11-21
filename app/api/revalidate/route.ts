@@ -1,31 +1,40 @@
-import { revalidateTag } from "next/cache";
-import { type NextRequest, NextResponse } from "next/server";
-import { parseBody } from "next-sanity/webhook";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { isValidWebhook, planRevalidate } from "@/lib/revalidate";
 
-type WebhookPayload = { _type?: string; slug?: { current?: string } | string };
-
-/**
- * Sanity publish webhook. Set it up in sanity.io/manage (see README):
- * POST https://<site>/api/revalidate, projection {_type, slug},
- * secret = SANITY_REVALIDATE_SECRET. Without the secret this route is off.
+/*
+ * Refresh after a publish.
+ *
+ *   POST /api/revalidate   body: JSON, for example { "_id": "...", "_type": "post", "slug": "x", "path": "/blog/x" }
+ *   header sanity-webhook-signature: t=<ms>,v1=<base64url HMAC-SHA256(SANITY_REVALIDATE_SECRET, "<t>.<body>")>
+ *
+ * Called by TTR OS after it publishes, and by the Sanity publish webhook (same secret; projection
+ * {_id, _type, "slug": slug.current}). The site has no trailing slashes: use /api/revalidate exactly, since
+ * /api/revalidate/ answers with a 301 and TTR OS does not follow redirects. Without a valid signature nothing is
+ * refreshed. Without SANITY_REVALIDATE_SECRET the route is off (503).
  */
-export async function POST(req: NextRequest) {
+export const dynamic = "force-dynamic";
+
+const json = (body: unknown, status: number) => Response.json(body, { status, headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex" } });
+
+export async function POST(request: Request) {
   const secret = process.env.SANITY_REVALIDATE_SECRET;
-  if (!secret) return NextResponse.json({ ok: false, message: "Webhook secret is not configured" }, { status: 503 });
+  if (!secret) return json({ ok: false, message: "Refresh is not set up: add SANITY_REVALIDATE_SECRET in the Vercel environment variables." }, 503);
 
+  const raw = await request.text();
+  if (raw.length > 100_000) return json({ ok: false, message: "Body too large." }, 413);
+  if (!isValidWebhook(secret, raw, request.headers.get("sanity-webhook-signature"))) return json({ ok: false, message: "Invalid signature." }, 401);
+
+  let body: unknown;
   try {
-    const { isValidSignature, body } = await parseBody<WebhookPayload>(req, secret, true);
-    if (!isValidSignature) return NextResponse.json({ ok: false, message: "Invalid signature" }, { status: 401 });
-    if (!body?._type) return NextResponse.json({ ok: false, message: "Missing _type" }, { status: 400 });
-
-    const slug = typeof body.slug === "string" ? body.slug : body.slug?.current;
-    const tags = [body._type, ...(slug ? [`${body._type}:${slug}`] : []), "sanity"];
-    // Settings, navigation and services appear on every page, so the shared
-    // "sanity" tag is always cleared. Content is small; this keeps it simple.
-    for (const tag of tags) revalidateTag(tag, { expire: 0 });
-    return NextResponse.json({ ok: true, revalidated: tags });
-  } catch (err) {
-    console.error("Revalidate webhook failed", err);
-    return NextResponse.json({ ok: false, message: "Error" }, { status: 500 });
+    body = JSON.parse(raw);
+  } catch {
+    return json({ ok: false, message: "Body is not JSON." }, 400);
   }
+
+  const plan = planRevalidate(body);
+  if (!plan.tags.length && !plan.paths.length) return json({ ok: false, message: "Nothing to refresh: send _id, _type or path." }, 400);
+  // expire 0: the next visit waits for the fresh version instead of getting the old one (TTR OS checks the live page right after).
+  for (const tag of plan.tags) revalidateTag(tag, { expire: 0 });
+  for (const path of plan.paths) revalidatePath(path);
+  return json({ ok: true, revalidated: plan }, 200);
 }
