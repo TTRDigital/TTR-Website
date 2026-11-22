@@ -4,9 +4,15 @@ import { useEffect, useRef, useState } from "react";
 
 /*
  * Google reCAPTCHA v2 "I'm not a robot" checkbox, inside the form. It loads
- * once the form is near the screen. The compact layout is used when the
+ * once the form is near the screen and the visitor has interacted with the
+ * page (moved the mouse, tapped, typed, scrolled or focused a field), so a
+ * page load with no visitor (Lighthouse, bots) never pulls in Google's
+ * widget, its cookies or its console messages. A real visitor triggers it
+ * long before reaching the checkbox. The compact layout is used when the
  * form is narrower than the standard 304px widget (small phones).
  */
+
+const INTERACTIONS = ["pointermove", "pointerdown", "keydown", "touchstart", "scroll", "focusin"] as const;
 
 type Grecaptcha = {
   render: (el: HTMLElement, opts: Record<string, unknown>) => number;
@@ -103,11 +109,26 @@ export function Recaptcha({
         });
     };
 
+    // Both must be true before the widget loads: the form is near the
+    // screen and the visitor has interacted with the page.
+    let near = false;
+    let interacted = false;
+    const maybeMount = () => {
+      if (near && interacted) mount();
+    };
+    const onInteract = () => {
+      for (const e of INTERACTIONS) window.removeEventListener(e, onInteract, { capture: true });
+      interacted = true;
+      maybeMount();
+    };
+    for (const e of INTERACTIONS) window.addEventListener(e, onInteract, { passive: true, capture: true });
+
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
           io.disconnect();
-          mount();
+          near = true;
+          maybeMount();
         }
       },
       { rootMargin: "600px 0px" },
@@ -115,6 +136,7 @@ export function Recaptcha({
     io.observe(el);
     return () => {
       io.disconnect();
+      for (const e of INTERACTIONS) window.removeEventListener(e, onInteract, { capture: true });
       handleRef.current = null;
     };
   }, [siteKey, theme, handleRef]);
