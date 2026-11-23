@@ -136,7 +136,7 @@ export function HeroVisual({ posterSrc, heroId }: { posterSrc: string; heroId: s
     >
       <Image
         src={posterSrc}
-        alt=""
+        alt="Decorative 3D graphic"
         fill
         loading="eager"
         fetchPriority="high"

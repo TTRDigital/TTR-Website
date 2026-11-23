@@ -20,7 +20,7 @@ export function PostCard({ post, light = false, priority = false }: { post: Post
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
             src={post.cover.url}
-            alt={post.cover.alt}
+            alt={post.cover.alt || post.title}
             fill
             loading={priority ? "eager" : undefined}
             fetchPriority={priority ? "high" : undefined}
