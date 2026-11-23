@@ -14,7 +14,7 @@ export function LogoRow({ logos }: { logos: HomeContent["logos"] }) {
   const renderItem = (l: { name: string; src?: string }, i: number, hidden = false) => (
     <li key={`${l.name}-${i}`} aria-hidden={hidden || undefined} className="flex h-12 shrink-0 items-center justify-center px-4 sm:px-6">
       {l.src ? (
-        <Image src={l.src} alt={hidden ? "" : l.name} width={140} height={40} className="h-8 w-auto opacity-70 grayscale transition-opacity hover:opacity-100" />
+        <Image src={l.src} alt={l.name} width={140} height={40} className="h-8 w-auto opacity-70 grayscale transition-opacity hover:opacity-100" />
       ) : (
         <span className="rounded-md border border-dashed border-cyan-400/50 px-3 py-1.5 font-mono text-micro text-cyan-400">{l.name}</span>
       )}

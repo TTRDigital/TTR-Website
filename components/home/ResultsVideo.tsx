@@ -111,7 +111,7 @@ export function ResultsVideo({ video }: { video: TestimonialVideo }) {
           {/* eslint-disable-next-line @next/next/no-img-element -- YouTube still; not worth the image optimizer */}
           <img
             src={`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`}
-            alt=""
+            alt={`Video still: ${video.title}`}
             loading="lazy"
             decoding="async"
             className="h-full w-full object-cover"

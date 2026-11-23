@@ -129,7 +129,7 @@ export default async function PostPage(props: PageProps<"/blog/[slug]">) {
           </div>
           <div className="hero-fade mx-auto mt-10 max-w-5xl" style={{ "--d": "260ms" } as React.CSSProperties}>
             {post.cover ? (
-              <Image src={post.cover.url} alt={post.cover.alt} width={post.cover.width} height={post.cover.height} loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 1024px, 100vw" className="h-auto w-full rounded-[24px]" />
+              <Image src={post.cover.url} alt={post.cover.alt || post.title} width={post.cover.width} height={post.cover.height} loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 1024px, 100vw" className="h-auto w-full rounded-[24px]" />
             ) : (
               <GeneratedCover slug={post.slug} category={category?.title} size="hero" />
             )}
@@ -155,8 +155,8 @@ export default async function PostPage(props: PageProps<"/blog/[slug]">) {
 
             {/* Author box */}
             <aside aria-label="About the author" className="mt-14 flex max-w-[68ch] gap-5 rounded-[20px] border border-line-light bg-white p-6 sm:p-8">
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-ink-950">
-                <Image src="/icon.svg" alt="" width={36} height={36} className="h-9 w-9" unoptimized />
+              <span aria-hidden="true" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-ink-950">
+                <Image src="/icon.svg" alt="TTR Digital Marketing logo" width={36} height={36} className="h-9 w-9" unoptimized />
               </span>
               <div>
                 <p className="font-semibold text-ink-text">{authorName}</p>
